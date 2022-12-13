@@ -3,6 +3,7 @@ import { Divider, IconButton, TextField } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import { schoolClass, bucket, globalData, assignment } from "../pages";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Assignments(props: any) {
 
@@ -13,9 +14,10 @@ export default function Assignments(props: any) {
 
     function addAssignment() {
         setData((prevData: globalData) => {
-            prevData.classes.filter(x => x.number === selected.number)[0].weights.filter(x => x.name === bucket.name)[0].assignments.push({
+            prevData.classes.filter(x => x.id === selected.id)[0].weights.filter(x => x.id === bucket.id)[0].assignments.push({
                 name: "",
                 score: 0,
+                id: uuidv4(),
                 outOf: 100
             })
 
@@ -25,10 +27,9 @@ export default function Assignments(props: any) {
         })
     }
 
-    function removeAssignment(i: number) {
-        console.log(i)
+    function removeAssignment(id: string) {
         setData((prevData: globalData) => {
-            prevData.classes.filter(x => x.number === selected.number)[0].weights.filter(x => x.name === bucket.name)[0].assignments.splice(i, 1);
+            prevData.classes.filter(x => x.id === selected.id)[0].weights.filter(x => x.id === bucket.id)[0].assignments.filter(x => x.id != id);
 
             return ({
                 ...prevData
@@ -38,7 +39,7 @@ export default function Assignments(props: any) {
 
     function setAssignmentName(a: assignment, newName: string) {
         setData((prevData: globalData) => {
-            prevData.classes.filter(x => x.number === selected.number)[0].weights.filter(x => x.name === bucket.name)[0].assignments.filter(x => x.name === a.name)[0].name = newName;
+            prevData.classes.filter(x => x.id === selected.id)[0].weights.filter(x => x.id === bucket.id)[0].assignments.filter(x => x.id === a.id)[0].name = newName;
 
             return ({
                 ...prevData
@@ -48,7 +49,7 @@ export default function Assignments(props: any) {
 
     function setAssignmentScore(a: assignment, newScore: number) {
         setData((prevData: globalData) => {
-            prevData.classes.filter(x => x.number === selected.number)[0].weights.filter(x => x.name === bucket.name)[0].assignments.filter(x => x.name === a.name)[0].score = newScore;
+            prevData.classes.filter(x => x.id === selected.id)[0].weights.filter(x => x.id === bucket.id)[0].assignments.filter(x => x.id === a.id)[0].score = newScore;
 
             return ({
                 ...prevData
@@ -58,7 +59,7 @@ export default function Assignments(props: any) {
 
     function setAssignmentOutOf(a: assignment, newOutOf: number) {
         setData((prevData: globalData) => {
-            prevData.classes.filter(x => x.number === selected.number)[0].weights.filter(x => x.name === bucket.name)[0].assignments.filter(x => x.name === a.name)[0].outOf = newOutOf;
+            prevData.classes.filter(x => x.id === selected.id)[0].weights.filter(x => x.id === bucket.id)[0].assignments.filter(x => x.id === a.id)[0].outOf = newOutOf;
 
             return ({
                 ...prevData
@@ -70,8 +71,8 @@ export default function Assignments(props: any) {
 
     useEffect(() => {
         setAssignmentList(
-            bucket.assignments.map((x, i) => (
-                <Box key={i}>
+            bucket.assignments.map((x) => (
+                <Box key={x.id}>
                     <form>
                         <Stack direction="row" spacing={2}>
                             <TextField onChange={e => setAssignmentName(x, e.target.value)} variant="outlined" label="Assignment Name" value={x.name}/>
@@ -87,7 +88,7 @@ export default function Assignments(props: any) {
                             }} />
 
                             <Box minHeight="full" minWidth="full" alignItems="center" display="flex" textAlign="center">
-                                <IconButton onClick={() => {removeAssignment(i)}} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="error">
+                                <IconButton tabIndex={-1} onClick={() => {removeAssignment(x.id)}} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="error">
                                     <DeleteOutline />
                                 </IconButton>
                             </Box>

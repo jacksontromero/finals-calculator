@@ -13,7 +13,7 @@ export default function Classes(props: any) {
             <div>
                 {
                     data.classes.map((x: schoolClass) => (
-                        <div key={x.number} >
+                        <div key={x.id} >
                             <Card sx={{my: 2, mx: 2, px:2 }}>
                                 <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
                                     <div>
