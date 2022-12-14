@@ -10,6 +10,7 @@ export type assignment = {
   score: number
   outOf: number,
   id: string,
+  simulated: boolean,
 }
 
 export type bucket = {

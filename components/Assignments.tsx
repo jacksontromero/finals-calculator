@@ -1,9 +1,10 @@
 import { Add, DeleteOutline } from "@mui/icons-material";
-import { Divider, IconButton, TextField } from "@mui/material";
+import { Divider, IconButton, TextField, FormGroup, FormControlLabel, Checkbox, Tooltip } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import { schoolClass, bucket, globalData, assignment } from "../pages";
 import { v4 as uuidv4 } from 'uuid';
+import { calculateAverages } from "./ClassDetails";
 
 export default function Assignments(props: any) {
 
@@ -18,7 +19,8 @@ export default function Assignments(props: any) {
                 name: "",
                 score: 0,
                 id: uuidv4(),
-                outOf: 100
+                outOf: 100,
+                simulated: false
             })
 
             return ({
@@ -29,7 +31,8 @@ export default function Assignments(props: any) {
 
     function removeAssignment(id: string) {
         setData((prevData: globalData) => {
-            prevData.classes.filter(x => x.id === selected.id)[0].weights.filter(x => x.id === bucket.id)[0].assignments.filter(x => x.id != id);
+            let assignments = prevData.classes.filter(x => x.id === selected.id)[0].weights.filter(x => x.id === bucket.id)[0].assignments
+            assignments.splice(assignments.findIndex(x => x.id === id), 1);
 
             return ({
                 ...prevData
@@ -67,6 +70,16 @@ export default function Assignments(props: any) {
         })
     }
 
+    function simulateAssignment(a: assignment) {
+        setData((prevData: globalData) => {
+            prevData.classes.filter(x => x.id === selected.id)[0].weights.filter(x => x.id === bucket.id)[0].assignments.filter(x => x.id === a.id)[0].simulated = !a.simulated;
+
+            return ({
+                ...prevData
+            })
+        })
+    }
+
     const [assignmentList, setAssignmentList] = useState<JSX.Element[]>([])
 
     useEffect(() => {
@@ -74,24 +87,41 @@ export default function Assignments(props: any) {
             bucket.assignments.map((x) => (
                 <Box key={x.id}>
                     <form>
-                        <Stack direction="row" spacing={2}>
-                            <TextField onChange={e => setAssignmentName(x, e.target.value)} variant="outlined" label="Assignment Name" value={x.name}/>
-                            <TextField onChange={e => setAssignmentScore(x, Number(e.target.value))} variant="outlined" type="number" label="Score" value={x.score} InputProps={{
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <TextField onChange={e => setAssignmentName(x, e.target.value)} variant="outlined" label="Assignment Name" value={x.name} onFocus={
+                                (e) => {
+                                    e.target.select();
+                                }
+                            }/>
+                            <TextField disabled={x.simulated} onChange={e => setAssignmentScore(x, Number(e.target.value))} variant="outlined" type="number" label="Score" value={x.score} InputProps={{
                                 inputProps: {
                                     min: 0,
                                 }
-                            }} />
+                            }} onFocus={
+                                (e) => {
+                                    e.target.select();
+                                }
+                            }/>
                             <TextField onChange={e => setAssignmentOutOf(x, Number(e.target.value))} variant="outlined" type="number" label="Out Of" value={x.outOf} InputProps={{
                                 inputProps: {
                                     min: 0,
                                 }
-                            }} />
+                            }} onFocus={
+                                (e) => {
+                                    e.target.select();
+                                }
+                            }/>
 
-                            <Box minHeight="full" minWidth="full" alignItems="center" display="flex" textAlign="center">
-                                <IconButton tabIndex={-1} onClick={() => {removeAssignment(x.id)}} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="error">
-                                    <DeleteOutline />
-                                </IconButton>
-                            </Box>
+                            <Stack direction="column" alignItems="center" justifyContent="center"  spacing={0}>
+                                <Box minHeight="full" minWidth="full" alignItems="center" display="flex" textAlign="center">
+                                    <IconButton tabIndex={-1} onClick={() => {removeAssignment(x.id)}} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="error">
+                                        <DeleteOutline />
+                                    </IconButton>
+                                </Box>
+                                <Tooltip title="Replace score with 'Average without drops'">
+                                    <Checkbox checked={x.simulated} onChange={() => simulateAssignment(x)}/>
+                                </Tooltip>
+                            </Stack>
 
                         </Stack>
                     </form>
