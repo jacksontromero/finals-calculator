@@ -4,35 +4,6 @@ import { useState } from "react";
 import { assignment, bucket, globalData, schoolClass } from "../pages";
 import Assignments from "./Assignments";
 
-export function calculateScores(b: bucket): {dropped: number, raw: number} {
-
-    let nonSim = b.assignments.filter(x => !x.simulated);
-    let totalNonSimScore = nonSim.reduce((acc, x) => acc + x.score, 0);
-    let totalNonSimPoints = nonSim.reduce((acc, x) => acc + x.outOf, 0);
-
-
-    let simulated = b.assignments.map(x => !x.simulated ? x : {
-        ...x,
-        score: totalNonSimScore / totalNonSimPoints * x.outOf
-    })
-
-    let sorted = simulated.sort((a1, a2) => (a2.score / a2.outOf) - (a1.score / a1.outOf));
-
-    let totalScore = sorted.reduce((acc, x) => acc + x.score, 0);
-    let totalPoints = sorted.reduce((acc, x) => acc + x.outOf, 0);
-
-    let dropped = sorted.slice(0, sorted.length - b.drops);
-
-    let totalDroppedScore = dropped.reduce((acc, x) => acc + x.score, 0);
-    let totalDroppedPoints = dropped.reduce((acc, x) => acc + x.outOf, 0);
-
-
-    return {
-        dropped: totalDroppedPoints == 0 ? 1 : totalDroppedScore/totalDroppedPoints,
-        raw: totalPoints == 0 ? 1 : totalScore/totalPoints
-    }
-}
-
 export default function ClassDetails(props: any) {
 
     const data: globalData = props.data;
@@ -41,6 +12,35 @@ export default function ClassDetails(props: any) {
 
     const [selectedBucket, setSelectedBucket] = useState<bucket | null>(null);
     const [selectedAssignment, setSelectedAssignment] = useState<assignment | null>(null);
+
+    function calculateScores(b: bucket): {dropped: number, raw: number} {
+
+        let nonSim = b.assignments.filter(x => !x.simulated);
+        let totalNonSimScore = nonSim.reduce((acc, x) => acc + x.score, 0);
+        let totalNonSimPoints = nonSim.reduce((acc, x) => acc + x.outOf, 0);
+
+
+        let simulated = b.assignments.map(x => !x.simulated ? x : {
+            ...x,
+            score: totalNonSimScore / totalNonSimPoints * x.outOf
+        })
+
+        let sorted = simulated.sort((a1, a2) => (a2.score / a2.outOf) - (a1.score / a1.outOf));
+
+        let totalScore = sorted.reduce((acc, x) => acc + x.score, 0);
+        let totalPoints = sorted.reduce((acc, x) => acc + x.outOf, 0);
+
+        let dropped = sorted.slice(0, sorted.length - b.drops);
+
+        let totalDroppedScore = dropped.reduce((acc, x) => acc + x.score, 0);
+        let totalDroppedPoints = dropped.reduce((acc, x) => acc + x.outOf, 0);
+
+
+        return {
+            dropped: totalDroppedPoints == 0 ? 1 : totalDroppedScore/totalDroppedPoints,
+            raw: totalPoints == 0 ? 1 : totalScore/totalPoints
+        }
+    }
 
     function calculateScoreNecessary(): number {
         if (selectedAssignment == null || selectedBucket == null) {
@@ -94,6 +94,19 @@ export default function ClassDetails(props: any) {
         return total;
     }
 
+    function removeSelectedAssignment() {
+        setSelectedAssignment(null);
+        setSelectedBucket(null);
+    }
+
+    function pickSelectedAssignment(a: assignment, b: bucket) {
+
+        if (selectedAssignment == null && selectedBucket == null) {
+            setSelectedAssignment(a);
+            setSelectedBucket(b);
+        }
+    }
+
     return (
         <Card sx={{ height: '100%', width: '1', p:2 }}>
             <div>
@@ -108,12 +121,14 @@ export default function ClassDetails(props: any) {
                                     <Stack direction="column" spacing={2}>
                                         <Typography fontSize={16} fontWeight="bold" variant="subtitle1">{x.name} ({x.percentage}%)</Typography>
 
-                                        <Assignments data={data} setData={setData} selected={selected} bucket={x} />
+                                        <Assignments data={data} setData={setData} selected={selected} bucket={x} removeSelectedAssignment={removeSelectedAssignment} pickSelectedAssignment={pickSelectedAssignment} selectedAssignment={selectedAssignment}/>
 
                                         {
                                             x.assignments.length != 0 && (
                                                 <div>
-                                                    <Typography fontSize={16} fontWeight="bold" variant="subtitle1">Average after {x.drops} drops: {(calculateScores(x).dropped * 100).toFixed(2)}%</Typography>
+                                                    {
+                                                        x.drops != 0 && <Typography fontSize={16} fontWeight="bold" variant="subtitle1">Average after {x.drops} drops: {(calculateScores(x).dropped * 100).toFixed(2)}%</Typography>
+                                                    }
                                                     <Typography fontSize={16} fontWeight="bold" variant="subtitle1">Average without drops: {(calculateScores(x).raw * 100).toFixed(2)}%</Typography>
                                                 </div>
                                             )
@@ -128,7 +143,7 @@ export default function ClassDetails(props: any) {
                     <Divider sx={{mt: 4}} />
                     <Box>
                         <Typography textAlign="center" fontSize={20} fontWeight="bold" variant="body1">Total Grade: {totalGrade()}</Typography>
-                        <Typography textAlign="center" fontSize={20} fontWeight="bold" variant="body1">Score necessary on selected assignment to get ≥ 90%: {calculateScoreNecessary()}</Typography>
+                        <Typography textAlign="center" fontSize={20} fontWeight="bold" variant="body1">Score necessary on selected assignment to get ≥ 90%: {(calculateScoreNecessary() * 100).toFixed(2)}</Typography>
                     </Box>
                 </Stack>
             </div>

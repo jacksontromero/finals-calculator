@@ -12,6 +12,10 @@ export default function Assignments(props: any) {
     const selected: schoolClass = props.selected;
     const bucket: bucket = props.bucket;
 
+    const removeSelectedAssignment = props.removeSelectedAssignment;
+    const pickSelectedAssignment = props.pickSelectedAssignment;
+    const selectedAssignment: assignment | null = props.selectedAssignment;
+
     function addAssignment() {
         setData((prevData: globalData) => {
             prevData.classes.filter(x => x.id === selected.id)[0].weights.filter(x => x.id === bucket.id)[0].assignments.push({
@@ -79,6 +83,15 @@ export default function Assignments(props: any) {
         })
     }
 
+    function selectAssignment(a: assignment) {
+
+        if (selectedAssignment != null) {
+            removeSelectedAssignment();
+        } else {
+            pickSelectedAssignment(a, bucket);
+        }
+    }
+
     const [assignmentList, setAssignmentList] = useState<JSX.Element[]>([])
 
     useEffect(() => {
@@ -86,7 +99,7 @@ export default function Assignments(props: any) {
             bucket.assignments.map((x) => (
                 <Box key={x.id}>
                     <form>
-                        <Stack direction="row" alignItems="center" spacing={2}>
+                        <Stack direction="row" alignItems="center" spacing={0}>
                             <TextField onChange={e => setAssignmentName(x, e.target.value)} variant="outlined" label="Assignment Name" value={x.name} onFocus={
                                 (e) => {
                                     e.target.select();
@@ -118,16 +131,24 @@ export default function Assignments(props: any) {
                                     </IconButton>
                                 </Box>
                                 <Tooltip title="Replace score with 'Average without drops'">
-                                    <Checkbox checked={x.simulated} onChange={() => simulateAssignment(x)}/>
+                                    <Checkbox size="small" checked={x.simulated} onChange={() => simulateAssignment(x)}/>
                                 </Tooltip>
                             </Stack>
+
+                            {
+                                (selectedAssignment == null || selectedAssignment.id === x.id) && (
+                                    <Tooltip title="Calculate grade needed on this assignment for an A">
+                                        <Checkbox color="success" checked={selectedAssignment != null && selectedAssignment.id === x.id} onChange={() => selectAssignment(x)}/>
+                                    </Tooltip>
+                                )
+                            }
 
                         </Stack>
                     </form>
                 </Box>
             ))
         )
-    }, [data, selected])
+    }, [data, selected, selectedAssignment])
 
     return (
         <div>
