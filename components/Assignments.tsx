@@ -14,7 +14,6 @@ export default function Assignments(props: any) {
 
     const removeSelectedAssignment = props.removeSelectedAssignment;
     const pickSelectedAssignment = props.pickSelectedAssignment;
-    const selectedAssignment: assignment | null = props.selectedAssignment;
 
     function addAssignment() {
         setData((prevData: globalData) => {
@@ -85,7 +84,7 @@ export default function Assignments(props: any) {
 
     function selectAssignment(a: assignment) {
 
-        if (selectedAssignment != null) {
+        if (selected.selectedAssignment != null) {
             removeSelectedAssignment();
         } else {
             pickSelectedAssignment(a, bucket);
@@ -136,9 +135,9 @@ export default function Assignments(props: any) {
                             </Stack>
 
                             {
-                                (selectedAssignment == null || selectedAssignment.id === x.id) && (
+                                (selected.selectedAssignment == null || selected.selectedAssignment.id === x.id) && (
                                     <Tooltip title="Calculate grade needed on this assignment for an A">
-                                        <Checkbox color="success" checked={selectedAssignment != null && selectedAssignment.id === x.id} onChange={() => selectAssignment(x)}/>
+                                        <Checkbox color="success" checked={selected.selectedAssignment != null && selected.selectedAssignment.id === x.id} onChange={() => selectAssignment(x)}/>
                                     </Tooltip>
                                 )
                             }
@@ -148,7 +147,7 @@ export default function Assignments(props: any) {
                 </Box>
             ))
         )
-    }, [data, selected, selectedAssignment])
+    }, [data, selected, selected.selectedAssignment])
 
     return (
         <div>

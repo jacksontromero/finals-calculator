@@ -26,6 +26,8 @@ export type schoolClass = {
   number: string,
   weights: bucket[],
   id: string,
+  selectedBucket: bucket | null,
+  selectedAssignment: assignment | null,
 }
 
 export type globalData = {
@@ -75,7 +77,9 @@ export default function Home() {
             id: uuidv4(),
             assignments: []
           },
-        ]
+        ],
+        selectedAssignment: null,
+        selectedBucket: null
       },
       {
         name: "Software",
@@ -124,7 +128,9 @@ export default function Home() {
             id: uuidv4(),
             assignments: []
           },
-        ]
+        ],
+        selectedAssignment: null,
+        selectedBucket: null
       }
     ]
   })

@@ -10,9 +10,6 @@ export default function ClassDetails(props: any) {
     const setData = props.setData;
     const selected: schoolClass = props.selected;
 
-    const [selectedBucket, setSelectedBucket] = useState<bucket | null>(null);
-    const [selectedAssignment, setSelectedAssignment] = useState<assignment | null>(null);
-
     function calculateScores(b: bucket): {dropped: number, raw: number} {
 
         let nonSim = b.assignments.filter(x => !x.simulated);
@@ -43,14 +40,14 @@ export default function ClassDetails(props: any) {
     }
 
     function calculateScoreNecessary(): number {
-        if (selectedAssignment == null || selectedBucket == null) {
+        if (selected.selectedAssignment == null || selected.selectedBucket == null) {
             return 0;
         }
 
         let totalPercentage = 0;
 
         for (let b of selected.weights) {
-            if (b.id !== selectedBucket.id) {
+            if (b.id !== selected.selectedBucket.id) {
 
                 totalPercentage += calculateScores(b).dropped * b.percentage;
             }
@@ -58,12 +55,12 @@ export default function ClassDetails(props: any) {
 
         totalPercentage /= 100;
 
-        let percentFinalBucketNeeded = (.9 - totalPercentage) / (selectedBucket.percentage / 100);
+        let percentFinalBucketNeeded = (.9 - totalPercentage) / (selected.selectedBucket.percentage / 100);
 
 
         // calculate score needed for assignment within bucket
 
-        let assignmentsWithoutSelected = selectedBucket.assignments.filter(x => x.id !== selectedAssignment.id);
+        let assignmentsWithoutSelected = selected.selectedBucket.assignments.filter(x => x.id !== selected.selectedAssignment?.id);
         let nonSim = assignmentsWithoutSelected.filter(x => !x.simulated);
         let totalNonSimScore = nonSim.reduce((acc, x) => acc + x.score, 0);
         let totalNonSimPoints = nonSim.reduce((acc, x) => acc + x.outOf, 0);
@@ -74,14 +71,14 @@ export default function ClassDetails(props: any) {
         })
 
         let sorted = simulated.sort((a1, a2) => (a2.score / a2.outOf) - (a1.score / a1.outOf));
-        let dropped = sorted.slice(0, sorted.length - selectedBucket.drops);
+        let dropped = sorted.slice(0, sorted.length - selected.selectedBucket.drops);
 
         let totalDroppedScore = dropped.reduce((acc, x) => acc + x.score, 0);
         let totalDroppedPoints = dropped.reduce((acc, x) => acc + x.outOf, 0);
 
-        let percentageAddNecessary = (percentFinalBucketNeeded - (totalDroppedScore / (totalDroppedPoints + selectedAssignment.outOf)))
+        let percentageAddNecessary = (percentFinalBucketNeeded - (totalDroppedScore / (totalDroppedPoints + selected.selectedAssignment.outOf)))
 
-        return (percentageAddNecessary * (totalDroppedPoints + selectedAssignment.outOf)) / selectedAssignment.outOf;
+        return (percentageAddNecessary * (totalDroppedPoints + selected.selectedAssignment.outOf)) / selected.selectedAssignment.outOf;
     }
 
     function totalGrade(): number {
@@ -94,6 +91,26 @@ export default function ClassDetails(props: any) {
         return total;
     }
 
+    function setSelectedAssignment(a: assignment | null) {
+        setData((prevData: globalData) => {
+            prevData.classes.filter(x => x.id === selected.id)[0].selectedAssignment = a;
+
+            return ({
+                ...prevData
+            })
+        })
+    }
+
+    function setSelectedBucket(b: bucket | null) {
+        setData((prevData: globalData) => {
+            prevData.classes.filter(x => x.id === selected.id)[0].selectedBucket = b;
+
+            return ({
+                ...prevData
+            })
+        })
+    }
+
     function removeSelectedAssignment() {
         setSelectedAssignment(null);
         setSelectedBucket(null);
@@ -101,7 +118,7 @@ export default function ClassDetails(props: any) {
 
     function pickSelectedAssignment(a: assignment, b: bucket) {
 
-        if (selectedAssignment == null && selectedBucket == null) {
+        if (selected.selectedAssignment == null && selected.selectedBucket == null) {
             setSelectedAssignment(a);
             setSelectedBucket(b);
         }
@@ -121,7 +138,7 @@ export default function ClassDetails(props: any) {
                                     <Stack direction="column" spacing={2}>
                                         <Typography fontSize={16} fontWeight="bold" variant="subtitle1">{x.name} ({x.percentage}%)</Typography>
 
-                                        <Assignments data={data} setData={setData} selected={selected} bucket={x} removeSelectedAssignment={removeSelectedAssignment} pickSelectedAssignment={pickSelectedAssignment} selectedAssignment={selectedAssignment}/>
+                                        <Assignments data={data} setData={setData} selected={selected} bucket={x} removeSelectedAssignment={removeSelectedAssignment} pickSelectedAssignment={pickSelectedAssignment}/>
 
                                         {
                                             x.assignments.length != 0 && (
