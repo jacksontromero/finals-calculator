@@ -4,6 +4,7 @@ import ClassDetails from '../components/ClassDetails'
 import Classes from '../components/Classes'
 import useWindowDimensions from '../hooks/useWindowDimensions'
 import { v4 as uuidv4 } from 'uuid';
+import Head from 'next/head'
 
 export type assignment = {
   name: string,
@@ -143,6 +144,11 @@ export default function Home() {
   const {height, width} = useWindowDimensions();
 
   return (
+    <div>
+      <Head>
+        <title>Grade Calculator</title>
+        <meta name="Calculate what grade you need in multiple classes with support for different percentage buckets and dropped assignments" content="Meta description for the Home page" />
+      </Head>
       <Stack sx={{mt: 4, mx: 4, minHeight: (height == 0 ? 1080*.75 : height * .75)}} direction="column" justifyContent="space-between" spacing={2}>
         {
           selected != null && <ClassDetails data={data} setData={setData} selected={selected}></ClassDetails>
@@ -150,5 +156,6 @@ export default function Home() {
 
         <Classes data={data} setData={setData} setSelected={setSelected}></Classes>
       </Stack>
+    </div>
   )
 }
