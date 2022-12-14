@@ -4,7 +4,6 @@ import { Box, Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import { schoolClass, bucket, globalData, assignment } from "../pages";
 import { v4 as uuidv4 } from 'uuid';
-import { calculateAverages } from "./ClassDetails";
 
 export default function Assignments(props: any) {
 
