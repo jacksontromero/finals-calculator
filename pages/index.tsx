@@ -38,103 +38,103 @@ export type globalData = {
 export default function Home() {
   const [data, setData] = useState<globalData>({
     classes: [
-      {
-        name: "Probability",
-        number: "36-218",
-        id: uuidv4(),
-        weights: [
-          {
-            name: "Homework",
-            percentage: 35,
-            drops: 2,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Participation",
-            percentage: 5,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Quizzes",
-            percentage: 15,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Midterm",
-            percentage: 20,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Final",
-            percentage: 25,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-        ],
-        selectedAssignment: null,
-        selectedBucket: null,
-        targetGrade: 90
-      },
-      {
-        name: "Software",
-        number: "17-214",
-        id: uuidv4(),
-        weights: [
-          {
-            name: "Homework",
-            percentage: 50,
-            drops: 2,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Midterm 1",
-            percentage: 10,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Midterm 2",
-            percentage: 10,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Quizzes",
-            percentage: 5,
-            drops: 4,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Participation",
-            percentage: 5,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Final",
-            percentage: 20,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-        ],
-        selectedAssignment: null,
-        selectedBucket: null,
-        targetGrade: 90
-      }
+    //   {
+    //     name: "Probability",
+    //     number: "36-218",
+    //     id: uuidv4(),
+    //     weights: [
+    //       {
+    //         name: "Homework",
+    //         percentage: 35,
+    //         drops: 2,
+    //         id: uuidv4(),
+    //         assignments: []
+    //       },
+    //       {
+    //         name: "Participation",
+    //         percentage: 5,
+    //         drops: 0,
+    //         id: uuidv4(),
+    //         assignments: []
+    //       },
+    //       {
+    //         name: "Quizzes",
+    //         percentage: 15,
+    //         drops: 0,
+    //         id: uuidv4(),
+    //         assignments: []
+    //       },
+    //       {
+    //         name: "Midterm",
+    //         percentage: 20,
+    //         drops: 0,
+    //         id: uuidv4(),
+    //         assignments: []
+    //       },
+    //       {
+    //         name: "Final",
+    //         percentage: 25,
+    //         drops: 0,
+    //         id: uuidv4(),
+    //         assignments: []
+    //       },
+    //     ],
+    //     selectedAssignment: null,
+    //     selectedBucket: null,
+    //     targetGrade: 90
+    //   },
+    //   {
+    //     name: "Software",
+    //     number: "17-214",
+    //     id: uuidv4(),
+    //     weights: [
+    //       {
+    //         name: "Homework",
+    //         percentage: 50,
+    //         drops: 2,
+    //         id: uuidv4(),
+    //         assignments: []
+    //       },
+    //       {
+    //         name: "Midterm 1",
+    //         percentage: 10,
+    //         drops: 0,
+    //         id: uuidv4(),
+    //         assignments: []
+    //       },
+    //       {
+    //         name: "Midterm 2",
+    //         percentage: 10,
+    //         drops: 0,
+    //         id: uuidv4(),
+    //         assignments: []
+    //       },
+    //       {
+    //         name: "Quizzes",
+    //         percentage: 5,
+    //         drops: 4,
+    //         id: uuidv4(),
+    //         assignments: []
+    //       },
+    //       {
+    //         name: "Participation",
+    //         percentage: 5,
+    //         drops: 0,
+    //         id: uuidv4(),
+    //         assignments: []
+    //       },
+    //       {
+    //         name: "Final",
+    //         percentage: 20,
+    //         drops: 0,
+    //         id: uuidv4(),
+    //         assignments: []
+    //       },
+    //     ],
+    //     selectedAssignment: null,
+    //     selectedBucket: null,
+    //     targetGrade: 90
+    //   }
     ]
   })
 
