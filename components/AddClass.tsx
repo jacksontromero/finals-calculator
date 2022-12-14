@@ -1,6 +1,8 @@
 import { Backdrop, Box, Button, Divider, Fade, FormControl, Modal, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
+import { bucket, globalData } from "../pages";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -16,10 +18,11 @@ const style = {
 
 export default function AddClass(props: any) {
 
-    const {data, setData} = props;
+    const data: globalData = props.data;
+    const setData = props.setData;
 
     const [open, setOpen] = useState(false);
-    const [buckets, setBuckets] = useState([] as {name: string, percentage: number, drops: number}[]);
+    const [buckets, setBuckets] = useState([] as bucket[]);
 
     const [name, setName] = useState("")
     const [courseNumber, setCourseNumber] = useState("")
@@ -31,12 +34,79 @@ export default function AddClass(props: any) {
             classes: [...data.classes, {
                 name: name,
                 number: courseNumber,
-                weights: buckets
+                weights: buckets,
+                id: uuidv4(),
+                selectedBucket: null,
+                selectedAssignment: null,
             }]
         })
 
         setOpen(false);
     }
+
+    function updateBucketName(b: bucket, newName: string) {
+        setBuckets(buckets.map(x => {
+            if (x.id === b.id) {
+                return {
+                    ...x,
+                    name: newName
+                }
+            } else {
+                return x;
+            }
+        }))
+    }
+
+    function updateBucketWeight(b: bucket, newWeight: number) {
+        setBuckets(buckets.map(x => {
+            if (x.id === b.id) {
+                return {
+                    ...x,
+                    percentage: newWeight
+                }
+            } else {
+                return x;
+            }
+        }))
+    }
+
+    function updateBucketDrops(b: bucket, newDrops: number) {
+        setBuckets(buckets.map(x => {
+            if (x.id === b.id) {
+                return {
+                    ...x,
+                    drops: newDrops
+                }
+            } else {
+                return x;
+            }
+        }))
+    }
+
+    const [bucketsList, setBucketsList] = useState([] as JSX.Element[]);
+
+    useEffect(() => {
+        setBucketsList(
+            buckets.map((x) => (
+                <div key={x.id}>
+                    <Stack spacing={1} direction="row">
+                        <TextField onChange={e => updateBucketName(x, e.target.value)} variant="outlined" required label="Bucket Name" value={x.name}/>
+                        <TextField onChange={e => updateBucketWeight(x, Number(e.target.value))} variant="outlined" type="number" required label="Bucket Percentage" value={x.percentage} InputProps={{
+                            inputProps: {
+                                min: 0,
+                                max: 100
+                            }
+                        }} />
+                        <TextField onChange={e => updateBucketDrops(x, Number(e.target.value))} variant="outlined" type="number" required label="Bucket Drops" value={x.drops} InputProps={{
+                            inputProps: {
+                                min: 0,
+                            }
+                        }} />
+                    </Stack>
+                </div>
+            ))
+        )
+    }, [buckets])
 
     return (
         <div>
@@ -64,28 +134,11 @@ export default function AddClass(props: any) {
                                     </Stack>
                                     <Stack spacing={2} direction="column">
                                         <Typography variant="subtitle1">Weights</Typography>
-                                            {
-                                                buckets.map((x, i) => (
-                                                    <div key={i}>
-                                                        <Stack spacing={1} direction="row">
-                                                            <TextField id="bucketName" variant="outlined" required label="Bucket Name" defaultValue={x.name}/>
-                                                            <TextField id="bucketPercentage" variant="outlined" type="number" required label="Bucket Percentage" defaultValue={x.percentage} InputProps={{
-                                                                inputProps: {
-                                                                    min: 0,
-                                                                    max: 100
-                                                                }
-                                                            }} />
-                                                            <TextField id="bucketDrops" variant="outlined" type="number" required label="Bucket Drops" defaultValue={x.drops} InputProps={{
-                                                                inputProps: {
-                                                                    min: 0,
-                                                                }
-                                                            }} />
-                                                        </Stack>
-                                                    </div>
-                                                ))
-                                            }
+                                        {
+                                            bucketsList
+                                        }
                                         <Stack sx={{pt: 2}} justifyContent="space-between" spacing={1} direction="row">
-                                            <Button onClick={() => {setBuckets([...buckets, {name: "", percentage: 0, drops:0}])}} sx={{}} size="medium" variant="outlined">Add Bucket</Button>
+                                            <Button onClick={() => {setBuckets([...buckets, {name: "", percentage: 0, drops:0, assignments: [], id: uuidv4()}])}} sx={{}} size="medium" variant="outlined">Add Bucket</Button>
                                             <Button onClick={() => {setBuckets(buckets.slice(0, -1))}} sx={{}} color="error" size="medium" variant="outlined">Remove Bucket</Button>
                                         </Stack>
                                     </Stack>

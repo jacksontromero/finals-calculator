@@ -130,14 +130,14 @@ export default function Assignments(props: any) {
                                     </IconButton>
                                 </Box>
                                 <Tooltip title="Replace score with 'Average without drops'">
-                                    <Checkbox size="small" checked={x.simulated} onChange={() => simulateAssignment(x)}/>
+                                    <Checkbox tabIndex={-1} size="small" checked={x.simulated} onChange={() => simulateAssignment(x)}/>
                                 </Tooltip>
                             </Stack>
 
                             {
                                 (selected.selectedAssignment == null || selected.selectedAssignment.id === x.id) && (
                                     <Tooltip title="Calculate grade needed on this assignment for an A">
-                                        <Checkbox color="success" checked={selected.selectedAssignment != null && selected.selectedAssignment.id === x.id} onChange={() => selectAssignment(x)}/>
+                                        <Checkbox tabIndex={-1} color="success" checked={selected.selectedAssignment != null && selected.selectedAssignment.id === x.id} onChange={() => selectAssignment(x)}/>
                                     </Tooltip>
                                 )
                             }
@@ -151,7 +151,7 @@ export default function Assignments(props: any) {
 
     return (
         <div>
-            <Stack divider={<Divider orientation="horizontal" flexItem />} direction="column" spacing={2}>
+            <Stack divider={<Divider orientation="horizontal" flexItem />} direction="column" spacing={1}>
                 {
                     assignmentList
                 }
