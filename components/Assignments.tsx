@@ -99,12 +99,12 @@ export default function Assignments(props: any) {
                 <Box key={x.id}>
                     <form>
                         <Stack direction="row" alignItems="center" spacing={0}>
-                            <TextField onChange={e => setAssignmentName(x, e.target.value)} variant="outlined" label="Assignment Name" value={x.name} onFocus={
+                            <TextField onChange={e => setAssignmentName(x, e.target.value)} variant="outlined" label="Assignment Name" defaultValue={x.name} onFocus={
                                 (e) => {
                                     e.target.select();
                                 }
                             }/>
-                            <TextField disabled={x.simulated} onChange={e => setAssignmentScore(x, Number(e.target.value))} variant="outlined" type="number" label="Score" value={x.score} InputProps={{
+                            <TextField disabled={x.simulated} onChange={e => setAssignmentScore(x, Number(e.target.value))} variant="outlined" type="number" label="Score" defaultValue={x.score} InputProps={{
                                 inputProps: {
                                     min: 0,
                                 }
@@ -113,7 +113,7 @@ export default function Assignments(props: any) {
                                     e.target.select();
                                 }
                             }/>
-                            <TextField onChange={e => setAssignmentOutOf(x, Number(e.target.value))} variant="outlined" type="number" label="Out Of" value={x.outOf} InputProps={{
+                            <TextField onChange={e => setAssignmentOutOf(x, Number(e.target.value))} variant="outlined" type="number" label="Out Of" defaultValue={x.outOf} InputProps={{
                                 inputProps: {
                                     min: 0,
                                 }

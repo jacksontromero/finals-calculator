@@ -1,6 +1,6 @@
 import React from "react"
 import { schoolClass } from "../pages";
-import { Box, Card, Divider, IconButton, Stack } from "@mui/material";
+import { Box, Card, Divider, IconButton, Stack, Tooltip } from "@mui/material";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import AddClass from "./AddClass";
 
@@ -10,6 +10,7 @@ export default function Classes(props: any) {
 
     return (
         <Card sx={{ height: '100%', width: '30%', maxWidth: '300px', p:2 }}>
+            <h1>All Classes</h1>
             <div>
                 {
                     data.classes.map((x: schoolClass) => (
@@ -17,13 +18,15 @@ export default function Classes(props: any) {
                             <Card sx={{my: 2, mx: 2, px:2 }}>
                                 <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
                                     <div>
-                                        <h2 >{x.name}</h2>
+                                        <h3 >{x.name}</h3>
                                         <p >{x.number}</p>
                                     </div>
                                     <Box >
-                                        <IconButton onClick={() => {setSelected(x)}}>
-                                            <ArrowRightIcon fontSize="large" />
-                                        </IconButton>
+                                        <Tooltip title="Select this class">
+                                            <IconButton onClick={() => {setSelected(x)}}>
+                                                <ArrowRightIcon fontSize="large" />
+                                            </IconButton>
+                                        </Tooltip>
                                     </Box>
                                 </Stack>
                             </Card>

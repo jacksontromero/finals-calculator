@@ -28,6 +28,7 @@ export type schoolClass = {
   id: string,
   selectedBucket: bucket | null,
   selectedAssignment: assignment | null,
+  targetGrade: number,
 }
 
 export type globalData = {
@@ -79,7 +80,8 @@ export default function Home() {
           },
         ],
         selectedAssignment: null,
-        selectedBucket: null
+        selectedBucket: null,
+        targetGrade: 90
       },
       {
         name: "Software",
@@ -130,18 +132,22 @@ export default function Home() {
           },
         ],
         selectedAssignment: null,
-        selectedBucket: null
+        selectedBucket: null,
+        targetGrade: 90
       }
     ]
   })
 
-  const [selected, setSelected] = useState(data.classes[0]);
+  const [selected, setSelected] = useState(null);
 
   const {height, width} = useWindowDimensions();
 
   return (
       <Stack sx={{mt: 4, mx: 4, minHeight: (height == 0 ? 1080*.75 : height * .75)}} direction="column" justifyContent="space-between" spacing={2}>
-        <ClassDetails data={data} setData={setData} selected={selected}></ClassDetails>
+        {
+          selected != null && <ClassDetails data={data} setData={setData} selected={selected}></ClassDetails>
+        }
+
         <Classes data={data} setData={setData} setSelected={setSelected}></Classes>
       </Stack>
   )

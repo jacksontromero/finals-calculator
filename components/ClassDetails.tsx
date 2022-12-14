@@ -1,6 +1,6 @@
 import { Add } from "@mui/icons-material";
-import { Box, Button, Card, Divider, IconButton, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import { Box, Button, Card, Divider, IconButton, Stack, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { assignment, bucket, globalData, schoolClass } from "../pages";
 import Assignments from "./Assignments";
 
@@ -55,7 +55,7 @@ export default function ClassDetails(props: any) {
 
         totalPercentage /= 100;
 
-        let percentFinalBucketNeeded = (.9 - totalPercentage) / (selected.selectedBucket.percentage / 100);
+        let percentFinalBucketNeeded = ((selected.targetGrade / 100) - totalPercentage) / (selected.selectedBucket.percentage / 100);
 
 
         // calculate score needed for assignment within bucket
@@ -124,6 +124,32 @@ export default function ClassDetails(props: any) {
         }
     }
 
+    function setTargetGrade(newTarget: number) {
+        setData((prevData: globalData) => {
+            prevData.classes.filter(x => x.id === selected.id)[0].targetGrade = newTarget;
+
+            return ({
+                ...prevData
+            })
+        })
+    }
+
+    const [targetGradeBox, setTargetGradeBox] = useState(null as JSX.Element | null)
+
+    useEffect(() => {
+        setTargetGradeBox(
+            <TextField onChange={e => setTargetGrade(Number(e.target.value))} variant="outlined" label="Target Grade" type="number" defaultValue={selected.targetGrade} InputProps={{
+                inputProps: {
+                    min: 0,
+                }
+            }} onFocus={
+                (e) => {
+                    e.target.select();
+                }
+            }/>
+        )
+    }, [selected.targetGrade])
+
     return (
         <Card sx={{ height: '100%', width: '1', p:2 }}>
             <div>
@@ -158,10 +184,13 @@ export default function ClassDetails(props: any) {
                     </Stack>
 
                     <Divider sx={{mt: 4}} />
-                    <Box>
-                        <Typography textAlign="center" fontSize={20} fontWeight="bold" variant="body1">Total Grade: {totalGrade()}</Typography>
-                        <Typography textAlign="center" fontSize={20} fontWeight="bold" variant="body1">Score necessary on selected assignment to get ≥ 90%: {(calculateScoreNecessary() * 100).toFixed(2)}</Typography>
-                    </Box>
+                    <Stack direction="column" spacing={2} alignItems="center" justifyContent="center">
+                        <Typography sx={{mb: 4}} textAlign="center" fontSize={20} fontWeight="bold" variant="h2">Total Grade: {totalGrade().toFixed(2)}%</Typography>
+                        {
+                            targetGradeBox
+                        }
+                        <Typography textAlign="center" fontSize={20} fontWeight="bold" variant="body1">Score necessary on selected assignment to get ≥ {selected.targetGrade}%: {(calculateScoreNecessary() * 100).toFixed(2)}</Typography>
+                    </Stack>
                 </Stack>
             </div>
         </Card>

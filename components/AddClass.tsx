@@ -2,7 +2,7 @@ import { Backdrop, Box, Button, Divider, Fade, FormControl, Modal, TextField, Ty
 import { Stack } from "@mui/system";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { bucket, globalData } from "../pages";
+import { bucket, globalData, schoolClass } from "../pages";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -31,15 +31,20 @@ export default function AddClass(props: any) {
         event.preventDefault();
         setData({
             ...data,
-            classes: [...data.classes, {
+            classes: [...data.classes, ...[{
                 name: name,
                 number: courseNumber,
                 weights: buckets,
                 id: uuidv4(),
                 selectedBucket: null,
                 selectedAssignment: null,
-            }]
+                targetGrade: 90
+            } as schoolClass]]
         })
+
+        setBuckets([])
+        setName("")
+        setCourseNumber("")
 
         setOpen(false);
     }
@@ -90,14 +95,14 @@ export default function AddClass(props: any) {
             buckets.map((x) => (
                 <div key={x.id}>
                     <Stack spacing={1} direction="row">
-                        <TextField onChange={e => updateBucketName(x, e.target.value)} variant="outlined" required label="Bucket Name" value={x.name}/>
-                        <TextField onChange={e => updateBucketWeight(x, Number(e.target.value))} variant="outlined" type="number" required label="Bucket Percentage" value={x.percentage} InputProps={{
+                        <TextField onChange={e => updateBucketName(x, e.target.value)} variant="outlined" required label="Bucket Name" defaultValue={x.name}/>
+                        <TextField onChange={e => updateBucketWeight(x, Number(e.target.value))} variant="outlined" type="number" required label="Bucket Percentage" defaultValue={x.percentage} InputProps={{
                             inputProps: {
                                 min: 0,
                                 max: 100
                             }
                         }} />
-                        <TextField onChange={e => updateBucketDrops(x, Number(e.target.value))} variant="outlined" type="number" required label="Bucket Drops" value={x.drops} InputProps={{
+                        <TextField onChange={e => updateBucketDrops(x, Number(e.target.value))} variant="outlined" type="number" required label="Bucket Drops" defaultValue={x.drops} InputProps={{
                             inputProps: {
                                 min: 0,
                             }
