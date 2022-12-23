@@ -8,6 +8,8 @@ export default function AddClass(props: any) {
 
     const data: globalData = props.data;
     const setData = props.setData;
+    const selectedClassID = props.selectedClassID;
+    const setSelectedClassID = props.setSelectedClassID;
 
     const [open, setOpen] = useState(false);
     const [buckets, setBuckets] = useState([] as bucket[]);
@@ -21,13 +23,20 @@ export default function AddClass(props: any) {
 
     function submit(event: SyntheticEvent) {
         event.preventDefault();
+
+        const newID = uuidv4();
+
+        if (data.classes.length === 0) {
+            setSelectedClassID(newID)
+        }
+
         setData({
             ...data,
             classes: [...data.classes, ...[{
                 name: name,
                 number: courseNumber,
                 weights: buckets,
-                id: uuidv4(),
+                id: newID,
                 selectedBucket: defaultBucket,
                 selectedAssignment: defaultAssignment,
                 targetGrade: 90
