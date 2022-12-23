@@ -153,20 +153,17 @@ export default function Assignments(props: any) {
     }, [data, selected, selected.selectedAssignment])
 
     return (
-        <div>
-            <Stack divider={<Divider orientation="horizontal" flexItem />} direction="column" spacing={1}>
-                {
-                    assignmentList
-                }
+        <Stack sx={{minWidth: "100%"}} divider={<Divider orientation="horizontal" flexItem />} alignItems="center" direction="column" spacing={1}>
+            {
+                assignmentList
+            }
 
 
-                <Box minWidth="full" textAlign="center">
-                    <IconButton onClick={addAssignment} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="info">
-                        <Add />
-                    </IconButton>
-                </Box>
-            </Stack>
-
-        </div>
+            <Box textAlign="center">
+                <IconButton onClick={addAssignment} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="info">
+                    <Add />
+                </IconButton>
+            </Box>
+        </Stack>
     )
 }
