@@ -3,10 +3,11 @@ import { schoolClass } from "../pages";
 import { Box, Card, Divider, IconButton, Stack, Tooltip } from "@mui/material";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import AddClass from "./AddClass";
+import EditClass from "./EditClass";
 
 export default function Classes(props: any) {
 
-    const {data, setSelected} = props;
+    const {data, setSelectedClassID} = props;
 
     return (
         <Card sx={{ height: '100%', width: 'auto', maxWidth: '300px', p:2 }}>
@@ -21,13 +22,16 @@ export default function Classes(props: any) {
                                         <h3 >{x.name}</h3>
                                         <p >{x.number}</p>
                                     </div>
-                                    <Box >
-                                        <Tooltip title="Select this class">
-                                            <IconButton onClick={() => {setSelected(x)}}>
-                                                <ArrowRightIcon fontSize="large" />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Box>
+                                    <Stack direction="column" spacing={0} alignItems="center">
+                                        <Box >
+                                            <Tooltip placement="top" title="Select this class">
+                                                <IconButton onClick={() => {setSelectedClassID(x.id)}}>
+                                                    <ArrowRightIcon fontSize="large" />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Box>
+                                        <EditClass classID={x.id} {...props} />
+                                    </Stack>
                                 </Stack>
                             </Card>
                         </div>

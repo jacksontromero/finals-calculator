@@ -9,7 +9,13 @@ export default function ClassDetails(props: any) {
 
     const data: globalData = props.data;
     const setData = props.setData;
-    const selected: schoolClass = props.selected;
+    const selectedClassID: string = props.selectedClassID;
+
+    const [selected, setSelected] = useState(data.classes.filter(x => x.id == selectedClassID)[0]);
+
+    useEffect(() => {
+        setSelected(data.classes.filter(x => x.id == selectedClassID)[0]);
+    }, [data])
 
     function calculateScores(b: bucket): {dropped: number, raw: number} {
 

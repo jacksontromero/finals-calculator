@@ -1,4 +1,5 @@
-import { Backdrop, Box, Button, Divider, Fade, FormControl, FormHelperText, InputAdornment, Modal, OutlinedInput, TextField, Typography } from "@mui/material";
+import { EditRounded } from "@mui/icons-material";
+import { Backdrop, Box, Button, Divider, Fade, FormControl, FormHelperText, IconButton, InputAdornment, Modal, OutlinedInput, TextField, Tooltip, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
@@ -16,35 +17,62 @@ const style = {
     p: 3,
   };
 
-export default function AddClass(props: any) {
+export default function EditClass(props: any) {
 
     const data: globalData = props.data;
     const setData = props.setData;
 
-    const [open, setOpen] = useState(false);
-    const [buckets, setBuckets] = useState([] as bucket[]);
+    const [currentClass, setCurrentClass] = useState(data.classes.filter(x => x.id === props.classID)[0]);
 
-    const [name, setName] = useState("")
-    const [courseNumber, setCourseNumber] = useState("")
+    useEffect(() => {
+        setCurrentClass(data.classes.filter(x => x.id === props.classID)[0]);
+    }, [data.classes])
+
+    const [bucketsList, setBucketsList] = useState([] as JSX.Element[]);
+    const [classProps, setClassProps] = useState((<></>) as JSX.Element)
+
+    function setDefaults() {
+        setClassProps(
+            <>
+                <TextField onChange={e => setName(e.target.value)} id="className" variant="outlined" defaultValue={currentClass.name} required label="Class Name" />
+                <TextField onChange={e => setCourseNumber(e.target.value)} id="classNumber" variant="outlined" defaultValue={currentClass.number} required label="Class Number" />
+            </>
+        )
+        setBuckets(currentClass.weights)
+        setName(currentClass.name)
+        setCourseNumber(currentClass.number)
+    }
+
+    useEffect(() => {
+        setDefaults()
+    }, [currentClass.name, currentClass.number])
+
+
+    const [open, setOpen] = useState(false);
+    const [buckets, setBuckets] = useState(currentClass.weights);
+
+    const [name, setName] = useState(currentClass.name)
+    const [courseNumber, setCourseNumber] = useState(currentClass.number)
+
+    function close() {
+        setDefaults()
+        setOpen(false);
+    }
 
     function submit(event: SyntheticEvent) {
         event.preventDefault();
         setData({
             ...data,
-            classes: [...data.classes, ...[{
+            classes: [...data.classes.filter((x) => x.id != currentClass.id), {
                 name: name,
                 number: courseNumber,
                 weights: buckets,
-                id: uuidv4(),
+                id: currentClass.id,
                 selectedBucket: defaultBucket,
                 selectedAssignment: defaultAssignment,
                 targetGrade: 90
-            } as schoolClass]].sort((a, b) => a.name.localeCompare(b.name))
+            }].sort((a, b) => a.name.localeCompare(b.name))
         })
-
-        setBuckets([])
-        setName("")
-        setCourseNumber("")
 
         setOpen(false);
     }
@@ -99,8 +127,6 @@ export default function AddClass(props: any) {
         }))
     }
 
-    const [bucketsList, setBucketsList] = useState([] as JSX.Element[]);
-
     useEffect(() => {
         setBucketsList(
             buckets.map((x) => (
@@ -136,11 +162,17 @@ export default function AddClass(props: any) {
 
     return (
         <div>
-            <Button onClick={() => {setOpen(true)}} sx={{ my:2, mx:2, px:2 }} size="large" variant="outlined">Add Class</Button>
+            <Box>
+                <Tooltip placement="bottom" title="Edit this class">
+                    <IconButton onClick={() => {setOpen(true)}}>
+                        <EditRounded fontSize="medium" />
+                    </IconButton>
+                </Tooltip>
+            </Box>
 
             <Modal
                 open={open}
-                onClose={() => {setOpen(false)}}
+                onClose={close}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -151,13 +183,16 @@ export default function AddClass(props: any) {
                 <Fade in={open}>
                     <div>
                         <Box sx={style}>
-                            <h1>Add a New Class</h1>
+                            <h1>Edit {}</h1>
                             <form onSubmit={submit}>
                                 <Stack justifyContent="center" spacing={4} direction={{ xs: 'column', sm: 'row' }} sx={{mt: 6}}>
                                     <Stack spacing={2} direction="column">
                                         <Typography variant="subtitle1">Class Info</Typography>
-                                            <TextField onChange={e => setName(e.target.value)} id="className" variant="outlined" required label="Class Name" />
-                                            <TextField onChange={e => setCourseNumber(e.target.value)} id="classNumber" variant="outlined" required label="Class Number" />
+                                        {
+                                            classProps
+                                        }
+                                            {/* <TextField onChange={e => setName(e.target.value)} id="className" variant="outlined" defaultValue={currentClass.name} required label="Class Name" />
+                                            <TextField onChange={e => setCourseNumber(e.target.value)} id="classNumber" variant="outlined" defaultValue={currentClass.number} required label="Class Number" /> */}
                                     </Stack>
                                     <Stack spacing={2} direction="column">
                                         <Typography variant="subtitle1">Weights</Typography>
@@ -172,7 +207,7 @@ export default function AddClass(props: any) {
                                 </Stack>
                                 <Divider sx={{my: 4, mx: 2}}></Divider>
                                 <Box textAlign="center">
-                                    <Button id="add-class-submit-button" type="submit" variant="outlined" color="success" size="large">Add Class</Button>
+                                    <Button id="add-class-submit-button" type="submit" variant="outlined" color="success" size="large">Save Changes</Button>
                                 </Box>
                             </form>
                         </Box>

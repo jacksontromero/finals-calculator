@@ -155,7 +155,7 @@ export default function Home() {
     ]
   })
 
-  const [selected, setSelected] = useState(null);
+  const [selectedClassID, setSelectedClassID] = useState(null);
 
   return (
     <div>
@@ -165,10 +165,10 @@ export default function Home() {
       </Head>
       <Stack sx={{mt: 2, mx: 2}} direction="column" justifyContent="space-between" spacing={2}>
         {
-          selected != null && <ClassDetails data={data} setData={setData} selected={selected}></ClassDetails>
+          selectedClassID != null && <ClassDetails data={data} setData={setData} selectedClassID={selectedClassID}></ClassDetails>
         }
 
-        <Classes data={data} setData={setData} setSelected={setSelected}></Classes>
+        <Classes data={data} setData={setData} setSelectedClassID={setSelectedClassID}></Classes>
       </Stack>
     </div>
   )
