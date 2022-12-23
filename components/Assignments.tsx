@@ -1,9 +1,10 @@
 import { Add, DeleteOutline } from "@mui/icons-material";
-import { Divider, IconButton, TextField, FormGroup, FormControlLabel, Checkbox, Tooltip } from "@mui/material";
-import { Box, Stack } from "@mui/system";
+import { Divider, IconButton, TextField, FormGroup, FormControlLabel, Checkbox, Tooltip, colors, Typography, Button } from "@mui/material";
+import { alpha, Box, Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import { schoolClass, bucket, globalData, assignment } from "../pages";
 import { v4 as uuidv4 } from 'uuid';
+import { green } from "@mui/material/colors";
 
 export default function Assignments(props: any) {
 
@@ -96,54 +97,56 @@ export default function Assignments(props: any) {
     useEffect(() => {
         setAssignmentList(
             bucket.assignments.map((x) => (
-                <Box key={x.id}>
-                    <form>
-                        <Stack direction="row" alignItems="center" spacing={0}>
-                            <TextField onChange={e => setAssignmentName(x, e.target.value)} variant="outlined" label="Assignment Name" defaultValue={x.name} onFocus={
-                                (e) => {
-                                    e.target.select();
-                                }
-                            }/>
-                            <TextField disabled={x.simulated} onChange={e => setAssignmentScore(x, Number(e.target.value))} variant="outlined" type="number" label="Score" defaultValue={x.score} InputProps={{
-                                inputProps: {
-                                    min: 0,
-                                }
-                            }} onFocus={
-                                (e) => {
-                                    e.target.select();
-                                }
-                            }/>
-                            <TextField onChange={e => setAssignmentOutOf(x, Number(e.target.value))} variant="outlined" type="number" label="Out Of" defaultValue={x.outOf} InputProps={{
-                                inputProps: {
-                                    min: 0,
-                                }
-                            }} onFocus={
-                                (e) => {
-                                    e.target.select();
-                                }
-                            }/>
+                <Box key={x.id} sx={{px: 1, borderRadius: 2, backgroundColor: (selected.selectedAssignment != null && selected.selectedAssignment.id === x.id) ?  alpha("#4caf50", .2) : ""}}>
 
-                            <Stack direction="column" alignItems="center" justifyContent="center"  spacing={0}>
-                                <Box minHeight="full" minWidth="full" alignItems="center" display="flex" textAlign="center">
-                                    <IconButton tabIndex={-1} onClick={() => {removeAssignment(x.id)}} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="error">
-                                        <DeleteOutline />
-                                    </IconButton>
-                                </Box>
-                                <Tooltip title="Replace score with 'Average without drops'">
-                                    <Checkbox tabIndex={-1} size="small" checked={x.simulated} onChange={() => simulateAssignment(x)}/>
-                                </Tooltip>
-                            </Stack>
+                    {
 
-                            {
-                                (selected.selectedAssignment == null || selected.selectedAssignment.id === x.id) && (
-                                    <Tooltip title="Calculate grade needed on this assignment for an A">
-                                        <Checkbox tabIndex={-1} color="success" checked={selected.selectedAssignment != null && selected.selectedAssignment.id === x.id} onChange={() => selectAssignment(x)}/>
-                                    </Tooltip>
-                                )
-                            }
+                        (selected.selectedAssignment != null) ? (
+                            <form>
+                                <Stack direction="row" alignItems="center" spacing={0}>
+                                    <TextField onChange={e => setAssignmentName(x, e.target.value)} variant="outlined" label="Assignment Name" defaultValue={x.name} onFocus={
+                                        (e) => {
+                                            e.target.select();
+                                        }
+                                    }
+                                />
+                                    <TextField disabled={x.simulated} onChange={e => setAssignmentScore(x, Number(e.target.value))} variant="outlined" type="number" label="Score" defaultValue={x.score} InputProps={{
+                                        inputProps: {
+                                            min: 0,
+                                        }
+                                    }} onFocus={
+                                        (e) => {
+                                            e.target.select();
+                                        }
+                                    }/>
+                                    <TextField onChange={e => setAssignmentOutOf(x, Number(e.target.value))} variant="outlined" type="number" label="Out Of" defaultValue={x.outOf} InputProps={{
+                                        inputProps: {
+                                            min: 0,
+                                        }
+                                    }} onFocus={
+                                        (e) => {
+                                            e.target.select();
+                                        }
+                                    }/>
 
-                        </Stack>
-                    </form>
+                                    <Stack direction="column" alignItems="center" justifyContent="center"  spacing={0}>
+                                        <Box minHeight="full" minWidth="full" alignItems="center" display="flex" textAlign="center">
+                                            <IconButton tabIndex={-1} onClick={() => {removeAssignment(x.id)}} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="error">
+                                                <DeleteOutline />
+                                            </IconButton>
+                                        </Box>
+                                        <Tooltip title="Replace score with 'Average without drops'">
+                                            <Checkbox tabIndex={-1} size="small" checked={x.simulated} onChange={() => simulateAssignment(x)}/>
+                                        </Tooltip>
+                                    </Stack>
+                                </Stack>
+                            </form>
+                        ) : (
+                            <Button variant="outlined" size="medium" onClick={() => selectAssignment(x)}>
+                                {x.name == "" ? "Unnamed" : x.name}
+                            </Button>
+                        )
+                    }
                 </Box>
             ))
         )

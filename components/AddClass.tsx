@@ -2,7 +2,7 @@ import { Backdrop, Box, Button, Divider, Fade, FormControl, FormHelperText, Inpu
 import { Stack } from "@mui/system";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { bucket, globalData, schoolClass } from "../pages";
+import { bucket, defaultAssignment, defaultBucket, globalData, schoolClass } from "../pages";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -36,8 +36,8 @@ export default function AddClass(props: any) {
                 number: courseNumber,
                 weights: buckets,
                 id: uuidv4(),
-                selectedBucket: null,
-                selectedAssignment: null,
+                selectedBucket: defaultBucket,
+                selectedAssignment: defaultAssignment,
                 targetGrade: 90
             } as schoolClass]]
         })

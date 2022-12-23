@@ -1,8 +1,9 @@
 import { Add } from "@mui/icons-material";
 import { Box, Button, Card, Divider, IconButton, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { assignment, bucket, globalData, schoolClass } from "../pages";
+import { assignment, bucket, defaultAssignment, defaultBucket, globalData, schoolClass } from "../pages";
 import Assignments from "./Assignments";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ClassDetails(props: any) {
 
@@ -19,7 +20,7 @@ export default function ClassDetails(props: any) {
 
         let simulated = b.assignments.map(x => !x.simulated ? x : {
             ...x,
-            score: totalNonSimScore / totalNonSimPoints * x.outOf
+            score: totalNonSimPoints == 0 ? 0 : totalNonSimScore / totalNonSimPoints * x.outOf
         })
 
         let sorted = simulated.sort((a1, a2) => (a2.score / a2.outOf) - (a1.score / a1.outOf));
@@ -67,7 +68,7 @@ export default function ClassDetails(props: any) {
 
         let simulated = assignmentsWithoutSelected.map(x => !x.simulated ? x : {
             ...x,
-            score: totalNonSimScore / totalNonSimPoints * x.outOf
+            score: totalNonSimPoints == 0 ? 0 : totalNonSimScore / totalNonSimPoints * x.outOf
         })
 
         let sorted = simulated.sort((a1, a2) => (a2.score / a2.outOf) - (a1.score / a1.outOf));
@@ -78,7 +79,8 @@ export default function ClassDetails(props: any) {
 
         let percentageAddNecessary = (percentFinalBucketNeeded - (totalDroppedScore / (totalDroppedPoints + selected.selectedAssignment.outOf)))
 
-        return (percentageAddNecessary * (totalDroppedPoints + selected.selectedAssignment.outOf)) / selected.selectedAssignment.outOf;
+        let percentageForTarget = (percentageAddNecessary * (totalDroppedPoints + selected.selectedAssignment.outOf)) / selected.selectedAssignment.outOf;
+        return percentageForTarget < 0 ? 0 : percentageForTarget;
     }
 
     function totalGrade(): number {
@@ -186,10 +188,28 @@ export default function ClassDetails(props: any) {
                     <Divider sx={{mt: 4}} />
                     <Stack direction="column" spacing={2} alignItems="center" justifyContent="center">
                         <Typography sx={{mb: 4}} textAlign="center" fontSize={20} fontWeight="bold" variant="h2">Total Grade: {totalGrade().toFixed(2)}%</Typography>
+                        <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
+                            {
+                                targetGradeBox
+                            }
+                            <Button size="large" variant={selected.selectedAssignment == null ? "contained" : "outlined"}
+                                onClick={() => {
+                                    if (selected.selectedAssignment != null) {
+                                        removeSelectedAssignment();
+                                    }
+                                    else {
+                                        pickSelectedAssignment(defaultAssignment, defaultBucket);
+                                    }
+                                }}
+                            >
+                                    Select Target Assignment
+                            </Button>
+                        </Stack>
                         {
-                            targetGradeBox
+                            (selected.selectedAssignment != null && selected.selectedAssignment.id != defaultAssignment.id) && (
+                                <Typography textAlign="center" fontSize={20} fontWeight="bold" variant="body1">Score necessary on selected assignment to get ≥ {selected.targetGrade}%: {(calculateScoreNecessary() * 100).toFixed(2)}</Typography>
+                            )
                         }
-                        <Typography textAlign="center" fontSize={20} fontWeight="bold" variant="body1">Score necessary on selected assignment to get ≥ {selected.targetGrade}%: {(calculateScoreNecessary() * 100).toFixed(2)}</Typography>
                     </Stack>
                 </Stack>
             </div>
