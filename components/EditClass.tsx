@@ -1,21 +1,9 @@
 import { EditRounded } from "@mui/icons-material";
-import { Backdrop, Box, Button, Divider, Fade, FormControl, FormHelperText, IconButton, InputAdornment, Modal, OutlinedInput, TextField, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle, Divider, FormControl, FormHelperText, IconButton, InputAdornment, OutlinedInput, TextField, Tooltip, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { bucket, defaultAssignment, defaultBucket, globalData, schoolClass } from "../pages";
-
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '85%',
-    bgcolor: 'background.paper',
-    borderRadius: 2,
-    boxShadow: 24,
-    p: 3,
-  };
+import { bucket, defaultAssignment, defaultBucket, globalData } from "../pages";
 
 export default function EditClass(props: any) {
 
@@ -170,50 +158,40 @@ export default function EditClass(props: any) {
                 </Tooltip>
             </Box>
 
-            <Modal
+            <Dialog
                 open={open}
                 onClose={close}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
-                sx={{overflow: "scroll"}}
+                fullWidth={true}
+                maxWidth="md"
             >
-                <Fade in={open}>
-                    <div>
-                        <Box sx={style}>
-                            <h1>Edit {}</h1>
-                            <form onSubmit={submit}>
-                                <Stack justifyContent="center" spacing={4} direction={{ xs: 'column', sm: 'row' }} sx={{mt: 6}}>
-                                    <Stack spacing={2} direction="column">
-                                        <Typography variant="subtitle1">Class Info</Typography>
-                                        {
-                                            classProps
-                                        }
-                                            {/* <TextField onChange={e => setName(e.target.value)} id="className" variant="outlined" defaultValue={currentClass.name} required label="Class Name" />
-                                            <TextField onChange={e => setCourseNumber(e.target.value)} id="classNumber" variant="outlined" defaultValue={currentClass.number} required label="Class Number" /> */}
-                                    </Stack>
-                                    <Stack spacing={2} direction="column">
-                                        <Typography variant="subtitle1">Weights</Typography>
-                                        {
-                                            bucketsList
-                                        }
-                                        <Stack sx={{pt: 2}} justifyContent="space-between" spacing={1} direction="row">
-                                            <Button onClick={() => {setBuckets([...buckets, {name: "", percentage: 0, drops:0, assignments: [], id: uuidv4()}])}} sx={{}} size="medium" variant="outlined">Add Bucket</Button>
-                                            <Button onClick={() => {setBuckets(buckets.slice(0, -1))}} sx={{}} color="error" size="medium" variant="outlined">Remove Bucket</Button>
-                                        </Stack>
-                                    </Stack>
+                <DialogTitle sx={{fontWeight: "bold", fontSize: "x-large"}}>Edit</DialogTitle>
+                <DialogContent>
+                    <form onSubmit={submit}>
+                        <Stack justifyContent="center" spacing={4} direction={{ xs: 'column', sm: 'row' }} sx={{mt: 6}}>
+                            <Stack spacing={2} direction="column">
+                                <Typography variant="subtitle1">Class Info</Typography>
+                                {
+                                    classProps
+                                }
+                            </Stack>
+                            <Stack spacing={2} direction="column">
+                                <Typography variant="subtitle1">Weights</Typography>
+                                {
+                                    bucketsList
+                                }
+                                <Stack sx={{pt: 2}} justifyContent="space-between" spacing={1} direction="row">
+                                    <Button onClick={() => {setBuckets([...buckets, {name: "", percentage: 0, drops:0, assignments: [], id: uuidv4()}])}} sx={{}} size="medium" variant="outlined">Add Bucket</Button>
+                                    <Button onClick={() => {setBuckets(buckets.slice(0, -1))}} sx={{}} color="error" size="medium" variant="outlined">Remove Bucket</Button>
                                 </Stack>
-                                <Divider sx={{my: 4, mx: 2}}></Divider>
-                                <Box textAlign="center">
-                                    <Button id="add-class-submit-button" type="submit" variant="outlined" color="success" size="large">Save Changes</Button>
-                                </Box>
-                            </form>
+                            </Stack>
+                        </Stack>
+                        <Divider sx={{my: 4, mx: 2}}></Divider>
+                        <Box textAlign="center">
+                            <Button id="add-class-submit-button" type="submit" variant="outlined" color="success" size="large">Save Changes</Button>
                         </Box>
-                    </div>
-                </Fade>
-            </Modal>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

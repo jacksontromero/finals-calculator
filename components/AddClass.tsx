@@ -1,20 +1,8 @@
-import { Backdrop, Box, Button, Divider, Fade, FormControl, FormHelperText, InputAdornment, Modal, OutlinedInput, TextField, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle, Divider, FormControl, FormHelperText, InputAdornment, OutlinedInput, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { bucket, defaultAssignment, defaultBucket, globalData, schoolClass } from "../pages";
-
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '85%',
-    bgcolor: 'background.paper',
-    borderRadius: 2,
-    boxShadow: 24,
-    p: 3,
-  };
 
 export default function AddClass(props: any) {
 
@@ -138,47 +126,39 @@ export default function AddClass(props: any) {
         <div>
             <Button onClick={() => {setOpen(true)}} sx={{ my:2, mx:2, px:2 }} size="large" variant="outlined">Add Class</Button>
 
-            <Modal
+            <Dialog
                 open={open}
-                onClose={() => {setOpen(false)}}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
-                sx={{overflow: "scroll"}}
+                onClose={() => setOpen(false)}
+                fullWidth={true}
+                maxWidth="md"
             >
-                <Fade in={open}>
-                    <div>
-                        <Box sx={style}>
-                            <h1>Add a New Class</h1>
-                            <form onSubmit={submit}>
-                                <Stack justifyContent="center" spacing={4} direction={{ xs: 'column', sm: 'row' }} sx={{mt: 6}}>
-                                    <Stack spacing={2} direction="column">
-                                        <Typography variant="subtitle1">Class Info</Typography>
-                                            <TextField onChange={e => setName(e.target.value)} id="className" variant="outlined" required label="Class Name" />
-                                            <TextField onChange={e => setCourseNumber(e.target.value)} id="classNumber" variant="outlined" required label="Class Number" />
-                                    </Stack>
-                                    <Stack spacing={2} direction="column">
-                                        <Typography variant="subtitle1">Weights</Typography>
-                                        {
-                                            bucketsList
-                                        }
-                                        <Stack sx={{pt: 2}} justifyContent="space-between" spacing={1} direction="row">
-                                            <Button onClick={() => {setBuckets([...buckets, {name: "", percentage: 0, drops:0, assignments: [], id: uuidv4()}])}} sx={{}} size="medium" variant="outlined">Add Bucket</Button>
-                                            <Button onClick={() => {setBuckets(buckets.slice(0, -1))}} sx={{}} color="error" size="medium" variant="outlined">Remove Bucket</Button>
-                                        </Stack>
-                                    </Stack>
+                <DialogTitle sx={{fontWeight: "bold", fontSize: "x-large"}}>Add a New Class</DialogTitle>
+                <DialogContent>
+                    <form onSubmit={submit}>
+                        <Stack justifyContent="center" spacing={4} direction={{ xs: 'column', sm: 'row' }} sx={{mt: 6}}>
+                            <Stack spacing={2} direction="column">
+                                <Typography variant="subtitle1">Class Info</Typography>
+                                    <TextField onChange={e => setName(e.target.value)} id="className" variant="outlined" required label="Class Name" />
+                                    <TextField onChange={e => setCourseNumber(e.target.value)} id="classNumber" variant="outlined" required label="Class Number" />
+                            </Stack>
+                            <Stack spacing={2} direction="column">
+                                <Typography variant="subtitle1">Weights</Typography>
+                                {
+                                    bucketsList
+                                }
+                                <Stack sx={{pt: 2}} justifyContent="space-between" spacing={1} direction="row">
+                                    <Button onClick={() => {setBuckets([...buckets, {name: "", percentage: 0, drops:0, assignments: [], id: uuidv4()}])}} sx={{}} size="medium" variant="outlined">Add Bucket</Button>
+                                    <Button onClick={() => {setBuckets(buckets.slice(0, -1))}} sx={{}} color="error" size="medium" variant="outlined">Remove Bucket</Button>
                                 </Stack>
-                                <Divider sx={{my: 4, mx: 2}}></Divider>
-                                <Box textAlign="center">
-                                    <Button id="add-class-submit-button" type="submit" variant="outlined" color="success" size="large">Add Class</Button>
-                                </Box>
-                            </form>
+                            </Stack>
+                        </Stack>
+                        <Divider sx={{my: 4, mx: 2}}></Divider>
+                        <Box textAlign="center">
+                            <Button id="add-class-submit-button" type="submit" variant="outlined" color="success" size="large">Add Class</Button>
                         </Box>
-                    </div>
-                </Fade>
-            </Modal>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
