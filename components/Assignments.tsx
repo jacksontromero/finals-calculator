@@ -149,7 +149,7 @@ export default function Assignments(props: any) {
                 </Box>
             ))
         )
-    }, [data, selected, selected.selectedAssignment])
+    }, [data, selected, bucket, selected.selectedAssignment])
 
     const theme = useTheme();
 
