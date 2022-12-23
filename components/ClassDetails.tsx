@@ -157,13 +157,13 @@ export default function ClassDetails(props: any) {
             <div>
                 <h1>{selected.name} Details</h1>
                 <Stack direction="column" spacing={2}>
-                    <Stack sx={{mt: 4}} direction="row" spacing={2} alignItems="flex-start" justifyContent="space-around"
+                    <Stack sx={{mt: 4}} direction="row" spacing={1} alignItems="flex-start" justifyContent="space-around"
                         divider={<Divider orientation="vertical" flexItem/>}
                     >
                         {
                             selected.weights.map((x) => (
                                 <Box key={x.id}>
-                                    <Stack direction="column" spacing={2}>
+                                    <Stack direction="column" alignItems="flex-start" spacing={1}>
                                         <Typography fontSize={16} fontWeight="bold" variant="subtitle1">{x.name} ({x.percentage}%)</Typography>
 
                                         <Assignments data={data} setData={setData} selected={selected} bucket={x} removeSelectedAssignment={removeSelectedAssignment} pickSelectedAssignment={pickSelectedAssignment}/>
