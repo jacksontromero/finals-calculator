@@ -9,7 +9,7 @@ export default function Classes(props: any) {
     const {data, setSelected} = props;
 
     return (
-        <Card sx={{ height: '100%', width: '30%', maxWidth: '300px', p:2 }}>
+        <Card sx={{ height: '100%', width: 'auto', maxWidth: '300px', p:2 }}>
             <h1>All Classes</h1>
             <div>
                 {

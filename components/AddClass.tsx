@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, Divider, Fade, FormControl, Modal, TextField, Typography } from "@mui/material";
+import { Backdrop, Box, Button, Divider, Fade, FormControl, FormHelperText, InputAdornment, Modal, OutlinedInput, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
@@ -9,11 +9,11 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '75%',
+    width: '85%',
     bgcolor: 'background.paper',
     borderRadius: 2,
     boxShadow: 24,
-    p: 4,
+    p: 3,
   };
 
 export default function AddClass(props: any) {
@@ -75,6 +75,17 @@ export default function AddClass(props: any) {
         }))
     }
 
+    // handle validation that form adds to 100%
+    useEffect(() => {
+        const submitButton: HTMLObjectElement | null = document.getElementById("add-class-submit-button") as HTMLObjectElement;
+
+        if (buckets.reduce((sum, x) => sum + x.percentage, 0) != 100) {
+            submitButton?.setCustomValidity("The sum of all bucket weights must be 100%")
+        } else {
+            submitButton?.setCustomValidity("")
+        }
+    }, [buckets])
+
     function updateBucketDrops(b: bucket, newDrops: number) {
         setBuckets(buckets.map(x => {
             if (x.id === b.id) {
@@ -95,18 +106,28 @@ export default function AddClass(props: any) {
             buckets.map((x) => (
                 <div key={x.id}>
                     <Stack spacing={1} direction="row">
-                        <TextField onChange={e => updateBucketName(x, e.target.value)} variant="outlined" required label="Bucket Name" defaultValue={x.name}/>
-                        <TextField onChange={e => updateBucketWeight(x, Number(e.target.value))} variant="outlined" type="number" required label="Bucket Percentage" defaultValue={x.percentage} InputProps={{
-                            inputProps: {
-                                min: 0,
-                                max: 100
-                            }
-                        }} />
-                        <TextField onChange={e => updateBucketDrops(x, Number(e.target.value))} variant="outlined" type="number" required label="Bucket Drops" defaultValue={x.drops} InputProps={{
-                            inputProps: {
-                                min: 0,
-                            }
-                        }} />
+                        <FormControl sx={{ width: '50%' }}>
+                            <OutlinedInput onChange={e => updateBucketName(x, e.target.value)} required defaultValue={x.name}/>
+                            <FormHelperText sx={{ml: 1}}>Bucket Name</FormHelperText>
+                        </FormControl>
+                        <FormControl sx={{ width: '30%' }}>
+                            <OutlinedInput onChange={e => updateBucketWeight(x, Number(e.target.value))} required defaultValue={x.percentage} type="number"
+                                endAdornment={<InputAdornment position="end">%</InputAdornment>}
+                                inputProps={{
+                                    min: 0,
+                                    max: 100,
+                                }}
+                            />
+                            <FormHelperText sx={{ml: 1}}>Percentage</FormHelperText>
+                        </FormControl>
+                        <FormControl sx={{ width: '20%' }}>
+                            <OutlinedInput onChange={e => updateBucketDrops(x, Number(e.target.value))} required defaultValue={x.drops} type="number"
+                                inputProps={{
+                                    min: 0,
+                                }}
+                            />
+                            <FormHelperText sx={{ml: 1}}>Drops</FormHelperText>
+                        </FormControl>
                     </Stack>
                 </div>
             ))
@@ -131,7 +152,7 @@ export default function AddClass(props: any) {
                         <Box sx={style}>
                             <h1>Add a New Class</h1>
                             <form onSubmit={submit}>
-                                <Stack justifyContent="center" spacing={4} direction="row" sx={{mt: 6}}>
+                                <Stack justifyContent="center" spacing={4} direction={{ xs: 'column', sm: 'row' }} sx={{mt: 6}}>
                                     <Stack spacing={2} direction="column">
                                         <Typography variant="subtitle1">Class Info</Typography>
                                             <TextField onChange={e => setName(e.target.value)} id="className" variant="outlined" required label="Class Name" />
@@ -150,7 +171,7 @@ export default function AddClass(props: any) {
                                 </Stack>
                                 <Divider sx={{my: 4, mx: 2}}></Divider>
                                 <Box textAlign="center">
-                                    <Button type="submit" variant="outlined" color="success" size="large">Add Class</Button>
+                                    <Button id="add-class-submit-button" type="submit" variant="outlined" color="success" size="large">Add Class</Button>
                                 </Box>
                             </form>
                         </Box>
