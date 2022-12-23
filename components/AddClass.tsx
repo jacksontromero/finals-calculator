@@ -142,8 +142,8 @@ export default function AddClass(props: any) {
                         <Stack justifyContent="center" spacing={4} direction={{ xs: 'column', sm: 'row' }} sx={{mt: 6}}>
                             <Stack spacing={2} direction="column">
                                 <Typography variant="subtitle1">Class Info</Typography>
-                                    <TextField onChange={e => setName(e.target.value)} id="className" variant="outlined" required label="Class Name" />
-                                    <TextField onChange={e => setCourseNumber(e.target.value)} id="classNumber" variant="outlined" required label="Class Number" />
+                                    <TextField onChange={e => setName(e.target.value)} defaultValue={name} id="className" variant="outlined" required label="Class Name" />
+                                    <TextField onChange={e => setCourseNumber(e.target.value)} defaultValue={courseNumber} id="classNumber" variant="outlined" required label="Class Number" />
                             </Stack>
                             <Stack spacing={2} direction="column">
                                 <Typography variant="subtitle1">Weights</Typography>
