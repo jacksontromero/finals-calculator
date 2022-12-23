@@ -47,7 +47,7 @@ export default function ClassDetails(props: any) {
     }
 
     function calculateScoreNecessary(): number {
-        if (selected.selectedAssignment == null || selected.selectedBucket == null) {
+        if (!selected || selected.selectedAssignment == null || selected.selectedBucket == null) {
             return 0;
         }
 
@@ -92,7 +92,7 @@ export default function ClassDetails(props: any) {
     function totalGrade(): number {
         let total = 0;
 
-        for (let b of selected.weights) {
+        for (let b of selected?.weights) {
             total += calculateScores(b).dropped * b.percentage;
         }
 
@@ -156,7 +156,7 @@ export default function ClassDetails(props: any) {
                 }
             }/>
         )
-    }, [selected.targetGrade])
+    }, [selected?.targetGrade])
 
     const theme = useTheme();
 

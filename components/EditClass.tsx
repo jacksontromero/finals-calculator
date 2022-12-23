@@ -10,6 +10,9 @@ export default function EditClass(props: any) {
     const data: globalData = props.data;
     const setData = props.setData;
 
+    const selectedClassID = props.selectedClassID;
+    const setSelectedClassID = props.setSelectedClassID;
+
     const [currentClass, setCurrentClass] = useState(data.classes.filter(x => x.id === props.classID)[0]);
 
     useEffect(() => {
@@ -53,6 +56,10 @@ export default function EditClass(props: any) {
             ...data,
             classes: data.classes.filter(x => x.id != props.classID)
         })
+
+        if (selectedClassID === props.classID) {
+            setSelectedClassID(null);
+        }
 
         setOpen(false);
     }

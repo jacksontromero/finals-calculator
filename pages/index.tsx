@@ -185,7 +185,7 @@ export default function Home() {
           selectedClassID != null && <ClassDetails data={data} setData={setData} selectedClassID={selectedClassID}></ClassDetails>
         }
 
-        <Classes data={data} setData={setData} setSelectedClassID={setSelectedClassID}></Classes>
+        <Classes data={data} setData={setData} selectedClassID={selectedClassID} setSelectedClassID={setSelectedClassID}></Classes>
       </Stack>
     </div>
   )
