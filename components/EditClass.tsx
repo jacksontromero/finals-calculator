@@ -42,8 +42,18 @@ export default function EditClass(props: any) {
     const [name, setName] = useState(currentClass.name)
     const [courseNumber, setCourseNumber] = useState(currentClass.number)
 
+
     function close() {
         setDefaults()
+        setOpen(false);
+    }
+
+    function deleteClass() {
+        setData({
+            ...data,
+            classes: data.classes.filter(x => x.id != props.classID)
+        })
+
         setOpen(false);
     }
 
@@ -186,9 +196,14 @@ export default function EditClass(props: any) {
                             </Stack>
                         </Stack>
                         <Divider sx={{my: 4, mx: 2}}></Divider>
-                        <Box textAlign="center">
-                            <Button id="add-class-submit-button" type="submit" variant="outlined" color="success" size="large">Save Changes</Button>
-                        </Box>
+                        <Stack justifyContent="center" alignItems="center" direction="row" spacing={2}>
+                            <Box textAlign="center">
+                                <Button id="add-class-submit-button" type="submit" variant="outlined" color="success" size="large">Save Changes</Button>
+                            </Box>
+                            <Box textAlign="center">
+                                <Button onClick={deleteClass} variant="outlined" color="error" size="large">Delete Class</Button>
+                            </Box>
+                        </Stack>
                     </form>
                 </DialogContent>
             </Dialog>

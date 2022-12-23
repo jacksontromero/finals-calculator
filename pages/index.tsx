@@ -156,17 +156,18 @@ export default function Home() {
   // })
 
   const [data, setData] = useState<globalData>({classes: []})
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     const data = localStorage.getItem("data");
-    console.log(data)
+    setLoaded(true);
     if (data) {
       setData(JSON.parse(data));
     }
   }, [])
 
   useEffect(() => {
-    if (data.classes.length != 0) {
+    if (loaded) {
       localStorage.setItem("data", JSON.stringify(data));
     }
   }, [data])

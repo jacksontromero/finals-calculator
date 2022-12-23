@@ -15,6 +15,10 @@ export default function AddClass(props: any) {
     const [name, setName] = useState("")
     const [courseNumber, setCourseNumber] = useState("")
 
+    useEffect(() => {
+        setOpen(localStorage.getItem("data") === null || JSON.parse(localStorage.getItem("data") as string).classes.length === 0)
+    }, [])
+
     function submit(event: SyntheticEvent) {
         event.preventDefault();
         setData({
