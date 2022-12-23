@@ -1,5 +1,5 @@
 import { Add, DeleteOutline } from "@mui/icons-material";
-import { Divider, IconButton, TextField, FormGroup, FormControlLabel, Checkbox, Tooltip, colors, Typography, Button } from "@mui/material";
+import { Divider, IconButton, TextField, FormGroup, FormControlLabel, Checkbox, Tooltip, colors, Typography, Button, useMediaQuery, useTheme } from "@mui/material";
 import { alpha, Box, Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import { schoolClass, bucket, globalData, assignment } from "../pages";
@@ -152,8 +152,12 @@ export default function Assignments(props: any) {
         )
     }, [data, selected, selected.selectedAssignment])
 
+    const theme = useTheme();
+
     return (
-        <Stack sx={{minWidth: "100%"}} divider={<Divider orientation="horizontal" flexItem />} alignItems="center" direction="column" spacing={1}>
+        <Stack sx={{minWidth: "100%"}} divider={<Divider orientation="horizontal" flexItem />} direction="column" spacing={1}
+            alignItems={useMediaQuery(theme.breakpoints.down("md")) ? "flex-start" : "center"}
+        >
             {
                 assignmentList
             }

@@ -1,5 +1,5 @@
 import { Add } from "@mui/icons-material";
-import { Box, Button, Card, Divider, IconButton, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, Divider, IconButton, Stack, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { assignment, bucket, defaultAssignment, defaultBucket, globalData, schoolClass } from "../pages";
 import Assignments from "./Assignments";
@@ -152,13 +152,20 @@ export default function ClassDetails(props: any) {
         )
     }, [selected.targetGrade])
 
+    const theme = useTheme();
+
     return (
         <Card sx={{ height: '100%', width: '1', p:2 }}>
             <div>
                 <h1>{selected.name} Details</h1>
                 <Stack direction="column" spacing={2}>
-                    <Stack sx={{mt: 4}} direction="row" spacing={1} alignItems="flex-start" justifyContent="space-around"
-                        divider={<Divider orientation="vertical" flexItem/>}
+                    <Stack sx={{mt: 4}} direction={useMediaQuery(theme.breakpoints.down("md")) ? "column" : "row"} spacing={1} alignItems="flex-start" justifyContent="space-around"
+                        divider={
+                            <Divider
+                                orientation={useMediaQuery(theme.breakpoints.down("md")) ? "horizontal" : "vertical"}
+                                flexItem
+                            />
+                        }
                     >
                         {
                             selected.weights.map((x) => (

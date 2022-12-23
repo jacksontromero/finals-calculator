@@ -163,7 +163,7 @@ export default function Home() {
         <title>Grade Calculator</title>
         <meta name="Calculate what grade you need in multiple classes with support for different percentage buckets and dropped assignments" content="Meta description for the Home page" />
       </Head>
-      <Stack sx={{mt: 4, mx: 4}} direction="column" justifyContent="space-between" spacing={2}>
+      <Stack sx={{mt: 2, mx: 2}} direction="column" justifyContent="space-between" spacing={2}>
         {
           selected != null && <ClassDetails data={data} setData={setData} selected={selected}></ClassDetails>
         }
