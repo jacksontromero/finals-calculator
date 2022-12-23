@@ -8,7 +8,6 @@ export default function AddClass(props: any) {
 
     const data: globalData = props.data;
     const setData = props.setData;
-    const selectedClassID = props.selectedClassID;
     const setSelectedClassID = props.setSelectedClassID;
 
     const [open, setOpen] = useState(false);
@@ -76,17 +75,6 @@ export default function AddClass(props: any) {
         }))
     }
 
-    // handle validation that form adds to 100%
-    useEffect(() => {
-        const submitButton: HTMLObjectElement | null = document.getElementById("add-class-submit-button") as HTMLObjectElement;
-
-        if (buckets.reduce((sum, x) => sum + x.percentage, 0) != 100) {
-            submitButton?.setCustomValidity("The sum of all bucket weights must be 100%")
-        } else {
-            submitButton?.setCustomValidity("")
-        }
-    }, [buckets])
-
     function updateBucketDrops(b: bucket, newDrops: number) {
         setBuckets(buckets.map(x => {
             if (x.id === b.id) {
@@ -103,6 +91,15 @@ export default function AddClass(props: any) {
     const [bucketsList, setBucketsList] = useState([] as JSX.Element[]);
 
     useEffect(() => {
+        // handle validation that form adds to 100%
+        const submitButton: HTMLObjectElement | null = document.getElementById("add-class-submit-button") as HTMLObjectElement;
+
+        if (buckets.reduce((sum, x) => sum + x.percentage, 0) != 100) {
+            submitButton?.setCustomValidity("The sum of all bucket weights must be 100%")
+        } else {
+            submitButton?.setCustomValidity("")
+        }
+
         setBucketsList(
             buckets.map((x) => (
                 <div key={x.id}>

@@ -1,10 +1,9 @@
 import { Add, DeleteOutline } from "@mui/icons-material";
-import { Divider, IconButton, TextField, FormGroup, FormControlLabel, Checkbox, Tooltip, colors, Typography, Button, useMediaQuery, useTheme } from "@mui/material";
+import { Divider, IconButton, TextField, Checkbox, Tooltip, Button, useMediaQuery, useTheme } from "@mui/material";
 import { alpha, Box, Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import { schoolClass, bucket, globalData, assignment } from "../pages";
 import { v4 as uuidv4 } from 'uuid';
-import { green } from "@mui/material/colors";
 
 export default function Assignments(props: any) {
 
@@ -161,7 +160,6 @@ export default function Assignments(props: any) {
             {
                 assignmentList
             }
-
 
             <Box textAlign="center">
                 <IconButton onClick={addAssignment} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="info">

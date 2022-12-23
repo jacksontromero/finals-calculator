@@ -1,9 +1,7 @@
-import { Add } from "@mui/icons-material";
-import { Box, Button, Card, Divider, IconButton, Stack, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Card, Divider, Stack, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
-import { assignment, bucket, defaultAssignment, defaultBucket, globalData, schoolClass } from "../pages";
+import { assignment, bucket, defaultAssignment, defaultBucket, globalData } from "../pages";
 import Assignments from "./Assignments";
-import { v4 as uuidv4 } from 'uuid';
 
 export default function ClassDetails(props: any) {
 
