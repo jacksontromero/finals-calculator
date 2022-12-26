@@ -4,6 +4,7 @@ import ClassDetails from '../components/ClassDetails'
 import Classes from '../components/Classes'
 import { v4 as uuidv4 } from 'uuid';
 import Head from 'next/head'
+import Footer from '../components/Footer';
 
 
 export type assignment = {
@@ -187,6 +188,7 @@ export default function Home() {
 
         <Classes data={data} setData={setData} selectedClassID={selectedClassID} setSelectedClassID={setSelectedClassID}></Classes>
       </Stack>
+      <Footer></Footer>
     </div>
   )
 }
