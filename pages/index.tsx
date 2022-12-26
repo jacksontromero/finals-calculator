@@ -177,8 +177,8 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Grade Calculator</title>
-        <meta name="Calculate what grade you need in multiple classes with support for different percentage buckets and dropped assignments" content="Meta description for the Home page" />
+        <title>Final Grade Calculator</title>
+        <meta name="description" content="Calculator for what grade you need on an assignment to get a specific grade in a class.  Supports multiple classes, grading schemes that make use of buckets/weights for differnt types of assignments, dropping/drops for the lowest assignments per bucket, and simulating average performance on assignments." />
       </Head>
       <Stack sx={{mt: 2, mx: 2}} direction="column" justifyContent="space-between" spacing={2}>
         {
