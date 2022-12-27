@@ -25,7 +25,7 @@ export default function Footer() {
                 </IconButton>
                 <Typography>Created by Jackson Romero</Typography>
                 <Link href={"https://github.com/jacksontromero/finals-calculator"} target="_blank">
-                    <GitHub sx={{color: "black"}} />
+                    <GitHub sx={{color: mode === "dark" ? "white" : "black"}} />
                 </Link>
             </Stack>
         </Box>
