@@ -1,10 +1,11 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { Box, createTheme, CssBaseline, PaletteMode } from '@mui/material'
+import { createTheme, CssBaseline, PaletteMode } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles';
 import lightJSON from '../styles/light.json'
 import darkJSON from '../styles/dark.json'
 import { createContext, useMemo, useState } from 'react'
+import { Analytics } from '@vercel/analytics/react';
 
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
@@ -51,14 +52,15 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [mode, lightTheme, darkTheme]);
 
   return (
-    <Box sx={{minHeight: "100%"}}>
+    <>
       <link rel="icon" type="image/svg" href="/test.svg"></link>
       <ColorModeContext.Provider value={{ mode, setMode }}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
             <Component {...pageProps} />
+            <Analytics />
         </ThemeProvider>
       </ColorModeContext.Provider>
-    </Box>
-  )
+    </>
+)
 }
