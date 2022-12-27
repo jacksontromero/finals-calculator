@@ -11,7 +11,7 @@ export default function Classes(props: any) {
 
     return (
         <Card variant="elevation" sx={{ height: '100%', width: 'auto', maxWidth: '300px', p:2 }}>
-            <Typography variant="h4" fontWeight="bold">All Classes</Typography>
+            <Typography sx={{pt: 2, pb: 1}} variant="h4" fontWeight="bold">All Classes</Typography>
             <div>
                 {
                     data.classes.map((x: schoolClass) => (

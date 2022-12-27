@@ -134,7 +134,7 @@ export default function AddClass(props: any) {
 
     return (
         <div>
-            <Button onClick={() => {setOpen(true)}} sx={{ my:2, mx:2, px:2 }} size="large" variant="outlined">Add New Class</Button>
+            <Button onClick={() => {setOpen(true)}} sx={{ my:2 }} size="large" variant="outlined">Add New Class</Button>
 
             <Dialog
                 open={open}
