@@ -196,17 +196,17 @@ export default function EditClass(props: any) {
                                 }
                                 <Stack sx={{pt: 2}} justifyContent="space-between" spacing={1} direction="row">
                                     <Button onClick={() => {setBuckets([...buckets, {name: "", percentage: 0, drops:0, assignments: [], id: uuidv4()}])}} sx={{}} size="medium" variant="outlined">Add Bucket</Button>
-                                    <Button onClick={() => {setBuckets(buckets.slice(0, -1))}} sx={{}} color="error" size="medium" variant="outlined">Remove Bucket</Button>
+                                    <Button onClick={() => {setBuckets(buckets.slice(0, -1))}} sx={{}} color="secondary" size="medium" variant="outlined">Remove Bucket</Button>
                                 </Stack>
                             </Stack>
                         </Stack>
                         <Divider sx={{my: 4, mx: 2}}></Divider>
                         <Stack justifyContent="center" alignItems="center" direction="row" spacing={2}>
                             <Box textAlign="center">
-                                <Button id="add-class-submit-button" type="submit" variant="outlined" color="success" size="large">Save Changes</Button>
+                                <Button id="add-class-submit-button" type="submit" variant="contained" color="primary" size="large">Save Changes</Button>
                             </Box>
                             <Box textAlign="center">
-                                <Button onClick={deleteClass} variant="outlined" color="error" size="large">Delete Class</Button>
+                                <Button onClick={deleteClass} variant="contained" color="tertiary" size="large">Delete Class</Button>
                             </Box>
                         </Stack>
                     </form>

@@ -96,13 +96,13 @@ export default function Assignments(props: any) {
     useEffect(() => {
         setAssignmentList(
             bucket.assignments.map((x) => (
-                <Box key={x.id} sx={{px: 1, borderRadius: 2, backgroundColor: (selected.selectedAssignment != null && selected.selectedAssignment.id === x.id) ?  alpha("#4caf50", .2) : ""}}>
+                <Box key={x.id} sx={{p: 1, borderRadius: 2, backgroundColor: (selected.selectedAssignment != null && selected.selectedAssignment.id === x.id) ?  alpha("#4caf50", .2) : ""}}>
 
                     {
 
                         (selected.selectedAssignment != null) ? (
                             <form>
-                                <Stack direction="row" alignItems="center" spacing={0}>
+                                <Stack direction="row" alignItems="center" spacing={0.5}>
                                     <TextField sx={{width: "40%"}} onChange={e => setAssignmentName(x, e.target.value)} variant="outlined" label="Name" defaultValue={x.name} onFocus={
                                         (e) => {
                                             e.target.select();
@@ -130,12 +130,14 @@ export default function Assignments(props: any) {
 
                                     <Stack direction="column" alignItems="center" justifyContent="center"  spacing={0}>
                                         <Box minHeight="full" minWidth="full" alignItems="center" display="flex" textAlign="center">
-                                            <IconButton tabIndex={-1} onClick={() => {removeAssignment(x.id)}} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="error">
-                                                <DeleteOutline />
-                                            </IconButton>
+                                            <Tooltip title="Delete Assignment" placement="top">
+                                                <IconButton tabIndex={-1} onClick={() => {removeAssignment(x.id)}} sx={{borderRadius: 4, height:"30px",width:"30px"}} size="small" color="error">
+                                                    <DeleteOutline />
+                                                </IconButton>
+                                            </Tooltip>
                                         </Box>
-                                        <Tooltip title="Replace score with 'Average without drops'">
-                                            <Checkbox tabIndex={-1} size="small" checked={x.simulated} onChange={() => simulateAssignment(x)}/>
+                                        <Tooltip title="Replace score with 'Average without drops'" placement="bottom">
+                                            <Checkbox  tabIndex={-1} size="small" color="primary"  checked={x.simulated} onChange={() => simulateAssignment(x)}/>
                                         </Tooltip>
                                     </Stack>
                                 </Stack>
@@ -154,15 +156,15 @@ export default function Assignments(props: any) {
     const theme = useTheme();
 
     return (
-        <Stack sx={{minWidth: "100%"}} divider={<Divider orientation="horizontal" flexItem />} direction="column" spacing={1}
-            alignItems={useMediaQuery(theme.breakpoints.down("md")) ? "flex-start" : "center"}
+        <Stack sx={{minWidth: "100%"}} direction="column" spacing={0}
+            alignItems={"center"}
         >
             {
                 assignmentList
             }
 
             <Box textAlign="center">
-                <IconButton onClick={addAssignment} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="info">
+                <IconButton onClick={addAssignment} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="primary">
                     <Add />
                 </IconButton>
             </Box>

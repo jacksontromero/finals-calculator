@@ -134,7 +134,7 @@ export default function AddClass(props: any) {
 
     return (
         <div>
-            <Button onClick={() => {setOpen(true)}} sx={{ my:2, mx:2, px:2 }} size="large" variant="outlined">Add Class</Button>
+            <Button onClick={() => {setOpen(true)}} sx={{ my:2, mx:2, px:2 }} size="large" variant="outlined">Add New Class</Button>
 
             <Dialog
                 open={open}
@@ -158,13 +158,13 @@ export default function AddClass(props: any) {
                                 }
                                 <Stack sx={{pt: 2}} justifyContent="space-between" spacing={1} direction="row">
                                     <Button onClick={() => {setBuckets([...buckets, {name: "", percentage: 0, drops:0, assignments: [], id: uuidv4()}])}} sx={{}} size="medium" variant="outlined">Add Bucket</Button>
-                                    <Button onClick={() => {setBuckets(buckets.slice(0, -1))}} sx={{}} color="error" size="medium" variant="outlined">Remove Bucket</Button>
+                                    <Button onClick={() => {setBuckets(buckets.slice(0, -1))}} sx={{}} size="medium" variant="outlined" color="secondary">Remove Bucket</Button>
                                 </Stack>
                             </Stack>
                         </Stack>
                         <Divider sx={{my: 4, mx: 2}}></Divider>
                         <Box textAlign="center">
-                            <Button id="add-class-submit-button" type="submit" variant="outlined" color="success" size="large">Add Class</Button>
+                            <Button id="add-class-submit-button" type="submit" variant="contained" size="large">Add Class</Button>
                         </Box>
                     </form>
                 </DialogContent>

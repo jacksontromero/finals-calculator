@@ -159,7 +159,7 @@ export default function ClassDetails(props: any) {
     const theme = useTheme();
 
     return (
-        <Card sx={{ height: '100%', width: '1', p:2 }}>
+        <Card variant="elevation" sx={{ height: '100%', width: '1', p:2 }}>
             <div>
                 <h1>{selected.name} Details</h1>
                 <Stack direction="column" spacing={2}>
@@ -173,7 +173,7 @@ export default function ClassDetails(props: any) {
                     >
                         {
                             selected.weights.map((x) => (
-                                <Box key={x.id}>
+                                <Box key={x.id} width="100%">
                                     <Stack direction="column" alignItems="flex-start" spacing={1}>
                                         <Typography fontSize={16} fontWeight="bold" variant="subtitle1">{x.name} ({x.percentage}%)</Typography>
 
