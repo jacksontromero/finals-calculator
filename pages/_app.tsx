@@ -1,10 +1,10 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { createTheme, CssBaseline, PaletteMode } from '@mui/material'
+import { createTheme, CssBaseline, PaletteMode, useMediaQuery } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles';
 import lightJSON from '../styles/light.json'
 import darkJSON from '../styles/dark.json'
-import { createContext, useMemo, useState } from 'react'
+import { createContext, useEffect, useMemo, useState } from 'react'
 import { Analytics } from '@vercel/analytics/react';
 
 declare module '@mui/material/Button' {
@@ -44,12 +44,18 @@ export default function App({ Component, pageProps }: AppProps) {
 
   let lightTheme = createTheme(lightJSON as any);
   let darkTheme = createTheme(darkJSON as any);
+  const [theme, setTheme] = useState(lightTheme);
 
-  const [mode, setMode] = useState<PaletteMode>("light");
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const [mode, setMode] = useState<PaletteMode>("dark");
 
-  const theme = useMemo(() => {
-    return mode === "light" ? lightTheme : darkTheme;
+  useEffect(() => {
+    setTheme(mode == "light" ? lightTheme : darkTheme);
   }, [mode, lightTheme, darkTheme]);
+
+  useEffect(() => {
+    setMode(prefersDarkMode ? "dark" : "light");
+  }, [prefersDarkMode])
 
   return (
     <>
