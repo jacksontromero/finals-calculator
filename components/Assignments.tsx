@@ -1,5 +1,5 @@
 import { Add, DeleteOutline } from "@mui/icons-material";
-import { Divider, IconButton, TextField, Checkbox, Tooltip, Button, useMediaQuery, useTheme } from "@mui/material";
+import { Divider, IconButton, TextField, Checkbox, Tooltip, Button, useTheme } from "@mui/material";
 import { alpha, Box, Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import { schoolClass, bucket, globalData, assignment } from "../pages";
