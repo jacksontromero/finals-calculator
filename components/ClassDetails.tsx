@@ -159,11 +159,11 @@ export default function ClassDetails(props: any) {
     const theme = useTheme();
 
     return (
-        <Card variant="elevation" sx={{ height: '100%', width: '1', p:2 }}>
+        <Card variant="elevation" sx={{ height: '100%', p:2 }}>
             <div>
-                <h1>{selected.name} Details</h1>
+                <Typography variant="h4" fontWeight="bold">{selected.name} Details</Typography>
                 <Stack direction="column" spacing={2}>
-                    <Stack sx={{mt: 4}} direction={useMediaQuery(theme.breakpoints.down("md")) ? "column" : "row"} spacing={1} alignItems="flex-start" justifyContent="space-around"
+                    <Stack maxWidth={1} sx={{mt: 4}} direction={useMediaQuery(theme.breakpoints.down("md")) ? "column" : "row"} spacing={1} alignItems="flex-start" justifyContent="space-around"
                         divider={
                             <Divider
                                 orientation={useMediaQuery(theme.breakpoints.down("md")) ? "horizontal" : "vertical"}
@@ -173,7 +173,7 @@ export default function ClassDetails(props: any) {
                     >
                         {
                             selected.weights.map((x) => (
-                                <Box key={x.id} width="100%">
+                                <Box key={x.id} minWidth="auto">
                                     <Stack direction="column" alignItems="flex-start" spacing={1}>
                                         <Typography fontSize={16} fontWeight="bold" variant="subtitle1">{x.name} ({x.percentage}%)</Typography>
 

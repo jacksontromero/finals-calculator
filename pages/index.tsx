@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { useEffect, useState } from 'react'
 import ClassDetails from '../components/ClassDetails'
 import Classes from '../components/Classes'
@@ -176,19 +176,21 @@ export default function Home() {
   const [selectedClassID, setSelectedClassID] = useState(null);
 
   return (
-    <div>
+    <Box sx={{minHeight: "100%"}}>
       <Head>
         <title>Final Grade Calculator</title>
         <meta name="description" content="Calculator for what grade you need on an assignment to get a specific grade in a class.  Supports multiple classes, grading schemes that make use of buckets/weights for differnt types of assignments, dropping/drops for the lowest assignments per bucket, and simulating average performance on assignments." />
       </Head>
-      <Stack sx={{mt: 2, mx: 2}} direction="column" justifyContent="space-between" spacing={2}>
-        {
-          selectedClassID != null && <ClassDetails data={data} setData={setData} selectedClassID={selectedClassID}></ClassDetails>
-        }
+      <Box sx={{minHeight: "100%"}}>
+        <Stack sx={{mt: 2, mx: 2}} direction="column" justifyContent="space-between" spacing={2}>
+          {
+            selectedClassID != null && <ClassDetails data={data} setData={setData} selectedClassID={selectedClassID}></ClassDetails>
+          }
 
-        <Classes data={data} setData={setData} selectedClassID={selectedClassID} setSelectedClassID={setSelectedClassID}></Classes>
-      </Stack>
+          <Classes data={data} setData={setData} selectedClassID={selectedClassID} setSelectedClassID={setSelectedClassID}></Classes>
+        </Stack>
+      </Box>
       <Footer></Footer>
-    </div>
+    </Box>
   )
 }

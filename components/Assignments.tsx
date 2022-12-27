@@ -93,10 +93,12 @@ export default function Assignments(props: any) {
 
     const [assignmentList, setAssignmentList] = useState<JSX.Element[]>([])
 
+    const theme = useTheme();
+
     useEffect(() => {
         setAssignmentList(
             bucket.assignments.map((x) => (
-                <Box key={x.id} sx={{p: 1, borderRadius: 2, backgroundColor: (selected.selectedAssignment != null && selected.selectedAssignment.id === x.id) ?  alpha("#4caf50", .2) : ""}}>
+                <Box key={x.id} sx={{p: 1, borderRadius: 2, backgroundColor: (selected.selectedAssignment != null && selected.selectedAssignment.id === x.id) ?  alpha(theme.palette.primary.main, .2) : ""}}>
 
                     {
 
@@ -153,10 +155,8 @@ export default function Assignments(props: any) {
         )
     }, [data, selected, bucket, selected.selectedAssignment])
 
-    const theme = useTheme();
-
     return (
-        <Stack sx={{minWidth: "100%"}} direction="column" spacing={0}
+        <Stack direction="column" spacing={0}
             alignItems={"center"}
         >
             {
@@ -164,9 +164,11 @@ export default function Assignments(props: any) {
             }
 
             <Box textAlign="center">
-                <IconButton onClick={addAssignment} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="primary">
-                    <Add />
-                </IconButton>
+                <Tooltip title="Add Assignment">
+                    <IconButton onClick={addAssignment} sx={{borderRadius: 4, height:"40px",width:"40px"}} size="small" color="primary">
+                        <Add />
+                    </IconButton>
+                </Tooltip>
             </Box>
         </Stack>
     )

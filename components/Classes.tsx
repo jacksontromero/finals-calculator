@@ -1,6 +1,6 @@
 import React from "react"
 import { schoolClass } from "../pages";
-import { Box, Card, Divider, IconButton, Stack, Tooltip } from "@mui/material";
+import { Box, Card, Divider, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import AddClass from "./AddClass";
 import EditClass from "./EditClass";
@@ -11,7 +11,7 @@ export default function Classes(props: any) {
 
     return (
         <Card variant="elevation" sx={{ height: '100%', width: 'auto', maxWidth: '300px', p:2 }}>
-            <h1>All Classes</h1>
+            <Typography variant="h4" fontWeight="bold">All Classes</Typography>
             <div>
                 {
                     data.classes.map((x: schoolClass) => (
