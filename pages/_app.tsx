@@ -48,7 +48,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const [mode, setMode] = useState<PaletteMode>("light");
 
   const theme = useMemo(() => {
-    return mode === "dark" ? lightTheme : darkTheme;
+    return mode === "light" ? lightTheme : darkTheme;
   }, [mode, lightTheme, darkTheme]);
 
   return (
