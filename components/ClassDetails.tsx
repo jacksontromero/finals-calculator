@@ -163,10 +163,10 @@ export default function ClassDetails(props: any) {
             <div>
                 <Typography variant="h4" fontWeight="bold">{selected.name} Details</Typography>
                 <Stack direction="column" spacing={2}>
-                    <Stack maxWidth={1} sx={{mt: 4}} direction={useMediaQuery(theme.breakpoints.down("md")) ? "column" : "row"} spacing={1} alignItems="flex-start" justifyContent="space-around"
+                    <Stack maxWidth={1} sx={{mt: 4}} direction={useMediaQuery(theme.breakpoints.down(1400)) ? "column" : "row"} spacing={1} alignItems="flex-start" justifyContent="space-around"
                         divider={
                             <Divider
-                                orientation={useMediaQuery(theme.breakpoints.down("md")) ? "horizontal" : "vertical"}
+                                orientation={useMediaQuery(theme.breakpoints.down(1400)) ? "horizontal" : "vertical"}
                                 flexItem
                             />
                         }

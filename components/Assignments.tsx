@@ -98,7 +98,7 @@ export default function Assignments(props: any) {
     useEffect(() => {
         setAssignmentList(
             bucket.assignments.map((x) => (
-                <Box key={x.id} sx={{p: 1, borderRadius: 2, backgroundColor: (selected.selectedAssignment != null && selected.selectedAssignment.id === x.id) ?  alpha(theme.palette.primary.main, .2) : ""}}>
+                <Box key={x.id} sx={{py: 1, borderRadius: 2, backgroundColor: (selected.selectedAssignment != null && selected.selectedAssignment.id === x.id) ?  alpha(theme.palette.primary.main, .2) : ""}}>
 
                     {
 
@@ -130,16 +130,16 @@ export default function Assignments(props: any) {
                                         }
                                     }/>
 
-                                    <Stack direction="column" alignItems="center" justifyContent="center"  spacing={0}>
+                                    <Stack width="20px" direction="column" alignItems="center" justifyContent="center" spacing={0} >
                                         <Box minHeight="full" minWidth="full" alignItems="center" display="flex" textAlign="center">
                                             <Tooltip title="Delete Assignment" placement="top">
-                                                <IconButton tabIndex={-1} onClick={() => {removeAssignment(x.id)}} sx={{borderRadius: 4, height:"30px",width:"30px"}} size="small" color="error">
+                                                <IconButton tabIndex={-1} onClick={() => {removeAssignment(x.id)}} sx={{borderRadius: 4, height:"30px",width:"10px"}} size="small" color="error">
                                                     <DeleteOutline />
                                                 </IconButton>
                                             </Tooltip>
                                         </Box>
                                         <Tooltip title="Replace score with 'Average without drops'" placement="bottom">
-                                            <Checkbox  tabIndex={-1} size="small" color="primary"  checked={x.simulated} onChange={() => simulateAssignment(x)}/>
+                                            <Checkbox  tabIndex={-1} size="small" color="primary" sx={{height:"30px", width:"10px"}} checked={x.simulated} onChange={() => simulateAssignment(x)}/>
                                         </Tooltip>
                                     </Stack>
                                 </Stack>
