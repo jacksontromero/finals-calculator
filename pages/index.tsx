@@ -179,7 +179,7 @@ export default function Home() {
     <Box sx={{minHeight: "100%"}}>
       <Head>
         <title>Final Grade Calculator</title>
-        <meta name="description" content="Calculator for what grade you need on an assignment to get a specific grade in a class.  Supports multiple classes, grading schemes that make use of buckets/weights for differnt types of assignments, dropping/drops for the lowest assignments per bucket, and simulating average performance on assignments." />
+        <meta name="description" content="Calculator for what grade you need on an assignment to get a specific grade in a class.  Supports multiple classes, grading schemes that make use of buckets/weights for different types of assignments, dropping/drops for the lowest assignments per bucket, and simulating average performance on assignments." />
       </Head>
       <Box sx={{minHeight: "100%"}}>
         <Stack sx={{mt: 2, mx: 2}} direction="column" justifyContent="space-between" spacing={2}>
