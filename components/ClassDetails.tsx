@@ -13,7 +13,7 @@ export default function ClassDetails(props: any) {
 
     useEffect(() => {
         setSelected(data.classes.filter(x => x.id == selectedClassID)[0]);
-    }, [data])
+    }, [data, selectedClassID])
 
     function calculateScores(b: bucket): {dropped: number, raw: number} {
 

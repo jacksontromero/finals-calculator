@@ -51,7 +51,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     setTheme(mode == "light" ? lightTheme : darkTheme);
-  }, [mode, lightTheme, darkTheme]);
+  }, [mode]);
 
   useEffect(() => {
     setMode(prefersDarkMode ? "dark" : "light");
