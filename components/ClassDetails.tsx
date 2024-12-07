@@ -18,6 +18,7 @@ import {
   globalData,
 } from '../pages';
 import Assignments from './Assignments';
+import { useWindowWidth } from '@react-hook/window-size/throttled';
 
 export default function ClassDetails(props: any) {
   const data: globalData = props.data;
@@ -219,7 +220,8 @@ export default function ClassDetails(props: any) {
     );
   }, [selected?.targetGrade]);
 
-  const theme = useTheme();
+  const screenWidth = useWindowWidth();
+  let widthPerBucket = screenWidth / selected.weights.length;
 
   return (
     <Card variant="elevation" sx={{ height: '100%', p: 2 }}>
@@ -232,7 +234,7 @@ export default function ClassDetails(props: any) {
             maxWidth={1}
             sx={{ mt: 4 }}
             direction={
-              useMediaQuery(theme.breakpoints.down(1400)) ? 'column' : 'row'
+              (widthPerBucket < 240) ? 'column' : 'row'
             }
             spacing={1}
             alignItems="flex-start"
@@ -240,7 +242,7 @@ export default function ClassDetails(props: any) {
             divider={
               <Divider
                 orientation={
-                  useMediaQuery(theme.breakpoints.down(1400))
+                  (widthPerBucket < 240)
                     ? 'horizontal'
                     : 'vertical'
                 }
