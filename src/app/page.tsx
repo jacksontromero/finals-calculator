@@ -1,59 +1,14 @@
-import { Box, Stack } from '@mui/material'
-import { useEffect, useState } from 'react'
-import ClassDetails from '../components/ClassDetails'
-import Classes from '../components/Classes'
-import { v4 as uuidv4 } from 'uuid';
-import Head from 'next/head'
-import Footer from '../components/Footer';
+"use client";
 
-
-export type assignment = {
-  name: string,
-  score: number
-  outOf: number,
-  id: string,
-  simulated: boolean,
-}
-
-export type bucket = {
-  name: string,
-  percentage: number,
-  drops: number,
-  assignments: assignment[]
-  id: string,
-}
-
-export type schoolClass = {
-  name: string,
-  number: string,
-  weights: bucket[],
-  id: string,
-  selectedBucket: bucket | null,
-  selectedAssignment: assignment | null,
-  targetGrade: number,
-}
-
-export type globalData = {
-  classes: schoolClass[]
-}
-
-export const defaultAssignment: assignment = {
-  name: "",
-  score: 0,
-  outOf: 100,
-  simulated: false,
-  id: uuidv4()
-}
-
-export const defaultBucket: bucket = {
-  name: "",
-  percentage: 0,
-  drops: 0,
-  assignments: [defaultAssignment],
-  id: uuidv4()
-}
+import ClassDetails from "@/components/ClassDetails";
+import Classes from "@/components/Classes";
+import { defaultAssignment, defaultBucket, globalData } from "@/components/Data";
+import { Card, CardHeader } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
+
   const [data, setData] = useState<globalData>({
     classes: [
       {
@@ -176,21 +131,29 @@ export default function Home() {
   const [selectedClassID, setSelectedClassID] = useState(null);
 
   return (
-    <Box sx={{minHeight: "100%"}}>
-      <Head>
-        <title>Final Grade Calculator</title>
-        <meta name="description" content="Calculator for what grade you need on an assignment to get a specific grade in a class.  Supports multiple classes, grading schemes that make use of buckets/weights for different types of assignments, dropping/drops for the lowest assignments per bucket, and simulating average performance on assignments." />
-      </Head>
-      <Box sx={{minHeight: "100%"}}>
-        <Stack sx={{mt: 2, mx: 2}} direction="column" justifyContent="space-between" spacing={2}>
-          {
-            selectedClassID != null && <ClassDetails data={data} setData={setData} selectedClassID={selectedClassID}></ClassDetails>
-          }
+    //  <Box sx={{minHeight: "100%"}}>
+    //   <Head>
+    //     <title>Final Grade Calculator</title>
+    //     <meta name="description" content="Calculator for what grade you need on an assignment to get a specific grade in a class.  Supports multiple classes, grading schemes that make use of buckets/weights for different types of assignments, dropping/drops for the lowest assignments per bucket, and simulating average performance on assignments." />
+    //   </Head>
+    //   <Box sx={{minHeight: "100%"}}>
+    //     <Stack sx={{mt: 2, mx: 2}} direction="column" justifyContent="space-between" spacing={2}>
+    //       {
+    //         selectedClassID != null && <ClassDetails data={data} setData={setData} selectedClassID={selectedClassID}></ClassDetails>
+    //       }
 
-          <Classes data={data} setData={setData} selectedClassID={selectedClassID} setSelectedClassID={setSelectedClassID}></Classes>
-        </Stack>
-      </Box>
-      <Footer></Footer>
-    </Box>
-  )
+    //       <Classes data={data} setData={setData} selectedClassID={selectedClassID} setSelectedClassID={setSelectedClassID}></Classes>
+    //     </Stack>
+    //   </Box>
+    //   <Footer></Footer>
+    // </Box>
+    // <h1>Hi</h1>
+    <div className="flex flex-col justify-between">
+      {/* {
+        selectedClassID != null && <ClassDetails data={data} setData={setData} selectedClassID={selectedClassID}></ClassDetails>
+      } */}
+
+      <Classes className="m-4" data={data} setData={setData} selectedClassID={selectedClassID} setSelectedClassID={setSelectedClassID}></Classes>
+    </div>
+  );
 }
