@@ -28,6 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=delete&display=block" rel="stylesheet" />
         {children}
       </body>
     </html>
