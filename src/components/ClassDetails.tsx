@@ -1,26 +1,13 @@
-import { useEffect, useState } from 'react';
-import {
-  assignment,
-  bucket,
-  defaultAssignment,
-  defaultBucket,
-  globalData,
-} from '../pages';
-import Assignments from './Assignments';
-import { useWindowWidth } from '@react-hook/window-size/throttled';
+"use client";
 
-export default function ClassDetails(props: any) {
-  const data: globalData = props.data;
-  const setData = props.setData;
-  const selectedClassID: string = props.selectedClassID;
+import { useEffect, useState } from "react";
+import Assignments from "./Assignments";
+import { useWindowWidth } from "@react-hook/window-size/throttled";
+import { bucket, getSelectedClass, useDataStore } from "@/app/store";
 
-  const [selected, setSelected] = useState(
-    data.classes.filter((x) => x.id == selectedClassID)[0]
-  );
-
-  useEffect(() => {
-    setSelected(data.classes.filter((x) => x.id == selectedClassID)[0]);
-  }, [data, selectedClassID]);
+export default function ClassDetails() {
+  const selected = getSelectedClass().class;
+  const selectClass = useDataStore((state) => state.selectClass);
 
   function calculateScores(b: bucket): { dropped: number; raw: number } {
     let nonSim = b.assignments.filter((x) => !x.simulated);
@@ -128,60 +115,11 @@ export default function ClassDetails(props: any) {
   function totalGrade(): number {
     let total = 0;
 
-    for (let b of selected?.weights) {
+    for (let b of selected.weights) {
       total += calculateScores(b).dropped * b.percentage;
     }
 
     return total;
-  }
-
-  function setSelectedAssignment(a: assignment | null) {
-    setData((prevData: globalData) => {
-      prevData.classes.filter(
-        (x) => x.id === selected.id
-      )[0].selectedAssignment = a;
-
-      return {
-        ...prevData,
-      };
-    });
-  }
-
-  function setSelectedBucket(b: bucket | null) {
-    setData((prevData: globalData) => {
-      prevData.classes.filter((x) => x.id === selected.id)[0].selectedBucket =
-        b;
-
-      return {
-        ...prevData,
-      };
-    });
-  }
-
-  function removeSelectedAssignment() {
-    setSelectedAssignment(null);
-    setSelectedBucket(null);
-  }
-
-  function pickSelectedAssignment(a: assignment, b: bucket) {
-    if (
-      selected.selectedAssignment == null &&
-      selected.selectedBucket == null
-    ) {
-      setSelectedAssignment(a);
-      setSelectedBucket(b);
-    }
-  }
-
-  function setTargetGrade(newTarget: number) {
-    setData((prevData: globalData) => {
-      prevData.classes.filter((x) => x.id === selected.id)[0].targetGrade =
-        newTarget;
-
-      return {
-        ...prevData,
-      };
-    });
   }
 
   const [targetGradeBox, setTargetGradeBox] = useState(
@@ -207,13 +145,13 @@ export default function ClassDetails(props: any) {
         onWheel={(e) => (e.target as HTMLElement).blur()}
       />
     );
-  }, [selected?.targetGrade]);
+  }, [selected.targetGrade]);
 
   const screenWidth = useWindowWidth();
   let widthPerBucket = screenWidth / selected.weights.length;
 
   return (
-    <Card variant="elevation" sx={{ height: '100%', p: 2 }}>
+    <Card variant="elevation" sx={{ height: "100%", p: 2 }}>
       <div>
         <Typography variant="h4" fontWeight="bold">
           {selected.name} Details
@@ -222,19 +160,13 @@ export default function ClassDetails(props: any) {
           <Stack
             maxWidth={1}
             sx={{ mt: 4 }}
-            direction={
-              (widthPerBucket < 240) ? 'column' : 'row'
-            }
+            direction={widthPerBucket < 240 ? "column" : "row"}
             spacing={1}
             alignItems="flex-start"
             justifyContent="space-around"
             divider={
               <Divider
-                orientation={
-                  (widthPerBucket < 240)
-                    ? 'horizontal'
-                    : 'vertical'
-                }
+                orientation={widthPerBucket < 240 ? "horizontal" : "vertical"}
                 flexItem
               />
             }
@@ -267,7 +199,7 @@ export default function ClassDetails(props: any) {
                           fontWeight="bold"
                           variant="subtitle1"
                         >
-                          Average after {x.drops} drops:{' '}
+                          Average after {x.drops} drops:{" "}
                           {(calculateScores(x).dropped * 100).toFixed(2)}%
                         </Typography>
                       )}
@@ -276,7 +208,7 @@ export default function ClassDetails(props: any) {
                         fontWeight="bold"
                         variant="subtitle1"
                       >
-                        Average without drops:{' '}
+                        Average without drops:{" "}
                         {(calculateScores(x).raw * 100).toFixed(2)}%
                       </Typography>
                     </div>
@@ -312,7 +244,7 @@ export default function ClassDetails(props: any) {
               <Button
                 size="large"
                 variant={
-                  selected.selectedAssignment == null ? 'contained' : 'outlined'
+                  selected.selectedAssignment == null ? "contained" : "outlined"
                 }
                 onClick={() => {
                   if (selected.selectedAssignment != null) {
@@ -333,8 +265,8 @@ export default function ClassDetails(props: any) {
                   fontWeight="bold"
                   variant="body1"
                 >
-                  Score necessary on selected assignment to get ≥{' '}
-                  {selected.targetGrade}%:{' '}
+                  Score necessary on selected assignment to get ≥{" "}
+                  {selected.targetGrade}%:{" "}
                   {(calculateScoreNecessary() * 100).toFixed(2)}
                 </Typography>
               )}

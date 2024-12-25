@@ -1,4 +1,6 @@
-import { EditRounded } from '@mui/icons-material';
+"use client";
+
+import { EditRounded } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -14,11 +16,11 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from '@mui/material';
-import { Stack } from '@mui/system';
-import { SyntheticEvent, useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { bucket, defaultAssignment, defaultBucket, globalData } from '../pages';
+} from "@mui/material";
+import { Stack } from "@mui/system";
+import { SyntheticEvent, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { bucket, defaultAssignment, defaultBucket, globalData } from "../pages";
 
 export default function EditClass(props: any) {
   const data: globalData = props.data;
@@ -161,22 +163,22 @@ export default function EditClass(props: any) {
   useEffect(() => {
     // handle validation that form adds to 100%
     const submitButton: HTMLObjectElement | null = document.getElementById(
-      'add-class-submit-button'
+      "add-class-submit-button"
     ) as HTMLObjectElement;
 
     if (buckets.reduce((sum, x) => sum + x.percentage, 0) != 100) {
       submitButton?.setCustomValidity(
-        'The sum of all bucket weights must be 100%'
+        "The sum of all bucket weights must be 100%"
       );
     } else {
-      submitButton?.setCustomValidity('');
+      submitButton?.setCustomValidity("");
     }
 
     setBucketsList(
       buckets.map((x) => (
         <div key={x.id}>
           <Stack spacing={1} direction="row">
-            <FormControl sx={{ width: '50%' }}>
+            <FormControl sx={{ width: "50%" }}>
               <OutlinedInput
                 onChange={(e) => updateBucketName(x, e.target.value)}
                 required
@@ -184,7 +186,7 @@ export default function EditClass(props: any) {
               />
               <FormHelperText sx={{ ml: 1 }}>Bucket Name</FormHelperText>
             </FormControl>
-            <FormControl sx={{ width: '30%' }}>
+            <FormControl sx={{ width: "30%" }}>
               <OutlinedInput
                 onChange={(e) => updateBucketWeight(x, Number(e.target.value))}
                 required
@@ -199,7 +201,7 @@ export default function EditClass(props: any) {
               />
               <FormHelperText sx={{ ml: 1 }}>Percentage</FormHelperText>
             </FormControl>
-            <FormControl sx={{ width: '20%' }}>
+            <FormControl sx={{ width: "20%" }}>
               <OutlinedInput
                 onChange={(e) => updateBucketDrops(x, Number(e.target.value))}
                 required
@@ -233,7 +235,7 @@ export default function EditClass(props: any) {
       </Box>
 
       <Dialog open={open} onClose={close} fullWidth={true} maxWidth="md">
-        <DialogTitle sx={{ fontWeight: 'bold', fontSize: 'x-large' }}>
+        <DialogTitle sx={{ fontWeight: "bold", fontSize: "x-large" }}>
           Edit
         </DialogTitle>
         <DialogContent>
@@ -241,7 +243,7 @@ export default function EditClass(props: any) {
             <Stack
               justifyContent="center"
               spacing={4}
-              direction={{ xs: 'column', sm: 'row' }}
+              direction={{ xs: "column", sm: "row" }}
               sx={{ mt: 6 }}
             >
               <Stack spacing={2} direction="column">
@@ -262,7 +264,7 @@ export default function EditClass(props: any) {
                       setBuckets([
                         ...buckets,
                         {
-                          name: '',
+                          name: "",
                           percentage: 0,
                           drops: 0,
                           assignments: [],

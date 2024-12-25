@@ -2,133 +2,44 @@
 
 import ClassDetails from "@/components/ClassDetails";
 import Classes from "@/components/Classes";
-import { defaultAssignment, defaultBucket, globalData } from "@/components/Data";
-import { Card, CardHeader } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import {
+  defaultAssignment,
+  defaultBucket,
+  probExampleClass,
+  schoolClass,
+  softwareExampleClass,
+  useDataStore,
+} from "./store";
 
 export default function Home() {
+  // const loadAllData = useDataStore((state) => state.loadAllData);
+  // const cachedData = useDataStore((state) => ({
+  //   classes: state.classes,
+  //   selectedClassId: state.selectedClassId,
+  // }));
 
-  const [data, setData] = useState<globalData>({
-    classes: [
-      {
-        name: "Probability",
-        number: "36-218",
-        id: uuidv4(),
-        weights: [
-          {
-            name: "Homework",
-            percentage: 35,
-            drops: 2,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Participation",
-            percentage: 5,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Quizzes",
-            percentage: 15,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Midterm",
-            percentage: 20,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Final",
-            percentage: 25,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-        ],
-        selectedAssignment: defaultAssignment,
-        selectedBucket: defaultBucket,
-        targetGrade: 90
-      },
-      {
-        name: "Software",
-        number: "17-214",
-        id: uuidv4(),
-        weights: [
-          {
-            name: "Homework",
-            percentage: 50,
-            drops: 2,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Midterm 1",
-            percentage: 10,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Midterm 2",
-            percentage: 10,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Quizzes",
-            percentage: 5,
-            drops: 4,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Participation",
-            percentage: 5,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-          {
-            name: "Final",
-            percentage: 20,
-            drops: 0,
-            id: uuidv4(),
-            assignments: []
-          },
-        ],
-        selectedAssignment: defaultAssignment,
-        selectedBucket: defaultBucket,
-        targetGrade: 90
-      }
-    ]
-  })
+  // const [loaded, setLoaded] = useState(false);
 
-  // const [data, setData] = useState<globalData>({classes: []})
-  const [loaded, setLoaded] = useState(false)
+  // useEffect(() => {
+  //   const data = localStorage.getItem("data");
+  //   setLoaded(true);
+  //   if (data) {
+  //     loadAllData(JSON.parse(data));
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    const data = localStorage.getItem("data");
-    setLoaded(true);
-    if (data) {
-      setData(JSON.parse(data));
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (loaded) {
+  //     localStorage.setItem("data", JSON.stringify(cachedData));
+  //   }
+  // }, [cachedData]);
 
-  useEffect(() => {
-    if (loaded) {
-      localStorage.setItem("data", JSON.stringify(data));
-    }
-  }, [data])
-
-  const [selectedClassID, setSelectedClassID] = useState(null);
+  const selectedClassId = useDataStore((state) => state.selectedClassId);
+  const addClass = useDataStore((state) => state.addClass);
+  addClass(probExampleClass);
+  addClass(softwareExampleClass);
 
   return (
     //  <Box sx={{minHeight: "100%"}}>
@@ -149,11 +60,7 @@ export default function Home() {
     // </Box>
     // <h1>Hi</h1>
     <div className="flex flex-col justify-between">
-      {/* {
-        selectedClassID != null && <ClassDetails data={data} setData={setData} selectedClassID={selectedClassID}></ClassDetails>
-      } */}
-
-      <Classes className="m-4" data={data} setData={setData} selectedClassID={selectedClassID} setSelectedClassID={setSelectedClassID}></Classes>
+      {selectedClassId != null && <ClassDetails />}
     </div>
   );
 }

@@ -1,17 +1,7 @@
-import { Add, DeleteOutline } from '@mui/icons-material';
-import {
-  Divider,
-  IconButton,
-  TextField,
-  Checkbox,
-  Tooltip,
-  Button,
-  useTheme,
-} from '@mui/material';
-import { alpha, Box, Stack } from '@mui/system';
-import { useEffect, useState } from 'react';
-import { schoolClass, bucket, globalData, assignment } from '../pages';
-import { v4 as uuidv4 } from 'uuid';
+"use client";
+
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Assignments(props: any) {
   const data: globalData = props.data;
@@ -28,7 +18,7 @@ export default function Assignments(props: any) {
         .filter((x) => x.id === selected.id)[0]
         .weights.filter((x) => x.id === bucket.id)[0]
         .assignments.push({
-          name: '',
+          name: "",
           score: 0,
           id: uuidv4(),
           outOf: 100,
@@ -133,14 +123,14 @@ export default function Assignments(props: any) {
               selected.selectedAssignment != null &&
               selected.selectedAssignment.id === x.id
                 ? alpha(theme.palette.primary.main, 0.2)
-                : '',
+                : "",
           }}
         >
           {selected.selectedAssignment != null ? (
             <form>
               <Stack direction="row" alignItems="center" spacing={0.5}>
                 <TextField
-                  sx={{ width: '40%' }}
+                  sx={{ width: "40%" }}
                   onChange={(e) => setAssignmentName(x, e.target.value)}
                   variant="outlined"
                   label="Name"
@@ -150,7 +140,7 @@ export default function Assignments(props: any) {
                   }}
                 />
                 <TextField
-                  sx={{ width: '30%' }}
+                  sx={{ width: "30%" }}
                   disabled={x.simulated}
                   onChange={(e) =>
                     setAssignmentScore(x, Number(e.target.value))
@@ -170,7 +160,7 @@ export default function Assignments(props: any) {
                   onWheel={(e) => (e.target as HTMLElement).blur()}
                 />
                 <TextField
-                  sx={{ width: '30%' }}
+                  sx={{ width: "30%" }}
                   onChange={(e) =>
                     setAssignmentOutOf(x, Number(e.target.value))
                   }
@@ -211,8 +201,8 @@ export default function Assignments(props: any) {
                         }}
                         sx={{
                           borderRadius: 4,
-                          height: '30px',
-                          width: '10px',
+                          height: "30px",
+                          width: "10px",
                         }}
                         size="small"
                         color="error"
@@ -229,7 +219,7 @@ export default function Assignments(props: any) {
                       tabIndex={-1}
                       size="small"
                       color="primary"
-                      sx={{ height: '30px', width: '10px' }}
+                      sx={{ height: "30px", width: "10px" }}
                       checked={x.simulated}
                       onChange={() => simulateAssignment(x)}
                     />
@@ -243,7 +233,7 @@ export default function Assignments(props: any) {
               size="medium"
               onClick={() => selectAssignment(x)}
             >
-              {x.name == '' ? 'Unnamed' : x.name}
+              {x.name == "" ? "Unnamed" : x.name}
             </Button>
           )}
         </Box>
@@ -252,14 +242,14 @@ export default function Assignments(props: any) {
   }, [data, selected, bucket, selected.selectedAssignment]);
 
   return (
-    <Stack direction="column" spacing={0} alignItems={'center'}>
+    <Stack direction="column" spacing={0} alignItems={"center"}>
       {assignmentList}
 
       <Box textAlign="center">
         <Tooltip title="Add Assignment">
           <IconButton
             onClick={addAssignment}
-            sx={{ borderRadius: 4, height: '40px', width: '40px' }}
+            sx={{ borderRadius: 4, height: "40px", width: "40px" }}
             size="small"
             color="primary"
           >
