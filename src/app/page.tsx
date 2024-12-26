@@ -36,9 +36,14 @@ export default function Home() {
   // }, [cachedData]);
 
   // const selectedClassId = useDataStore((state) => state.selectedClassId);
+
+  const numClasses = useDataStore((state) => state.classes.size);
   const addClass = useDataStore((state) => state.addClass);
-  addClass(probExampleClass);
-  addClass(softwareExampleClass);
+
+  if (numClasses === 0) {
+    addClass(probExampleClass);
+    addClass(softwareExampleClass);
+  }
 
   return (
     //  <Box sx={{minHeight: "100%"}}>

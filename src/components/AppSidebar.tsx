@@ -19,6 +19,7 @@ import { StoreApi, UseBoundStore } from "zustand";
 
 export function AppSidebar() {
   const classes = useDataStore((state) => state.classes);
+  const router = useRouter();
 
   return (
     <Sidebar>
@@ -28,8 +29,16 @@ export function AppSidebar() {
           <SidebarGroupLabel>Classes</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {[...classes.entries()].map(([id, store]) => (
-                <ClassMenuItem key={id} id={id} store={store} />
+              {[...classes.entries()].map(([id, x]) => (
+                <SidebarMenuItem key={x.id}>
+                  <SidebarMenuButton
+                    onClick={() => router.push(`/class/${x.id}`)}
+                  >
+                    <div>
+                      {x.name} ({x.number})
+                    </div>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -49,26 +58,5 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>
-  );
-}
-
-function ClassMenuItem({
-  id,
-  store,
-}: {
-  id: string;
-  store: UseBoundStore<StoreApi<schoolClass>>;
-}) {
-  const x = store();
-  const router = useRouter();
-
-  return (
-    <SidebarMenuItem key={x.id}>
-      <SidebarMenuButton onClick={() => router.push(`/class/${x.id}`)}>
-        <div>
-          {x.name} ({x.number})
-        </div>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
   );
 }

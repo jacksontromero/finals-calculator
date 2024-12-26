@@ -1,8 +1,7 @@
 "use client";
 
-import { BaseSyntheticEvent, useEffect, useState } from "react";
+import { BaseSyntheticEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Card } from "./ui/card";
 import {
   Form,
   FormControl,
@@ -24,7 +23,6 @@ import { z } from "zod";
 import { Separator } from "./ui/separator";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ErrorMessage } from "@hookform/error-message";
 import {
   Tooltip,
   TooltipContent,
@@ -60,6 +58,8 @@ type FormData = z.infer<typeof FormSchema>;
 export default function AddClass(props: any) {
   const [open, setOpen] = useState(false);
   const addClass = useDataStore((state) => state.addClass);
+
+  // TODO - come back, add auto-open if no classes
 
   // const classes = useDataStore((state) => state.classes);
 

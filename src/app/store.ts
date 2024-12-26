@@ -1,5 +1,8 @@
 import { StoreApi, UseBoundStore, create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
+import { persist, createJSONStorage, StorageValue } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
+import { enableMapSet } from "immer";
 
 export type assignment = {
   name: string;
@@ -28,8 +31,11 @@ export type schoolClass = {
 };
 
 export type globalDataStore = {
-  classes: Map<string, UseBoundStore<StoreApi<schoolClass>>>;
+  classes: Map<string, schoolClass>;
   addClass: (newClass: schoolClass) => void;
+  removeSelectedAssignment: (classId: string) => void;
+  pickSelectedAssignment: (classId: string, a: assignment, b: bucket) => void;
+  setTargetGrade: (classId: string, newTarget: number) => void;
 };
 
 export const defaultAssignment: assignment = {
@@ -147,67 +153,73 @@ export const softwareExampleClass: schoolClass = {
   targetGrade: 90,
 };
 
-// idea - create map of class ID to class data store
-// the main parent store would create a new map each time a class is added or removed,
-// so that components could update when number of classes changes.
-// the map values would be stores for that class itself and then each sub component for that class could update only on its own store
+enableMapSet();
 
-export type classStore = schoolClass & {
-  removeSelectedAssignment: () => void;
-  pickSelectedAssignment: (a: assignment, b: bucket) => void;
-  setTargetGrade: (newTarget: number) => void;
-};
+export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
+  create<globalDataStore>()(
+    persist(
+      immer((set, get) => ({
+        classes: new Map<string, schoolClass>(),
 
-function createNewClassStore(newClass: schoolClass) {
-  const store = create<classStore>((set) => ({
-    ...newClass,
-    removeSelectedAssignment: () =>
-      set((state) => {
-        state.selectedAssignment = null;
-        state.selectedBucket = null;
-        return state;
-      }),
-    pickSelectedAssignment: (a: assignment, b: bucket) =>
-      set((state) => {
-        state.selectedAssignment = a;
-        state.selectedBucket = b;
-        return state;
-      }),
-    setTargetGrade: (newTarget: number) =>
-      set((state) => {
-        state.targetGrade = newTarget;
-        return state;
-      }),
-  }));
+        addClass: (newClass: schoolClass) =>
+          set((state) => {
+            const existing = state.classes.get(newClass.id);
+            if (existing) {
+              console.warn("Class already exists");
+            } else {
+              state.classes.set(newClass.id, newClass);
+            }
+          }),
 
-  return store;
-}
+        removeSelectedAssignment: (classId: string) =>
+          set((state) => {
+            state.classes.get(classId)!.selectedAssignment = null;
+          }),
 
-export const useDataStore = create<globalDataStore>()((set) => ({
-  classes: new Map<string, UseBoundStore<StoreApi<schoolClass>>>(),
+        pickSelectedAssignment: (classId: string, a: assignment, b: bucket) =>
+          set((state) => {
+            state.classes.get(classId)!.selectedAssignment = a;
+            state.classes.get(classId)!.selectedBucket = b;
+          }),
 
-  addClass: (newClass: schoolClass) =>
-    set((state) => {
-      const existing = state.classes.get(newClass.id);
-      if (existing) {
-        console.warn("Class already exists");
-        return state;
-      } else {
-        const newMap = new Map(state.classes).set(
-          newClass.id,
-          createNewClassStore(newClass)
-        );
-        return { classes: newMap };
+        setTargetGrade: (classId: string, newTarget: number) =>
+          set((state) => {
+            state.classes.get(classId)!.targetGrade = newTarget;
+          }),
+      })),
+      {
+        name: "finals-calculator",
+        storage: {
+          getItem: (name: string) => {
+            const str = localStorage.getItem(name);
+            if (!str) {
+              return null;
+            }
+            const existingValue = JSON.parse(str);
+
+            return {
+              ...existingValue,
+              state: {
+                ...existingValue.state,
+                classes: new Map(existingValue.state.classes),
+              },
+            };
+          },
+          setItem(name: string, newValue: StorageValue<globalDataStore>) {
+            const str = JSON.stringify({
+              ...newValue,
+              state: {
+                ...newValue.state,
+                classes: Array.from(newValue.state.classes.entries()),
+              },
+            });
+
+            localStorage.setItem(name, str);
+          },
+          removeItem(name: string) {
+            localStorage.removeItem(name);
+          },
+        },
       }
-    }),
-}));
-
-export function getClassStore(id: string) {
-  const classStore = useDataStore.getState().classes.get(id);
-
-  if (!classStore) {
-    throw new Error("Could not find class store");
-  } else {
-    return classStore;
-  }
-}
+    )
+  );

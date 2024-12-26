@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import Assignments from "./Assignments";
 import { useWindowWidth } from "@react-hook/window-size/throttled";
-import { bucket, getSelectedClass, useDataStore } from "@/app/store";
+import { bucket, useDataStore } from "@/app/store";
+import { Input } from "./ui/input";
 
-export default function ClassDetails() {
-  const selected = getSelectedClass().class;
-  const selectClass = useDataStore((state) => state.selectClass);
+export default function ClassDetails(params: { classId: string }) {
+  const classId = params.classId;
+  const classData = useDataStore((state) => state.classes.get(classId))!;
 
   function calculateScores(b: bucket): { dropped: number; raw: number } {
     let nonSim = b.assignments.filter((x) => !x.simulated);
@@ -47,17 +48,16 @@ export default function ClassDetails() {
 
   function calculateScoreNecessary(): number {
     if (
-      !selected ||
-      selected.selectedAssignment == null ||
-      selected.selectedBucket == null
+      classData.selectedAssignment == null ||
+      classData.selectedBucket == null
     ) {
       return 0;
     }
 
     let totalPercentage = 0;
 
-    for (let b of selected.weights) {
-      if (b.id !== selected.selectedBucket.id) {
+    for (let b of classData.weights) {
+      if (b.id !== classData.selectedBucket.id) {
         totalPercentage += calculateScores(b).dropped * b.percentage;
       }
     }
@@ -65,14 +65,15 @@ export default function ClassDetails() {
     totalPercentage /= 100;
 
     let percentFinalBucketNeeded =
-      (selected.targetGrade / 100 - totalPercentage) /
-      (selected.selectedBucket.percentage / 100);
+      (classData.targetGrade / 100 - totalPercentage) /
+      (classData.selectedBucket.percentage / 100);
 
     // calculate score needed for assignment within bucket
 
-    let assignmentsWithoutSelected = selected.selectedBucket.assignments.filter(
-      (x) => x.id !== selected.selectedAssignment?.id
-    );
+    let assignmentsWithoutSelected =
+      classData.selectedBucket.assignments.filter(
+        (x) => x.id !== classData.selectedAssignment?.id
+      );
     let nonSim = assignmentsWithoutSelected.filter((x) => !x.simulated);
     let totalNonSimScore = nonSim.reduce((acc, x) => acc + x.score, 0);
     let totalNonSimPoints = nonSim.reduce((acc, x) => acc + x.outOf, 0);
@@ -94,7 +95,7 @@ export default function ClassDetails() {
     );
     let dropped = sorted.slice(
       0,
-      sorted.length - selected.selectedBucket.drops
+      sorted.length - classData.selectedBucket.drops
     );
 
     let totalDroppedScore = dropped.reduce((acc, x) => acc + x.score, 0);
@@ -103,19 +104,19 @@ export default function ClassDetails() {
     let percentageAddNecessary =
       percentFinalBucketNeeded -
       totalDroppedScore /
-        (totalDroppedPoints + selected.selectedAssignment.outOf);
+        (totalDroppedPoints + classData.selectedAssignment.outOf);
 
     let percentageForTarget =
       (percentageAddNecessary *
-        (totalDroppedPoints + selected.selectedAssignment.outOf)) /
-      selected.selectedAssignment.outOf;
+        (totalDroppedPoints + classData.selectedAssignment.outOf)) /
+      classData.selectedAssignment.outOf;
     return percentageForTarget < 0 ? 0 : percentageForTarget;
   }
 
   function totalGrade(): number {
     let total = 0;
 
-    for (let b of selected.weights) {
+    for (let b of classData.weights) {
       total += calculateScores(b).dropped * b.percentage;
     }
 
@@ -128,27 +129,21 @@ export default function ClassDetails() {
 
   useEffect(() => {
     setTargetGradeBox(
-      <TextField
-        onChange={(e) => setTargetGrade(Number(e.target.value))}
-        variant="outlined"
-        label="Target Grade"
+      <Input
+        onChange={(e) => classData.setTargetGrade(Number(e.target.value))}
         type="number"
-        defaultValue={selected.targetGrade}
-        InputProps={{
-          inputProps: {
-            min: 0,
-          },
-        }}
+        defaultValue={classData.targetGrade}
+        min={0}
         onFocus={(e) => {
           e.target.select();
         }}
         onWheel={(e) => (e.target as HTMLElement).blur()}
       />
     );
-  }, [selected.targetGrade]);
+  }, [classData.targetGrade]);
 
   const screenWidth = useWindowWidth();
-  let widthPerBucket = screenWidth / selected.weights.length;
+  let widthPerBucket = screenWidth / classData.weights.length;
 
   return (
     <Card variant="elevation" sx={{ height: "100%", p: 2 }}>
