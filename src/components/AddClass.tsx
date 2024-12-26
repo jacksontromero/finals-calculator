@@ -59,6 +59,7 @@ type FormData = z.infer<typeof FormSchema>;
 
 export default function AddClass(props: any) {
   const [open, setOpen] = useState(false);
+  const addClass = useDataStore((state) => state.addClass);
 
   // const classes = useDataStore((state) => state.classes);
 
@@ -95,32 +96,20 @@ export default function AddClass(props: any) {
 
     const newID = uuidv4();
 
-    if (data.classes.length === 0) {
-      setSelectedClassID(newID);
-    }
-
-    setData({
-      ...data,
-      classes: [
-        ...data.classes,
-        ...[
-          {
-            name: formData.courseName,
-            number: formData.courseNumber,
-            weights: formData.buckets.map((x) => ({
-              name: x.bucketName,
-              percentage: x.bucketPercentage,
-              drops: x.bucketDrops,
-              assignments: [],
-              id: uuidv4(),
-            })),
-            id: newID,
-            selectedBucket: null,
-            selectedAssignment: null,
-            targetGrade: 90,
-          } as schoolClass,
-        ],
-      ].sort((a, b) => a.name.localeCompare(b.name)),
+    addClass({
+      id: newID,
+      name: formData.courseName,
+      number: formData.courseNumber,
+      weights: formData.buckets.map((x) => ({
+        name: x.bucketName,
+        percentage: x.bucketPercentage,
+        drops: x.bucketDrops,
+        assignments: [],
+        id: uuidv4(),
+      })),
+      selectedBucket: null,
+      selectedAssignment: null,
+      targetGrade: 90,
     });
 
     form.reset();

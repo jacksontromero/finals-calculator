@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { StoreApi, UseBoundStore, create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
 
 export type assignment = {
@@ -27,19 +27,9 @@ export type schoolClass = {
   targetGrade: number;
 };
 
-export type globalData = {
-  classes: schoolClass[];
-  selectedClassId: string | null;
-  selectClass: (id: string) => void;
+export type globalDataStore = {
+  classes: Map<string, UseBoundStore<StoreApi<schoolClass>>>;
   addClass: (newClass: schoolClass) => void;
-  replaceClass: (id: string, updatedClass: schoolClass) => void;
-  removeSelectedAssignment: () => void;
-  pickSelectedAssignment: (a: assignment, b: bucket) => void;
-  setTargetGrade: (newTarget: number) => void;
-  loadAllData: (cachedData: {
-    classes: schoolClass[];
-    selectedClassId: string | null;
-  }) => void;
 };
 
 export const defaultAssignment: assignment = {
@@ -157,105 +147,67 @@ export const softwareExampleClass: schoolClass = {
   targetGrade: 90,
 };
 
-export const useDataStore = create<globalData>()((set) => ({
-  classes: [],
-  selectedClassId: null,
+// idea - create map of class ID to class data store
+// the main parent store would create a new map each time a class is added or removed,
+// so that components could update when number of classes changes.
+// the map values would be stores for that class itself and then each sub component for that class could update only on its own store
 
-  selectClass: (id: string) =>
-    set((state) => {
-      const index = state.classes.findIndex((x) => x.id === id);
-      if (index === -1) {
-        throw new Error("Class not found");
-      }
+export type classStore = schoolClass & {
+  removeSelectedAssignment: () => void;
+  pickSelectedAssignment: (a: assignment, b: bucket) => void;
+  setTargetGrade: (newTarget: number) => void;
+};
 
-      return { selectedClassId: id };
-    }),
+function createNewClassStore(newClass: schoolClass) {
+  const store = create<classStore>((set) => ({
+    ...newClass,
+    removeSelectedAssignment: () =>
+      set((state) => {
+        state.selectedAssignment = null;
+        state.selectedBucket = null;
+        return state;
+      }),
+    pickSelectedAssignment: (a: assignment, b: bucket) =>
+      set((state) => {
+        state.selectedAssignment = a;
+        state.selectedBucket = b;
+        return state;
+      }),
+    setTargetGrade: (newTarget: number) =>
+      set((state) => {
+        state.targetGrade = newTarget;
+        return state;
+      }),
+  }));
 
-  loadAllData: (cachedData: {
-    classes: schoolClass[];
-    selectedClassId: string | null;
-  }) =>
-    set((state) => ({
-      classes: cachedData.classes,
-      selectedClassId: cachedData.selectedClassId,
-    })),
+  return store;
+}
+
+export const useDataStore = create<globalDataStore>()((set) => ({
+  classes: new Map<string, UseBoundStore<StoreApi<schoolClass>>>(),
 
   addClass: (newClass: schoolClass) =>
     set((state) => {
-      const index = state.classes.findIndex((x) => x.id === newClass.id);
-      if (index !== -1) {
+      const existing = state.classes.get(newClass.id);
+      if (existing) {
         console.warn("Class already exists");
         return state;
+      } else {
+        const newMap = new Map(state.classes).set(
+          newClass.id,
+          createNewClassStore(newClass)
+        );
+        return { classes: newMap };
       }
-
-      return { classes: [...state.classes, newClass] };
-    }),
-
-  replaceClass: (id: string, updatedClass: schoolClass) =>
-    set((state) => {
-      if (updatedClass.id !== id) {
-        throw new Error("Class ID does not match");
-      }
-
-      const index = state.classes.findIndex((x) => x.id === id);
-      if (index === -1) {
-        throw new Error("Class not found");
-      }
-
-      state.classes[index] = updatedClass;
-      return { classes: state.classes };
-    }),
-
-  /**
-   * Sets selected assignment and bucket to null for the selected class
-   */
-  removeSelectedAssignment: () =>
-    set((state) => {
-      const index = getSelectedClass().idx;
-      state.classes[index].selectedAssignment = null;
-      state.classes[index].selectedBucket = null;
-      return { classes: state.classes };
-    }),
-
-  /**
-   * Sets the target assignment and target bucket for the selected class
-   * @param a The assignment to pick
-   * @param b The bucket to pick (that a is in)
-   */
-  pickSelectedAssignment: (a: assignment, b: bucket) =>
-    set((state) => {
-      const index = getSelectedClass().idx;
-      state.classes[index].selectedAssignment = a;
-      state.classes[index].selectedBucket = b;
-      return { classes: state.classes };
-    }),
-
-  /**
-   * Set the target grade for the selected class
-   * @param newTarget The new target grade
-   */
-  setTargetGrade: (newTarget: number) =>
-    set((state) => {
-      const index = getSelectedClass().idx;
-      state.classes[index].targetGrade = newTarget;
-      return { classes: state.classes };
     }),
 }));
 
-export function getSelectedClass() {
-  const selectedClassId = useDataStore((state) => state.selectedClassId);
-  const selectedClassIdx = useDataStore((state) =>
-    state.classes.findIndex((x) => x.id === selectedClassId)
-  );
+export function getClassStore(id: string) {
+  const classStore = useDataStore.getState().classes.get(id);
 
-  if (selectedClassIdx === -1) {
-    throw new Error("Could not find selected class");
+  if (!classStore) {
+    throw new Error("Could not find class store");
+  } else {
+    return classStore;
   }
-
-  const selected = useDataStore((state) => state.classes[selectedClassIdx]);
-
-  return {
-    idx: selectedClassIdx,
-    class: selected,
-  };
 }

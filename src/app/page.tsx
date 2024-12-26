@@ -1,7 +1,6 @@
 "use client";
 
 import ClassDetails from "@/components/ClassDetails";
-import Classes from "@/components/Classes";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -36,7 +35,7 @@ export default function Home() {
   //   }
   // }, [cachedData]);
 
-  const selectedClassId = useDataStore((state) => state.selectedClassId);
+  // const selectedClassId = useDataStore((state) => state.selectedClassId);
   const addClass = useDataStore((state) => state.addClass);
   addClass(probExampleClass);
   addClass(softwareExampleClass);
@@ -59,8 +58,9 @@ export default function Home() {
     //   <Footer></Footer>
     // </Box>
     // <h1>Hi</h1>
-    <div className="flex flex-col justify-between">
-      {selectedClassId != null && <ClassDetails />}
-    </div>
+    // <div className="flex flex-col justify-between">
+    //   {selectedClassId != null && <ClassDetails />}
+    // </div>
+    <></>
   );
 }

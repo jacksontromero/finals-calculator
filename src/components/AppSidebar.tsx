@@ -1,5 +1,5 @@
 "use client";
-import { getSelectedClass, schoolClass, useDataStore } from "@/app/store";
+import { schoolClass, useDataStore } from "@/app/store";
 import {
   Sidebar,
   SidebarContent,
@@ -14,15 +14,11 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import AddClass from "./AddClass";
+import { useRouter } from "next/navigation";
+import { StoreApi, UseBoundStore } from "zustand";
 
 export function AppSidebar() {
   const classes = useDataStore((state) => state.classes);
-  let selectedClass: schoolClass | null = null;
-
-  const selectedClassID = useDataStore((state) => state.selectedClassId);
-  if (selectedClassID != null) {
-    selectedClass = getSelectedClass().class;
-  }
 
   return (
     <Sidebar>
@@ -32,14 +28,8 @@ export function AppSidebar() {
           <SidebarGroupLabel>Classes</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {classes.map((x) => (
-                <SidebarMenuItem key={x.id}>
-                  <SidebarMenuButton asChild>
-                    <a href={`/class/${x.id}`}>
-                      {x.name} ({x.number})
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+              {[...classes.entries()].map(([id, store]) => (
+                <ClassMenuItem key={id} id={id} store={store} />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -59,5 +49,26 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>
+  );
+}
+
+function ClassMenuItem({
+  id,
+  store,
+}: {
+  id: string;
+  store: UseBoundStore<StoreApi<schoolClass>>;
+}) {
+  const x = store();
+  const router = useRouter();
+
+  return (
+    <SidebarMenuItem key={x.id}>
+      <SidebarMenuButton onClick={() => router.push(`/class/${x.id}`)}>
+        <div>
+          {x.name} ({x.number})
+        </div>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
   );
 }
