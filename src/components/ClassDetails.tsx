@@ -3,12 +3,28 @@
 import { useEffect, useState } from "react";
 import Assignments from "./Assignments";
 import { useWindowWidth } from "@react-hook/window-size/throttled";
-import { bucket, useDataStore } from "@/app/store";
+import {
+  bucket,
+  defaultAssignment,
+  defaultBucket,
+  useDataStore,
+} from "@/app/store";
 import { Input } from "./ui/input";
+import { Card } from "./ui/card";
+import { H2, H4, P } from "./ui/typography";
+import { Separator } from "./ui/separator";
+import { Button } from "./ui/button";
 
 export default function ClassDetails(params: { classId: string }) {
   const classId = params.classId;
   const classData = useDataStore((state) => state.classes.get(classId))!;
+  const setTargetGrade = useDataStore((state) => state.setTargetGrade);
+  const removeSelectedAssignment = useDataStore(
+    (state) => state.removeSelectedAssignment
+  );
+  const pickSelectedAssignment = useDataStore(
+    (state) => state.pickSelectedAssignment
+  );
 
   function calculateScores(b: bucket): { dropped: number; raw: number } {
     let nonSim = b.assignments.filter((x) => !x.simulated);
@@ -130,7 +146,7 @@ export default function ClassDetails(params: { classId: string }) {
   useEffect(() => {
     setTargetGradeBox(
       <Input
-        onChange={(e) => classData.setTargetGrade(Number(e.target.value))}
+        onChange={(e) => setTargetGrade(classId, Number(e.target.value))}
         type="number"
         defaultValue={classData.targetGrade}
         min={0}
@@ -146,127 +162,76 @@ export default function ClassDetails(params: { classId: string }) {
   let widthPerBucket = screenWidth / classData.weights.length;
 
   return (
-    <Card variant="elevation" sx={{ height: "100%", p: 2 }}>
+    <Card className="h-full p-2 w-full">
       <div>
-        <Typography variant="h4" fontWeight="bold">
-          {selected.name} Details
-        </Typography>
-        <Stack direction="column" spacing={2}>
-          <Stack
-            maxWidth={1}
-            sx={{ mt: 4 }}
-            direction={widthPerBucket < 240 ? "column" : "row"}
-            spacing={1}
-            alignItems="flex-start"
-            justifyContent="space-around"
-            divider={
-              <Divider
-                orientation={widthPerBucket < 240 ? "horizontal" : "vertical"}
-                flexItem
-              />
-            }
-          >
-            {selected.weights.map((x) => (
-              <Box key={x.id} minWidth="auto">
-                <Stack direction="column" alignItems="flex-start" spacing={1}>
-                  <Typography
-                    fontSize={16}
-                    fontWeight="bold"
-                    variant="subtitle1"
-                  >
+        <H4 className="font-bol">{classData.name} Details</H4>
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-row gap-1 mt-4 items-start justify-around w-full">
+            {classData.weights.map((x) => (
+              <div key={x.id}>
+                <div className="flex flex-col gap-1 align-start">
+                  <P className="font-bold text-md">
                     {x.name} ({x.percentage}%)
-                  </Typography>
+                  </P>
 
-                  <Assignments
-                    data={data}
-                    setData={setData}
-                    selected={selected}
-                    bucket={x}
-                    removeSelectedAssignment={removeSelectedAssignment}
-                    pickSelectedAssignment={pickSelectedAssignment}
-                  />
+                  <Assignments classData={classData} bucket={x} />
 
                   {x.assignments.length != 0 && (
                     <div>
                       {x.drops != 0 && (
-                        <Typography
-                          fontSize={16}
-                          fontWeight="bold"
-                          variant="subtitle1"
-                        >
+                        <P className="font-bold text-md">
                           Average after {x.drops} drops:{" "}
                           {(calculateScores(x).dropped * 100).toFixed(2)}%
-                        </Typography>
+                        </P>
                       )}
-                      <Typography
-                        fontSize={16}
-                        fontWeight="bold"
-                        variant="subtitle1"
-                      >
+                      <P className="font-bold text-md">
                         Average without drops:{" "}
                         {(calculateScores(x).raw * 100).toFixed(2)}%
-                      </Typography>
+                      </P>
                     </div>
                   )}
-                </Stack>
-              </Box>
+                </div>
+              </div>
             ))}
-          </Stack>
+          </div>
 
-          <Divider sx={{ mt: 4 }} />
-          <Stack
-            direction="column"
-            spacing={2}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typography
-              sx={{ mb: 4 }}
-              textAlign="center"
-              fontSize={20}
-              fontWeight="bold"
-              variant="h2"
-            >
+          <Separator className="mt-4" />
+          <div className="flex flex-col gap-2 items-center justify-center">
+            <H2 className="text-center mb-4">
               Total Grade: {totalGrade().toFixed(2)}%
-            </Typography>
-            <Stack
-              direction="row"
-              spacing={1}
-              alignItems="center"
-              justifyContent="center"
-            >
+            </H2>
+            <div className="flex flex-row gap-1 justify-center items-center">
               {targetGradeBox}
               <Button
-                size="large"
+                size="lg"
                 variant={
-                  selected.selectedAssignment == null ? "contained" : "outlined"
+                  classData.selectedAssignment == null ? "default" : "outline"
                 }
                 onClick={() => {
-                  if (selected.selectedAssignment != null) {
-                    removeSelectedAssignment();
+                  if (classData.selectedAssignment != null) {
+                    removeSelectedAssignment(classId);
                   } else {
-                    pickSelectedAssignment(defaultAssignment, defaultBucket);
+                    pickSelectedAssignment(
+                      classId,
+                      defaultAssignment,
+                      defaultBucket
+                    );
                   }
                 }}
               >
                 Select Target Assignment
               </Button>
-            </Stack>
-            {selected.selectedAssignment != null &&
-              selected.selectedAssignment.id != defaultAssignment.id && (
-                <Typography
-                  textAlign="center"
-                  fontSize={20}
-                  fontWeight="bold"
-                  variant="body1"
-                >
+            </div>
+            {classData.selectedAssignment != null &&
+              classData.selectedAssignment.id != defaultAssignment.id && (
+                <P className="text-center font-bold text-lg">
                   Score necessary on selected assignment to get ≥{" "}
-                  {selected.targetGrade}%:{" "}
+                  {classData.targetGrade}%:{" "}
                   {(calculateScoreNecessary() * 100).toFixed(2)}
-                </Typography>
+                </P>
               )}
-          </Stack>
-        </Stack>
+          </div>
+        </div>
       </div>
     </Card>
   );

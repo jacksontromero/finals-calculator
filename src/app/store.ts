@@ -36,6 +36,35 @@ export type globalDataStore = {
   removeSelectedAssignment: (classId: string) => void;
   pickSelectedAssignment: (classId: string, a: assignment, b: bucket) => void;
   setTargetGrade: (classId: string, newTarget: number) => void;
+  addNewAssignment: (classId: string, bucketId: string) => void;
+  removeAssignment: (
+    classId: string,
+    bucketId: string,
+    assignmentId: string
+  ) => void;
+  setAssignmentName: (
+    classId: string,
+    bucketId: string,
+    a: assignment,
+    newName: string
+  ) => void;
+  setAssignmentScore: (
+    classId: string,
+    bucketId: string,
+    a: assignment,
+    newScore: number
+  ) => void;
+  setAssignmentOutOf: (
+    classId: string,
+    bucketId: string,
+    a: assignment,
+    newOutOf: number
+  ) => void;
+  simulateAssignment: (
+    classId: string,
+    bucketId: string,
+    a: assignment
+  ) => void;
 };
 
 export const defaultAssignment: assignment = {
@@ -185,6 +214,78 @@ export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
         setTargetGrade: (classId: string, newTarget: number) =>
           set((state) => {
             state.classes.get(classId)!.targetGrade = newTarget;
+          }),
+
+        addNewAssignment: (classId: string, bucketId: string) =>
+          set((state) => {
+            state.classes
+              .get(classId)!
+              .weights.find((x) => x.id === bucketId)!
+              .assignments.push(defaultAssignment);
+          }),
+
+        removeAssignment: (
+          classId: string,
+          bucketId: string,
+          assignmentId: string
+        ) =>
+          set((state) => {
+            const assignments = state.classes
+              .get(classId)!
+              .weights.find((x) => x.id === bucketId)!.assignments;
+            assignments.splice(
+              assignments.findIndex((x) => x.id === assignmentId),
+              1
+            );
+          }),
+
+        setAssignmentName: (
+          classId: string,
+          bucketId: string,
+          a: assignment,
+          newName: string
+        ) =>
+          set((state) => {
+            state.classes
+              .get(classId)!
+              .weights.find((x) => x.id === bucketId)!
+              .assignments.find((x) => x.id === a.id)!.name = newName;
+          }),
+
+        setAssignmentScore: (
+          classId: string,
+          bucketId: string,
+          a: assignment,
+          newScore: number
+        ) =>
+          set((state) => {
+            state.classes
+              .get(classId)!
+              .weights.find((x) => x.id === bucketId)!
+              .assignments.find((x) => x.id === a.id)!.score = newScore;
+          }),
+        setAssignmentOutOf: (
+          classId: string,
+          bucketId: string,
+          a: assignment,
+          newOutOf: number
+        ) =>
+          set((state) => {
+            state.classes
+              .get(classId)!
+              .weights.find((x) => x.id === bucketId)!
+              .assignments.find((x) => x.id === a.id)!.outOf = newOutOf;
+          }),
+        simulateAssignment: (
+          classId: string,
+          bucketId: string,
+          a: assignment
+        ) =>
+          set((state) => {
+            state.classes
+              .get(classId)!
+              .weights.find((x) => x.id === bucketId)!
+              .assignments.find((x) => x.id === a.id)!.simulated = !a.simulated;
           }),
       })),
       {

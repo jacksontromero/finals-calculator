@@ -1,251 +1,185 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { assignment, bucket, schoolClass, useDataStore } from "@/app/store";
+import { Input } from "./ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { PlusIcon, Trash2Icon } from "lucide-react";
+import { P } from "./ui/typography";
+import { Checkbox } from "./ui/checkbox";
+import { Button } from "./ui/button";
 
-export default function Assignments(props: any) {
-  const data: globalData = props.data;
-  const setData = props.setData;
-  const selected: schoolClass = props.selected;
-  const bucket: bucket = props.bucket;
+export default function Assignments(params: {
+  classData: schoolClass;
+  bucket: bucket;
+}) {
+  const classData = params.classData;
+  const classId = classData.id;
+  const bucket = params.bucket;
 
-  const removeSelectedAssignment = props.removeSelectedAssignment;
-  const pickSelectedAssignment = props.pickSelectedAssignment;
-
-  function addAssignment() {
-    setData((prevData: globalData) => {
-      prevData.classes
-        .filter((x) => x.id === selected.id)[0]
-        .weights.filter((x) => x.id === bucket.id)[0]
-        .assignments.push({
-          name: "",
-          score: 0,
-          id: uuidv4(),
-          outOf: 100,
-          simulated: false,
-        });
-
-      return {
-        ...prevData,
-      };
-    });
-  }
-
-  function removeAssignment(id: string) {
-    setData((prevData: globalData) => {
-      let assignments = prevData.classes
-        .filter((x) => x.id === selected.id)[0]
-        .weights.filter((x) => x.id === bucket.id)[0].assignments;
-      assignments.splice(
-        assignments.findIndex((x) => x.id === id),
-        1
-      );
-
-      return {
-        ...prevData,
-      };
-    });
-  }
-
-  function setAssignmentName(a: assignment, newName: string) {
-    setData((prevData: globalData) => {
-      prevData.classes
-        .filter((x) => x.id === selected.id)[0]
-        .weights.filter((x) => x.id === bucket.id)[0]
-        .assignments.filter((x) => x.id === a.id)[0].name = newName;
-
-      return {
-        ...prevData,
-      };
-    });
-  }
-
-  function setAssignmentScore(a: assignment, newScore: number) {
-    setData((prevData: globalData) => {
-      prevData.classes
-        .filter((x) => x.id === selected.id)[0]
-        .weights.filter((x) => x.id === bucket.id)[0]
-        .assignments.filter((x) => x.id === a.id)[0].score = newScore;
-
-      return {
-        ...prevData,
-      };
-    });
-  }
-
-  function setAssignmentOutOf(a: assignment, newOutOf: number) {
-    setData((prevData: globalData) => {
-      prevData.classes
-        .filter((x) => x.id === selected.id)[0]
-        .weights.filter((x) => x.id === bucket.id)[0]
-        .assignments.filter((x) => x.id === a.id)[0].outOf = newOutOf;
-
-      return {
-        ...prevData,
-      };
-    });
-  }
-
-  function simulateAssignment(a: assignment) {
-    setData((prevData: globalData) => {
-      prevData.classes
-        .filter((x) => x.id === selected.id)[0]
-        .weights.filter((x) => x.id === bucket.id)[0]
-        .assignments.filter((x) => x.id === a.id)[0].simulated = !a.simulated;
-
-      return {
-        ...prevData,
-      };
-    });
-  }
+  const removeSelectedAssignment = useDataStore(
+    (state) => state.removeSelectedAssignment
+  );
+  const pickSelectedAssignment = useDataStore(
+    (state) => state.pickSelectedAssignment
+  );
+  const setAssignmentName = useDataStore((state) => state.setAssignmentName);
+  const setAssignmentScore = useDataStore((state) => state.setAssignmentScore);
+  const setAssignmentOutOf = useDataStore((state) => state.setAssignmentOutOf);
+  const simulateAssignment = useDataStore((state) => state.simulateAssignment);
+  const removeAssignment = useDataStore((state) => state.removeAssignment);
+  const addNewAssignment = useDataStore((state) => state.addNewAssignment);
 
   function selectAssignment(a: assignment) {
-    if (selected.selectedAssignment != null) {
-      removeSelectedAssignment();
+    if (classData.selectedAssignment != null) {
+      removeSelectedAssignment(classId);
     } else {
-      pickSelectedAssignment(a, bucket);
+      pickSelectedAssignment(classId, a, bucket);
     }
   }
 
   const [assignmentList, setAssignmentList] = useState<JSX.Element[]>([]);
 
-  const theme = useTheme();
-
   useEffect(() => {
     setAssignmentList(
       bucket.assignments.map((x) => (
-        <Box
+        <div
           key={x.id}
-          sx={{
-            py: 1,
-            borderRadius: 2,
-            backgroundColor:
-              selected.selectedAssignment != null &&
-              selected.selectedAssignment.id === x.id
-                ? alpha(theme.palette.primary.main, 0.2)
-                : "",
-          }}
+          // sx={{
+          //   py: 1,
+          //   borderRadius: 2,
+          //   backgroundColor:
+          //     selected.selectedAssignment != null &&
+          //     selected.selectedAssignment.id === x.id
+          //       ? alpha(theme.palette.primary.main, 0.2)
+          //       : "",
+          // }}
+          className={`py-1 rounded-md border bg-background ${
+            classData.selectedAssignment != null &&
+            classData.selectedAssignment.id === x.id
+              ? "bg-primary/20"
+              : ""
+          }`}
         >
-          {selected.selectedAssignment != null ? (
+          {classData.selectedAssignment != null ? (
             <form>
-              <Stack direction="row" alignItems="center" spacing={0.5}>
-                <TextField
-                  sx={{ width: "40%" }}
-                  onChange={(e) => setAssignmentName(x, e.target.value)}
-                  variant="outlined"
-                  label="Name"
+              <div className="flex flex-row gap-1 items-center">
+                <Input
+                  className="w-[40%]"
+                  onChange={(e) =>
+                    setAssignmentName(classId, bucket.id, x, e.target.value)
+                  }
                   defaultValue={x.name}
                   onFocus={(e) => {
                     e.target.select();
                   }}
                 />
-                <TextField
-                  sx={{ width: "30%" }}
+                <Input
+                  className="w-[30%]"
                   disabled={x.simulated}
                   onChange={(e) =>
-                    setAssignmentScore(x, Number(e.target.value))
+                    setAssignmentScore(
+                      classId,
+                      bucket.id,
+                      x,
+                      Number(e.target.value)
+                    )
                   }
-                  variant="outlined"
                   type="number"
-                  label="Score"
                   defaultValue={x.score}
-                  InputProps={{
-                    inputProps: {
-                      min: 0,
-                    },
-                  }}
+                  min={0}
                   onFocus={(e) => {
                     e.target.select();
                   }}
                   onWheel={(e) => (e.target as HTMLElement).blur()}
                 />
-                <TextField
-                  sx={{ width: "30%" }}
+                <Input
+                  className="w-[30%]"
                   onChange={(e) =>
-                    setAssignmentOutOf(x, Number(e.target.value))
+                    setAssignmentOutOf(
+                      classId,
+                      bucket.id,
+                      x,
+                      Number(e.target.value)
+                    )
                   }
-                  variant="outlined"
                   type="number"
-                  label="Out Of"
                   defaultValue={x.outOf}
-                  InputProps={{
-                    inputProps: {
-                      min: 0,
-                    },
-                  }}
+                  min={0}
                   onFocus={(e) => {
                     e.target.select();
                   }}
                   onWheel={(e) => (e.target as HTMLElement).blur()}
                 />
 
-                <Stack
-                  width="20px"
-                  direction="column"
-                  alignItems="center"
-                  justifyContent="center"
-                  spacing={0}
-                >
-                  <Box
-                    minHeight="full"
-                    minWidth="full"
-                    alignItems="center"
-                    display="flex"
-                    textAlign="center"
-                  >
-                    <Tooltip title="Delete Assignment" placement="top">
-                      <IconButton
-                        tabIndex={-1}
-                        onClick={() => {
-                          removeAssignment(x.id);
-                        }}
-                        sx={{
-                          borderRadius: 4,
-                          height: "30px",
-                          width: "10px",
-                        }}
-                        size="small"
-                        color="error"
-                      >
-                        <DeleteOutline />
-                      </IconButton>
+                <div className="w-20 flex flex-col items-center justify-center gap-0">
+                  <div className="min-h-full min-w-full align-items-center flex text-center">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger
+                          onClick={() =>
+                            removeAssignment(classId, bucket.id, x.id)
+                          }
+                        >
+                          <Trash2Icon size={20} />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <P>Delete Assignment</P>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Checkbox
+                          tabIndex={-1}
+                          // className="h-30 w-10"
+                          checked={x.simulated}
+                          onChange={() =>
+                            simulateAssignment(classId, bucket.id, x)
+                          }
+                        />
+                      </TooltipTrigger>
                     </Tooltip>
-                  </Box>
-                  <Tooltip
-                    title="Replace score with 'Average without drops'"
-                    placement="bottom"
-                  >
-                    <Checkbox
-                      tabIndex={-1}
-                      size="small"
-                      color="primary"
-                      sx={{ height: "30px", width: "10px" }}
-                      checked={x.simulated}
-                      onChange={() => simulateAssignment(x)}
-                    />
-                  </Tooltip>
-                </Stack>
-              </Stack>
+                  </TooltipProvider>
+                </div>
+              </div>
             </form>
           ) : (
             <Button
-              variant="outlined"
-              size="medium"
+              variant="outline"
+              size="default"
               onClick={() => selectAssignment(x)}
             >
               {x.name == "" ? "Unnamed" : x.name}
             </Button>
           )}
-        </Box>
+        </div>
       ))
     );
-  }, [data, selected, bucket, selected.selectedAssignment]);
+  }, [classData, bucket]);
 
   return (
-    <Stack direction="column" spacing={0} alignItems={"center"}>
+    <div className="flex flex-col gap-0 items-center">
       {assignmentList}
 
-      <Box textAlign="center">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger onClick={() => addNewAssignment(classId, bucket.id)}>
+            <PlusIcon />
+          </TooltipTrigger>
+          <TooltipContent>
+            <P>Add Assignment</P>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      {/* <Box textAlign="center">
         <Tooltip title="Add Assignment">
           <IconButton
             onClick={addAssignment}
@@ -256,7 +190,7 @@ export default function Assignments(props: any) {
             <Add />
           </IconButton>
         </Tooltip>
-      </Box>
-    </Stack>
+      </Box> */}
+    </div>
   );
 }
