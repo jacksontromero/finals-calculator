@@ -67,21 +67,21 @@ export type globalDataStore = {
   ) => void;
 };
 
-export const defaultAssignment: assignment = {
+export const defaultAssignment: () => assignment = () => ({
   name: "",
   score: 0,
   outOf: 100,
   simulated: false,
   id: uuidv4(),
-};
+});
 
-export const defaultBucket: bucket = {
+export const defaultBucket: () => bucket = () => ({
   name: "",
   percentage: 0,
   drops: 0,
-  assignments: [defaultAssignment],
+  assignments: [defaultAssignment()],
   id: uuidv4(),
-};
+});
 
 export const probExampleClass: schoolClass = {
   name: "Probability",
@@ -124,8 +124,8 @@ export const probExampleClass: schoolClass = {
       assignments: [],
     },
   ],
-  selectedAssignment: defaultAssignment,
-  selectedBucket: defaultBucket,
+  selectedAssignment: defaultAssignment(),
+  selectedBucket: defaultBucket(),
   targetGrade: 90,
 };
 
@@ -177,8 +177,8 @@ export const softwareExampleClass: schoolClass = {
       assignments: [],
     },
   ],
-  selectedAssignment: defaultAssignment,
-  selectedBucket: defaultBucket,
+  selectedAssignment: defaultAssignment(),
+  selectedBucket: defaultBucket(),
   targetGrade: 90,
 };
 
@@ -221,7 +221,7 @@ export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
             state.classes
               .get(classId)!
               .weights.find((x) => x.id === bucketId)!
-              .assignments.push(defaultAssignment);
+              .assignments.push(defaultAssignment());
           }),
 
         removeAssignment: (

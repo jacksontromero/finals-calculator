@@ -50,16 +50,7 @@ export default function Assignments(params: {
       bucket.assignments.map((x) => (
         <div
           key={x.id}
-          // sx={{
-          //   py: 1,
-          //   borderRadius: 2,
-          //   backgroundColor:
-          //     selected.selectedAssignment != null &&
-          //     selected.selectedAssignment.id === x.id
-          //       ? alpha(theme.palette.primary.main, 0.2)
-          //       : "",
-          // }}
-          className={`py-1 rounded-md border bg-background ${
+          className={`py-1 bg-background ${
             classData.selectedAssignment != null &&
             classData.selectedAssignment.id === x.id
               ? "bg-primary/20"
@@ -74,6 +65,7 @@ export default function Assignments(params: {
                   onChange={(e) =>
                     setAssignmentName(classId, bucket.id, x, e.target.value)
                   }
+                  placeholder="Assignment Name"
                   defaultValue={x.name}
                   onFocus={(e) => {
                     e.target.select();
@@ -92,6 +84,7 @@ export default function Assignments(params: {
                   }
                   type="number"
                   defaultValue={x.score}
+                  placeholder="Score"
                   min={0}
                   onFocus={(e) => {
                     e.target.select();
@@ -110,6 +103,7 @@ export default function Assignments(params: {
                   }
                   type="number"
                   defaultValue={x.outOf}
+                  placeholder="Out Of"
                   min={0}
                   onFocus={(e) => {
                     e.target.select();
@@ -117,23 +111,21 @@ export default function Assignments(params: {
                   onWheel={(e) => (e.target as HTMLElement).blur()}
                 />
 
-                <div className="w-20 flex flex-col items-center justify-center gap-0">
-                  <div className="min-h-full min-w-full align-items-center flex text-center">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger
-                          onClick={() =>
-                            removeAssignment(classId, bucket.id, x.id)
-                          }
-                        >
-                          <Trash2Icon size={20} />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <P>Delete Assignment</P>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
+                <div className="w-8 flex flex-col items-center justify-center gap-1">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger
+                        onClick={() =>
+                          removeAssignment(classId, bucket.id, x.id)
+                        }
+                      >
+                        <Trash2Icon size={20} />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <P>Delete Assignment</P>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -141,11 +133,17 @@ export default function Assignments(params: {
                           tabIndex={-1}
                           // className="h-30 w-10"
                           checked={x.simulated}
-                          onChange={() =>
+                          onCheckedChange={() =>
                             simulateAssignment(classId, bucket.id, x)
                           }
                         />
                       </TooltipTrigger>
+                      <TooltipContent>
+                        <P>
+                          Simulate score using average without drops of other
+                          assignments
+                        </P>
+                      </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 </div>
@@ -179,18 +177,6 @@ export default function Assignments(params: {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      {/* <Box textAlign="center">
-        <Tooltip title="Add Assignment">
-          <IconButton
-            onClick={addAssignment}
-            sx={{ borderRadius: 4, height: "40px", width: "40px" }}
-            size="small"
-            color="primary"
-          >
-            <Add />
-          </IconButton>
-        </Tooltip>
-      </Box> */}
     </div>
   );
 }

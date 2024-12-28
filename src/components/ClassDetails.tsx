@@ -11,7 +11,7 @@ import {
 } from "@/app/store";
 import { Input } from "./ui/input";
 import { Card } from "./ui/card";
-import { H2, H4, P } from "./ui/typography";
+import { H2, H3, H4, P } from "./ui/typography";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 
@@ -162,77 +162,75 @@ export default function ClassDetails(params: { classId: string }) {
   let widthPerBucket = screenWidth / classData.weights.length;
 
   return (
-    <Card className="h-full p-2 w-full">
-      <div>
-        <H4 className="font-bol">{classData.name} Details</H4>
-        <div className="flex flex-col gap-2">
-          <div className="flex flex-row gap-1 mt-4 items-start justify-around w-full">
-            {classData.weights.map((x) => (
-              <div key={x.id}>
-                <div className="flex flex-col gap-1 align-start">
-                  <P className="font-bold text-md">
-                    {x.name} ({x.percentage}%)
-                  </P>
-
-                  <Assignments classData={classData} bucket={x} />
-
-                  {x.assignments.length != 0 && (
-                    <div>
-                      {x.drops != 0 && (
-                        <P className="font-bold text-md">
-                          Average after {x.drops} drops:{" "}
-                          {(calculateScores(x).dropped * 100).toFixed(2)}%
-                        </P>
-                      )}
-                      <P className="font-bold text-md">
-                        Average without drops:{" "}
-                        {(calculateScores(x).raw * 100).toFixed(2)}%
-                      </P>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <Separator className="mt-4" />
-          <div className="flex flex-col gap-2 items-center justify-center">
-            <H2 className="text-center mb-4">
-              Total Grade: {totalGrade().toFixed(2)}%
-            </H2>
-            <div className="flex flex-row gap-1 justify-center items-center">
-              {targetGradeBox}
-              <Button
-                size="lg"
-                variant={
-                  classData.selectedAssignment == null ? "default" : "outline"
-                }
-                onClick={() => {
-                  if (classData.selectedAssignment != null) {
-                    removeSelectedAssignment(classId);
-                  } else {
-                    pickSelectedAssignment(
-                      classId,
-                      defaultAssignment,
-                      defaultBucket
-                    );
-                  }
-                }}
-              >
-                Select Target Assignment
-              </Button>
-            </div>
-            {classData.selectedAssignment != null &&
-              classData.selectedAssignment.id != defaultAssignment.id && (
-                <P className="text-center font-bold text-lg">
-                  Score necessary on selected assignment to get ≥{" "}
-                  {classData.targetGrade}%:{" "}
-                  {(calculateScoreNecessary() * 100).toFixed(2)}
+    <div className="p-2 w-full">
+      <H4>{classData.name} Details</H4>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-row mt-4 justify-around w-full h-full">
+          {classData.weights.map((x, i) => (
+            <div key={x.id} className="flex flex-row min-h-full">
+              {i != 0 && <Separator orientation="vertical" className="mx-2" />}
+              <div className="flex flex-col gap-1 align-start">
+                <P className="font-bold text-md">
+                  {x.name} ({x.percentage}%)
                 </P>
-              )}
+
+                <Assignments classData={classData} bucket={x} />
+
+                {x.assignments.length != 0 && (
+                  <div>
+                    {x.drops != 0 && (
+                      <P className="text-md !mt-4">
+                        Average after {x.drops} drops:{" "}
+                        {(calculateScores(x).dropped * 100).toFixed(2)}%
+                      </P>
+                    )}
+                    <P className="text-md !mt-2">
+                      Average without drops:{" "}
+                      {(calculateScores(x).raw * 100).toFixed(2)}%
+                    </P>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <Separator className="mt-4" />
+        <div className="flex flex-col gap-2 items-center justify-center">
+          <H3 className="text-center mb-4">
+            Total Grade: {totalGrade().toFixed(2)}%
+          </H3>
+          <div className="flex flex-row gap-1 justify-center items-center">
+            {targetGradeBox}
+            <Button
+              size="lg"
+              variant={
+                classData.selectedAssignment == null ? "default" : "outline"
+              }
+              onClick={() => {
+                if (classData.selectedAssignment != null) {
+                  removeSelectedAssignment(classId);
+                } else {
+                  pickSelectedAssignment(
+                    classId,
+                    defaultAssignment(),
+                    defaultBucket()
+                  );
+                }
+              }}
+            >
+              Select Target Assignment
+            </Button>
           </div>
+          {classData.selectedAssignment != null && (
+            <P className="text-center font-bold text-lg">
+              Score necessary on selected assignment to get ≥{" "}
+              {classData.targetGrade}%:{" "}
+              {(calculateScoreNecessary() * 100).toFixed(2)}
+            </P>
+          )}
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
