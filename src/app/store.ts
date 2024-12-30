@@ -2,7 +2,6 @@ import { StoreApi, UseBoundStore, create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
 import { persist, createJSONStorage, StorageValue } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { enableMapSet } from "immer";
 
 export type assignment = {
   name: string;
@@ -31,7 +30,7 @@ export type schoolClass = {
 };
 
 export type globalDataStore = {
-  classes: Map<string, schoolClass>;
+  classes: Record<string, schoolClass>;
   addClass: (newClass: schoolClass) => void;
   removeSelectedAssignment: (classId: string) => void;
   pickSelectedAssignment: (classId: string, a: assignment, b: bucket) => void;
@@ -182,45 +181,42 @@ export const softwareExampleClass: schoolClass = {
   targetGrade: 90,
 };
 
-enableMapSet();
-
 export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
   create<globalDataStore>()(
     persist(
       immer((set, get) => ({
-        classes: new Map<string, schoolClass>(),
+        classes: {} as Record<string, schoolClass>,
 
         addClass: (newClass: schoolClass) =>
           set((state) => {
-            const existing = state.classes.get(newClass.id);
+            const existing = state.classes.hasOwnProperty(newClass.id);
             if (existing) {
               console.warn("Class already exists");
             } else {
-              state.classes.set(newClass.id, newClass);
+              state.classes[newClass.id] = newClass;
             }
           }),
 
         removeSelectedAssignment: (classId: string) =>
           set((state) => {
-            state.classes.get(classId)!.selectedAssignment = null;
+            state.classes[classId].selectedAssignment = null;
           }),
 
         pickSelectedAssignment: (classId: string, a: assignment, b: bucket) =>
           set((state) => {
-            state.classes.get(classId)!.selectedAssignment = a;
-            state.classes.get(classId)!.selectedBucket = b;
+            state.classes[classId].selectedAssignment = a;
+            state.classes[classId].selectedBucket = b;
           }),
 
         setTargetGrade: (classId: string, newTarget: number) =>
           set((state) => {
-            state.classes.get(classId)!.targetGrade = newTarget;
+            state.classes[classId].targetGrade = newTarget;
           }),
 
         addNewAssignment: (classId: string, bucketId: string) =>
           set((state) => {
-            state.classes
-              .get(classId)!
-              .weights.find((x) => x.id === bucketId)!
+            state.classes[classId].weights
+              .find((x) => x.id === bucketId)!
               .assignments.push(defaultAssignment());
           }),
 
@@ -230,9 +226,9 @@ export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
           assignmentId: string
         ) =>
           set((state) => {
-            const assignments = state.classes
-              .get(classId)!
-              .weights.find((x) => x.id === bucketId)!.assignments;
+            const assignments = state.classes[classId].weights.find(
+              (x) => x.id === bucketId
+            )!.assignments;
             assignments.splice(
               assignments.findIndex((x) => x.id === assignmentId),
               1
@@ -246,9 +242,8 @@ export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
           newName: string
         ) =>
           set((state) => {
-            state.classes
-              .get(classId)!
-              .weights.find((x) => x.id === bucketId)!
+            state.classes[classId].weights
+              .find((x) => x.id === bucketId)!
               .assignments.find((x) => x.id === a.id)!.name = newName;
           }),
 
@@ -259,9 +254,8 @@ export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
           newScore: number
         ) =>
           set((state) => {
-            state.classes
-              .get(classId)!
-              .weights.find((x) => x.id === bucketId)!
+            state.classes[classId].weights
+              .find((x) => x.id === bucketId)!
               .assignments.find((x) => x.id === a.id)!.score = newScore;
           }),
         setAssignmentOutOf: (
@@ -271,9 +265,8 @@ export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
           newOutOf: number
         ) =>
           set((state) => {
-            state.classes
-              .get(classId)!
-              .weights.find((x) => x.id === bucketId)!
+            state.classes[classId].weights
+              .find((x) => x.id === bucketId)!
               .assignments.find((x) => x.id === a.id)!.outOf = newOutOf;
           }),
         simulateAssignment: (
@@ -282,45 +275,14 @@ export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
           a: assignment
         ) =>
           set((state) => {
-            state.classes
-              .get(classId)!
-              .weights.find((x) => x.id === bucketId)!
+            state.classes[classId].weights
+              .find((x) => x.id === bucketId)!
               .assignments.find((x) => x.id === a.id)!.simulated = !a.simulated;
           }),
       })),
       {
         name: "finals-calculator",
-        storage: {
-          getItem: (name: string) => {
-            const str = localStorage.getItem(name);
-            if (!str) {
-              return null;
-            }
-            const existingValue = JSON.parse(str);
-
-            return {
-              ...existingValue,
-              state: {
-                ...existingValue.state,
-                classes: new Map(existingValue.state.classes),
-              },
-            };
-          },
-          setItem(name: string, newValue: StorageValue<globalDataStore>) {
-            const str = JSON.stringify({
-              ...newValue,
-              state: {
-                ...newValue.state,
-                classes: Array.from(newValue.state.classes.entries()),
-              },
-            });
-
-            localStorage.setItem(name, str);
-          },
-          removeItem(name: string) {
-            localStorage.removeItem(name);
-          },
-        },
+        storage: createJSONStorage(() => localStorage),
       }
     )
   );

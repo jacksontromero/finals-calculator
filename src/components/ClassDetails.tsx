@@ -17,7 +17,7 @@ import { Button } from "./ui/button";
 
 export default function ClassDetails(params: { classId: string }) {
   const classId = params.classId;
-  const classData = useDataStore((state) => state.classes.get(classId))!;
+  const classData = useDataStore((state) => state.classes[classId]);
   const setTargetGrade = useDataStore((state) => state.setTargetGrade);
   const removeSelectedAssignment = useDataStore(
     (state) => state.removeSelectedAssignment

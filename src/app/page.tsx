@@ -37,10 +37,11 @@ export default function Home() {
 
   // const selectedClassId = useDataStore((state) => state.selectedClassId);
 
-  const numClasses = useDataStore((state) => state.classes.size);
+  const numClasses = useDataStore((state) => Object.keys(state.classes).length);
   const addClass = useDataStore((state) => state.addClass);
 
   if (numClasses === 0) {
+    console.log("adding example classes");
     addClass(probExampleClass);
     addClass(softwareExampleClass);
   }
