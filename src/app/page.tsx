@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import ClassDetails from "@/components/ClassDetails";
-import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import ClassDetails from '@/app/class/[classSlug]/ClassDetails';
+import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import {
   defaultAssignment,
   defaultBucket,
@@ -10,7 +10,7 @@ import {
   schoolClass,
   softwareExampleClass,
   useDataStore,
-} from "./store";
+} from './store';
 
 export default function Home() {
   // const loadAllData = useDataStore((state) => state.loadAllData);
@@ -37,11 +37,13 @@ export default function Home() {
 
   // const selectedClassId = useDataStore((state) => state.selectedClassId);
 
+  // TODO GET RID OF THIS
+
   const numClasses = useDataStore((state) => Object.keys(state.classes).length);
   const addClass = useDataStore((state) => state.addClass);
 
   if (numClasses === 0) {
-    console.log("adding example classes");
+    console.log('adding example classes');
     addClass(probExampleClass);
     addClass(softwareExampleClass);
   }

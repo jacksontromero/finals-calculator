@@ -1,7 +1,8 @@
-"use client";
+'use client';
 
-import ClassDetails from "@/components/ClassDetails";
-import { use } from "react";
+import ClassDetails from '@/app/class/[classSlug]/ClassDetails';
+import { useDataStore } from '@/app/store';
+import { use } from 'react';
 
 export default function Page({
   params,
@@ -9,6 +10,13 @@ export default function Page({
   params: Promise<{ classSlug: string }>;
 }) {
   const { classSlug } = use(params);
+  const classExists = useDataStore((state) =>
+    state.classes.hasOwnProperty(classSlug)
+  );
 
-  return <ClassDetails classId={classSlug} />;
+  return classExists ? (
+    <ClassDetails classId={classSlug} />
+  ) : (
+    <div>Loading...</div>
+  );
 }

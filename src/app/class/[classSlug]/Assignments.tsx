@@ -1,25 +1,24 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { assignment, bucket, schoolClass, useDataStore } from "@/app/store";
-import { Input } from "./ui/input";
+import { useEffect, useState } from 'react';
+import { assignment, bucket, schoolClass, useDataStore } from '@/app/store';
+import { Input } from '../../../components/ui/input';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./ui/tooltip";
-import { PlusIcon, Trash2Icon } from "lucide-react";
-import { P } from "./ui/typography";
-import { Checkbox } from "./ui/checkbox";
-import { Button } from "./ui/button";
+} from '../../../components/ui/tooltip';
+import { PlusIcon, Trash2Icon } from 'lucide-react';
+import { P } from '../../../components/ui/typography';
+import { Checkbox } from '../../../components/ui/checkbox';
+import { Button } from '../../../components/ui/button';
 
 export default function Assignments(params: {
-  classData: schoolClass;
+  classId: string;
   bucket: bucket;
 }) {
-  const classData = params.classData;
-  const classId = classData.id;
+  const classId = params.classId;
   const bucket = params.bucket;
 
   const removeSelectedAssignment = useDataStore(
@@ -35,8 +34,12 @@ export default function Assignments(params: {
   const removeAssignment = useDataStore((state) => state.removeAssignment);
   const addNewAssignment = useDataStore((state) => state.addNewAssignment);
 
+  const selectedAssignment = useDataStore(
+    (state) => state.classes[classId].selectedAssignment
+  );
+
   function selectAssignment(a: assignment) {
-    if (classData.selectedAssignment != null) {
+    if (selectedAssignment != null) {
       removeSelectedAssignment(classId);
     } else {
       pickSelectedAssignment(classId, a, bucket);
@@ -51,13 +54,12 @@ export default function Assignments(params: {
         <div
           key={x.id}
           className={`py-1 bg-background ${
-            classData.selectedAssignment != null &&
-            classData.selectedAssignment.id === x.id
-              ? "bg-primary/20"
-              : ""
+            selectedAssignment != null && selectedAssignment.id === x.id
+              ? 'bg-primary/20'
+              : ''
           }`}
         >
-          {classData.selectedAssignment != null ? (
+          {selectedAssignment != null ? (
             <form>
               <div className="flex flex-row gap-1 items-center">
                 <Input
@@ -155,13 +157,13 @@ export default function Assignments(params: {
               size="default"
               onClick={() => selectAssignment(x)}
             >
-              {x.name == "" ? "Unnamed" : x.name}
+              {x.name == '' ? 'Unnamed' : x.name}
             </Button>
           )}
         </div>
       ))
     );
-  }, [classData, bucket]);
+  }, [bucket]);
 
   return (
     <div className="flex flex-col gap-0 items-center">
