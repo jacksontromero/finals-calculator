@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { BaseSyntheticEvent, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { BaseSyntheticEvent, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Form,
   FormControl,
@@ -9,28 +9,28 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+} from './ui/form';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
-import { z } from "zod";
-import { Separator } from "./ui/separator";
-import { useFieldArray, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from './ui/dialog';
+import { z } from 'zod';
+import { Separator } from './ui/separator';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./ui/tooltip";
-import { useDataStore } from "@/app/store";
-import { Trash2Icon } from "lucide-react";
+} from './ui/tooltip';
+import { defaultAssignment, SelectingStates, useDataStore } from '@/app/store';
+import { Trash2Icon } from 'lucide-react';
 
 const FormSchema = z.object({
   courseName: z.string().min(1),
@@ -47,8 +47,8 @@ const FormSchema = z.object({
       (buckets) =>
         buckets.reduce((sum, x) => sum + Number(x.bucketPercentage), 0) === 100,
       {
-        message: "The sum of all bucket weights must be 100%",
-        path: ["refine"],
+        message: 'The sum of all bucket weights must be 100%',
+        path: ['refine'],
       }
     ),
 });
@@ -69,13 +69,13 @@ export default function AddClass(props: any) {
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
-    mode: "onSubmit",
+    mode: 'onSubmit',
     defaultValues: {
-      courseName: "",
-      courseNumber: "",
+      courseName: '',
+      courseNumber: '',
       buckets: [
         {
-          bucketName: "",
+          bucketName: '',
           bucketPercentage: 0,
           bucketDrops: 0,
         },
@@ -84,7 +84,7 @@ export default function AddClass(props: any) {
   });
 
   const { fields, append, remove } = useFieldArray({
-    name: "buckets",
+    name: 'buckets',
     control: form.control,
   });
 
@@ -104,9 +104,10 @@ export default function AddClass(props: any) {
         name: x.bucketName,
         percentage: x.bucketPercentage,
         drops: x.bucketDrops,
-        assignments: [],
+        assignments: [defaultAssignment()],
         id: uuidv4(),
       })),
+      selectingState: SelectingStates.FIRST_LOAD,
       selectedBucket: null,
       selectedAssignment: null,
       targetGrade: 90,
@@ -117,7 +118,7 @@ export default function AddClass(props: any) {
   }
 
   const bucketsSum = form
-    .watch("buckets")
+    .watch('buckets')
     .reduce((sum, x) => sum + Number(x.bucketPercentage), 0);
 
   return (
@@ -271,7 +272,7 @@ export default function AddClass(props: any) {
                     <Button
                       onClick={() => {
                         append({
-                          bucketName: "",
+                          bucketName: '',
                           bucketPercentage: 0,
                           bucketDrops: 0,
                         });

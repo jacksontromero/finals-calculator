@@ -7,16 +7,14 @@ import {
   bucket,
   defaultAssignment,
   defaultBucket,
-  schoolClass,
+  SelectingStates,
   useDataStore,
 } from '@/app/store';
 import { Input } from '../../../components/ui/input';
-import { Card } from '../../../components/ui/card';
-import { H2, H3, H4, P } from '../../../components/ui/typography';
+import { H3, H4, P } from '../../../components/ui/typography';
 import { Separator } from '../../../components/ui/separator';
 import { Button } from '../../../components/ui/button';
 import Bucket from './Bucket';
-import { Console } from 'console';
 
 export function calculateScores(b: bucket): { dropped: number; raw: number } {
   let nonSim = b.assignments.filter((x) => !x.simulated);
@@ -130,6 +128,9 @@ export default function ClassDetails(params: { classId: string }) {
   const classId = params.classId;
 
   const name = useDataStore((state) => state.classes[classId].name);
+  const selectingState = useDataStore(
+    (state) => state.classes[classId].selectingState
+  );
   const selectedAssignment = useDataStore(
     (state) => state.classes[classId].selectedAssignment
   );
@@ -142,8 +143,8 @@ export default function ClassDetails(params: { classId: string }) {
   );
 
   const setTargetGrade = useDataStore((state) => state.setTargetGrade);
-  const removeSelectedAssignment = useDataStore(
-    (state) => state.removeSelectedAssignment
+  const resetSelectAssignment = useDataStore(
+    (state) => state.resetSelectAssignment
   );
   const pickSelectedAssignment = useDataStore(
     (state) => state.pickSelectedAssignment
@@ -192,23 +193,25 @@ export default function ClassDetails(params: { classId: string }) {
             {targetGradeBox}
             <Button
               size="lg"
-              variant={selectedAssignment == null ? 'default' : 'outline'}
+              variant={
+                selectingState == SelectingStates.SELECTING
+                  ? 'default'
+                  : 'outline'
+              }
               onClick={() => {
-                if (selectedAssignment != null) {
-                  removeSelectedAssignment(classId);
+                if (selectingState == SelectingStates.SELECTING) {
+                  resetSelectAssignment(classId, SelectingStates.FIRST_LOAD);
                 } else {
-                  pickSelectedAssignment(
-                    classId,
-                    defaultAssignment(),
-                    defaultBucket()
-                  );
+                  resetSelectAssignment(classId, SelectingStates.SELECTING);
                 }
               }}
             >
-              Select Target Assignment
+              {selectingState == SelectingStates.SELECTING
+                ? 'Cancel Selection'
+                : 'Select Target Assignment'}
             </Button>
           </div>
-          {selectedAssignment != null && (
+          {selectingState == SelectingStates.SELECTED && (
             <P className="text-center font-bold text-lg">
               Score necessary on selected assignment to get ≥ {targetGrade}%:{' '}
               {(

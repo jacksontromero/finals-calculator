@@ -6,11 +6,10 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   defaultAssignment,
   defaultBucket,
-  probExampleClass,
   schoolClass,
-  softwareExampleClass,
   useDataStore,
 } from './store';
+import { probExampleClass, softwareExampleClass } from './dummy_classes';
 
 export default function Home() {
   // const loadAllData = useDataStore((state) => state.loadAllData);

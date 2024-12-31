@@ -1,7 +1,13 @@
-import { StoreApi, UseBoundStore, create } from "zustand";
-import { v4 as uuidv4 } from "uuid";
-import { persist, createJSONStorage, StorageValue } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
+import { StoreApi, UseBoundStore, create } from 'zustand';
+import { v4 as uuidv4 } from 'uuid';
+import { persist, createJSONStorage, StorageValue } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
+
+export enum SelectingStates {
+  FIRST_LOAD,
+  SELECTED,
+  SELECTING,
+}
 
 export type assignment = {
   name: string;
@@ -24,6 +30,7 @@ export type schoolClass = {
   number: string;
   weights: bucket[];
   id: string;
+  selectingState: SelectingStates;
   selectedBucket: bucket | null;
   selectedAssignment: assignment | null;
   targetGrade: number;
@@ -32,7 +39,7 @@ export type schoolClass = {
 export type globalDataStore = {
   classes: Record<string, schoolClass>;
   addClass: (newClass: schoolClass) => void;
-  removeSelectedAssignment: (classId: string) => void;
+  resetSelectAssignment: (classId: string, newState: SelectingStates) => void;
   pickSelectedAssignment: (classId: string, a: assignment, b: bucket) => void;
   setTargetGrade: (classId: string, newTarget: number) => void;
   addNewAssignment: (classId: string, bucketId: string) => void;
@@ -67,7 +74,7 @@ export type globalDataStore = {
 };
 
 export const defaultAssignment: () => assignment = () => ({
-  name: "",
+  name: '',
   score: 0,
   outOf: 100,
   simulated: false,
@@ -75,111 +82,12 @@ export const defaultAssignment: () => assignment = () => ({
 });
 
 export const defaultBucket: () => bucket = () => ({
-  name: "",
+  name: '',
   percentage: 0,
   drops: 0,
   assignments: [defaultAssignment()],
   id: uuidv4(),
 });
-
-export const probExampleClass: schoolClass = {
-  name: "Probability",
-  number: "36-218",
-  id: uuidv4(),
-  weights: [
-    {
-      name: "Homework",
-      percentage: 35,
-      drops: 2,
-      id: uuidv4(),
-      assignments: [],
-    },
-    {
-      name: "Participation",
-      percentage: 5,
-      drops: 0,
-      id: uuidv4(),
-      assignments: [],
-    },
-    {
-      name: "Quizzes",
-      percentage: 15,
-      drops: 0,
-      id: uuidv4(),
-      assignments: [],
-    },
-    {
-      name: "Midterm",
-      percentage: 20,
-      drops: 0,
-      id: uuidv4(),
-      assignments: [],
-    },
-    {
-      name: "Final",
-      percentage: 25,
-      drops: 0,
-      id: uuidv4(),
-      assignments: [],
-    },
-  ],
-  selectedAssignment: defaultAssignment(),
-  selectedBucket: defaultBucket(),
-  targetGrade: 90,
-};
-
-export const softwareExampleClass: schoolClass = {
-  name: "Software",
-  number: "17-214",
-  id: uuidv4(),
-  weights: [
-    {
-      name: "Homework",
-      percentage: 50,
-      drops: 2,
-      id: uuidv4(),
-      assignments: [],
-    },
-    {
-      name: "Midterm 1",
-      percentage: 10,
-      drops: 0,
-      id: uuidv4(),
-      assignments: [],
-    },
-    {
-      name: "Midterm 2",
-      percentage: 10,
-      drops: 0,
-      id: uuidv4(),
-      assignments: [],
-    },
-    {
-      name: "Quizzes",
-      percentage: 5,
-      drops: 4,
-      id: uuidv4(),
-      assignments: [],
-    },
-    {
-      name: "Participation",
-      percentage: 5,
-      drops: 0,
-      id: uuidv4(),
-      assignments: [],
-    },
-    {
-      name: "Final",
-      percentage: 20,
-      drops: 0,
-      id: uuidv4(),
-      assignments: [],
-    },
-  ],
-  selectedAssignment: defaultAssignment(),
-  selectedBucket: defaultBucket(),
-  targetGrade: 90,
-};
 
 export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
   create<globalDataStore>()(
@@ -191,21 +99,24 @@ export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
           set((state) => {
             const existing = state.classes.hasOwnProperty(newClass.id);
             if (existing) {
-              console.warn("Class already exists");
+              console.warn('Class already exists');
             } else {
               state.classes[newClass.id] = newClass;
             }
           }),
 
-        removeSelectedAssignment: (classId: string) =>
+        resetSelectAssignment: (classId: string, newState: SelectingStates) =>
           set((state) => {
             state.classes[classId].selectedAssignment = null;
+            state.classes[classId].selectedBucket = null;
+            state.classes[classId].selectingState = newState;
           }),
 
         pickSelectedAssignment: (classId: string, a: assignment, b: bucket) =>
           set((state) => {
             state.classes[classId].selectedAssignment = a;
             state.classes[classId].selectedBucket = b;
+            state.classes[classId].selectingState = SelectingStates.SELECTED;
           }),
 
         setTargetGrade: (classId: string, newTarget: number) =>
@@ -281,7 +192,7 @@ export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
           }),
       })),
       {
-        name: "finals-calculator",
+        name: 'finals-calculator',
         storage: createJSONStorage(() => localStorage),
       }
     )

@@ -1,7 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { assignment, bucket, schoolClass, useDataStore } from '@/app/store';
+import {
+  assignment,
+  bucket,
+  schoolClass,
+  SelectingStates,
+  useDataStore,
+} from '@/app/store';
 import { Input } from '../../../components/ui/input';
 import {
   Tooltip,
@@ -21,9 +27,6 @@ export default function Assignments(params: {
   const classId = params.classId;
   const bucket = params.bucket;
 
-  const removeSelectedAssignment = useDataStore(
-    (state) => state.removeSelectedAssignment
-  );
   const pickSelectedAssignment = useDataStore(
     (state) => state.pickSelectedAssignment
   );
@@ -34,32 +37,27 @@ export default function Assignments(params: {
   const removeAssignment = useDataStore((state) => state.removeAssignment);
   const addNewAssignment = useDataStore((state) => state.addNewAssignment);
 
+  const selectingState = useDataStore(
+    (state) => state.classes[classId].selectingState
+  );
   const selectedAssignment = useDataStore(
     (state) => state.classes[classId].selectedAssignment
   );
 
-  function selectAssignment(a: assignment) {
-    if (selectedAssignment != null) {
-      removeSelectedAssignment(classId);
-    } else {
-      pickSelectedAssignment(classId, a, bucket);
-    }
-  }
-
-  const [assignmentList, setAssignmentList] = useState<JSX.Element[]>([]);
-
-  useEffect(() => {
-    setAssignmentList(
-      bucket.assignments.map((x) => (
+  return (
+    <div className="flex flex-col gap-0 items-center">
+      {bucket.assignments.map((x, i) => (
         <div
           key={x.id}
-          className={`py-1 bg-background ${
-            selectedAssignment != null && selectedAssignment.id === x.id
+          className={`p-1 bg-background rounded-md ${
+            selectingState == SelectingStates.FIRST_LOAD ||
+            (selectingState == SelectingStates.SELECTED &&
+            selectedAssignment!.id === x.id
               ? 'bg-primary/20'
-              : ''
+              : '')
           }`}
         >
-          {selectedAssignment != null ? (
+          {selectingState != SelectingStates.SELECTING ? (
             <form>
               <div className="flex flex-row gap-1 items-center">
                 <Input
@@ -155,19 +153,13 @@ export default function Assignments(params: {
             <Button
               variant="outline"
               size="default"
-              onClick={() => selectAssignment(x)}
+              onClick={() => pickSelectedAssignment(classId, x, bucket)}
             >
-              {x.name == '' ? 'Unnamed' : x.name}
+              {x.name == '' ? `Unnamed Assignment ${i + 1}` : x.name}
             </Button>
           )}
         </div>
-      ))
-    );
-  }, [bucket]);
-
-  return (
-    <div className="flex flex-col gap-0 items-center">
-      {assignmentList}
+      ))}
 
       <TooltipProvider>
         <Tooltip>
