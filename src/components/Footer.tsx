@@ -1,33 +1,29 @@
-import { GitHub, LightModeRounded, NightsStayRounded } from "@mui/icons-material";
-import { Divider, IconButton, Link, Stack, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import { useContext } from "react";
-import { ColorModeContext } from "../pages/_app";
+import Link from 'next/link';
+import { P } from './ui/typography';
+import { FaGithub } from 'react-icons/fa';
 
 export default function Footer() {
+  // const {mode, setMode} = useContext(ColorModeContext);
 
-    const {mode, setMode} = useContext(ColorModeContext);
-
-    return (
-        <Box sx={{height: "50px", mt: 2, content: '""', display: "block"}}>
-            <Stack direction='row'
-                alignItems='center'
-                divider={<Divider orientation="vertical" flexItem />}
-                spacing={1}
-                justifyContent='center'
-                // position='fixed'
-                sx={{ bottom: 5, width: '100%'}}
-            >
-                <IconButton onClick={() => {setMode(mode === "dark" ? "light" : "dark")}}>
-                    {
-                        (mode === "dark") ? <NightsStayRounded/> : <LightModeRounded />
-                    }
-                </IconButton>
-                <Typography>Created by Jackson Romero</Typography>
-                <Link href={"https://github.com/jacksontromero/finals-calculator"} target="_blank">
-                    <GitHub sx={{color: mode === "dark" ? "white" : "black"}} />
-                </Link>
-            </Stack>
-        </Box>
-    )
+  return (
+    <div className="fixed bottom-0 left-0 z-20 p-4 flex justify-center w-full flex-row items-center *:px-2 divide-x-2">
+      {/* TODO ADD BACK DARK MODE SELECTOR */}
+      {/* <div className="flex flex-row items-center gap-1 divide-x-0 bottom-5 w-full"> */}
+      {/* <IconButton
+          onClick={() => {
+            setMode(mode === 'dark' ? 'light' : 'dark');
+          }}
+        >
+          {mode === 'dark' ? <NightsStayRounded /> : <LightModeRounded />}
+        </IconButton> */}
+      <P>Created by Jackson Romero</P>
+      <Link
+        href={'https://github.com/jacksontromero/finals-calculator'}
+        target="_blank"
+      >
+        <FaGithub size={20} />
+      </Link>
+      {/* </div> */}
+    </div>
+  );
 }
