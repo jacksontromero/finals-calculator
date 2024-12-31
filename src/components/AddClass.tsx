@@ -31,6 +31,7 @@ import {
 } from './ui/tooltip';
 import { defaultAssignment, SelectingStates, useDataStore } from '@/app/store';
 import { Trash2Icon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const FormSchema = z.object({
   courseName: z.string().min(1),
@@ -88,6 +89,8 @@ export default function AddClass(props: any) {
     control: form.control,
   });
 
+  const router = useRouter();
+
   function submit(
     formData: FormData,
     event: BaseSyntheticEvent<object, any, any> | undefined
@@ -115,6 +118,8 @@ export default function AddClass(props: any) {
 
     form.reset();
     setOpen(false);
+
+    router.push(`/class/${newID}`);
   }
 
   const bucketsSum = form
