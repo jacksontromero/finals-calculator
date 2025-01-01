@@ -2,14 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useWindowWidth } from '@react-hook/window-size/throttled';
-import {
-  assignment,
-  bucket,
-  defaultAssignment,
-  defaultBucket,
-  SelectingStates,
-  useDataStore,
-} from '@/app/store';
+import { assignment, bucket, SelectingStates, useDataStore } from '@/app/store';
 import { Input } from '../../../components/ui/input';
 import { H3, H4, P } from '../../../components/ui/typography';
 import { Separator } from '../../../components/ui/separator';

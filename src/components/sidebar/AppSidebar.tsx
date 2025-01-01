@@ -1,5 +1,5 @@
 'use client';
-import { schoolClass, useDataStore } from '@/app/store';
+import { useDataStore } from '@/app/store';
 import {
   Sidebar,
   SidebarContent,
@@ -7,7 +7,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -15,10 +14,8 @@ import {
 } from '@/components/ui/sidebar';
 import AddClass from './AddClass';
 import { useRouter } from 'next/navigation';
-import { StoreApi, UseBoundStore } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
-import { X } from 'lucide-react';
-import { useState } from 'react';
+import ClassOptions from './ClassOptions';
 
 export function AppSidebar() {
   const classIds = useDataStore(
@@ -26,6 +23,7 @@ export function AppSidebar() {
   );
 
   const classes = useDataStore.getState().classes;
+  const deleteClass = useDataStore((state) => state.deleteClass);
 
   const router = useRouter();
 
@@ -47,6 +45,7 @@ export function AppSidebar() {
                         {x.name} ({x.number})
                       </div>
                     </SidebarMenuButton>
+                    <ClassOptions existingClassId={x.id} />
                   </SidebarMenuItem>
                 ))}
             </SidebarMenu>

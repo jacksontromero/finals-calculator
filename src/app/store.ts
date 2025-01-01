@@ -39,6 +39,7 @@ export type schoolClass = {
 export type globalDataStore = {
   classes: Record<string, schoolClass>;
   addClass: (newClass: schoolClass) => void;
+  editClass: (classId: string, newClass: schoolClass) => void;
   resetSelectAssignment: (classId: string, newState: SelectingStates) => void;
   pickSelectedAssignment: (classId: string, a: assignment, b: bucket) => void;
   setTargetGrade: (classId: string, newTarget: number) => void;
@@ -71,6 +72,7 @@ export type globalDataStore = {
     bucketId: string,
     a: assignment
   ) => void;
+  deleteClass(classId: string): void;
 };
 
 export const defaultAssignment: () => assignment = () => ({
@@ -102,6 +104,17 @@ export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
               console.warn('Class already exists');
             } else {
               state.classes[newClass.id] = newClass;
+            }
+          }),
+
+        editClass: (classId: string, newClass: schoolClass) =>
+          set((state) => {
+            const sameId = classId === newClass.id;
+            if (!sameId) {
+              console.warn('Class IDs do not match');
+              return;
+            } else {
+              state.classes[classId] = newClass;
             }
           }),
 
@@ -189,6 +202,10 @@ export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
             state.classes[classId].weights
               .find((x) => x.id === bucketId)!
               .assignments.find((x) => x.id === a.id)!.simulated = !a.simulated;
+          }),
+        deleteClass: (classId: string) =>
+          set((state) => {
+            delete state.classes[classId];
           }),
       })),
       {

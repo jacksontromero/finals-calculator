@@ -1,13 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import {
-  assignment,
-  bucket,
-  schoolClass,
-  SelectingStates,
-  useDataStore,
-} from '@/app/store';
+import { bucket, SelectingStates, useDataStore } from '@/app/store';
 import { Input } from '../../../components/ui/input';
 import {
   Tooltip,
