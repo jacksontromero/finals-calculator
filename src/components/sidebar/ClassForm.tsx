@@ -191,6 +191,7 @@ export default function ClassForm(params: {
                       <Tooltip>
                         <TooltipTrigger
                           className="-mt-7"
+                          type="button"
                           onClick={() => remove(index)}
                         >
                           <Trash2Icon className="text-destructive" size={20} />
@@ -226,7 +227,6 @@ export default function ClassForm(params: {
           )}
           <Button
             className="max-w-md"
-            id="add-class-submit-button"
             type="submit"
             disabled={bucketsSum != 100}
           >

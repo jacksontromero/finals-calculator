@@ -37,6 +37,8 @@ export type schoolClass = {
 };
 
 export type globalDataStore = {
+  _hasHydrated: boolean;
+  setHasHydrated: (hasHydrated: boolean) => void;
   classes: Record<string, schoolClass>;
   addClass: (newClass: schoolClass) => void;
   editClass: (classId: string, newClass: schoolClass) => void;
@@ -91,126 +93,130 @@ export const defaultBucket: () => bucket = () => ({
   id: uuidv4(),
 });
 
-export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
-  create<globalDataStore>()(
-    persist(
-      immer((set, _get) => ({
-        classes: {} as Record<string, schoolClass>,
+export const useDataStore = create<globalDataStore>()(
+  persist(
+    immer((set, _get) => ({
+      classes: {} as Record<string, schoolClass>,
 
-        addClass: (newClass: schoolClass) =>
-          set((state) => {
-            const existing = state.classes.hasOwnProperty(newClass.id);
-            if (existing) {
-              console.warn('Class already exists');
-            } else {
-              state.classes[newClass.id] = newClass;
-            }
-          }),
+      _hasHydrated: false,
+      setHasHydrated: (hasHydrated: boolean) =>
+        set((state) => {
+          state._hasHydrated = hasHydrated;
+        }),
 
-        editClass: (classId: string, newClass: schoolClass) =>
-          set((state) => {
-            const sameId = classId === newClass.id;
-            if (!sameId) {
-              console.warn('Class IDs do not match');
-              return;
-            } else {
-              state.classes[classId] = newClass;
-            }
-          }),
+      addClass: (newClass: schoolClass) =>
+        set((state) => {
+          const existing = state.classes.hasOwnProperty(newClass.id);
+          if (existing) {
+            console.warn('Class already exists');
+          } else {
+            state.classes[newClass.id] = newClass;
+          }
+        }),
 
-        resetSelectAssignment: (classId: string, newState: SelectingStates) =>
-          set((state) => {
-            state.classes[classId].selectedAssignment = null;
-            state.classes[classId].selectedBucket = null;
-            state.classes[classId].selectingState = newState;
-          }),
+      editClass: (classId: string, newClass: schoolClass) =>
+        set((state) => {
+          const sameId = classId === newClass.id;
+          if (!sameId) {
+            console.warn('Class IDs do not match');
+            return;
+          } else {
+            state.classes[classId] = newClass;
+          }
+        }),
 
-        pickSelectedAssignment: (classId: string, a: assignment, b: bucket) =>
-          set((state) => {
-            state.classes[classId].selectedAssignment = a;
-            state.classes[classId].selectedBucket = b;
-            state.classes[classId].selectingState = SelectingStates.SELECTED;
-          }),
+      resetSelectAssignment: (classId: string, newState: SelectingStates) =>
+        set((state) => {
+          state.classes[classId].selectedAssignment = null;
+          state.classes[classId].selectedBucket = null;
+          state.classes[classId].selectingState = newState;
+        }),
 
-        setTargetGrade: (classId: string, newTarget: number) =>
-          set((state) => {
-            state.classes[classId].targetGrade = newTarget;
-          }),
+      pickSelectedAssignment: (classId: string, a: assignment, b: bucket) =>
+        set((state) => {
+          state.classes[classId].selectedAssignment = a;
+          state.classes[classId].selectedBucket = b;
+          state.classes[classId].selectingState = SelectingStates.SELECTED;
+        }),
 
-        addNewAssignment: (classId: string, bucketId: string) =>
-          set((state) => {
-            state.classes[classId].weights
-              .find((x) => x.id === bucketId)!
-              .assignments.push(defaultAssignment());
-          }),
+      setTargetGrade: (classId: string, newTarget: number) =>
+        set((state) => {
+          state.classes[classId].targetGrade = newTarget;
+        }),
 
-        removeAssignment: (
-          classId: string,
-          bucketId: string,
-          assignmentId: string
-        ) =>
-          set((state) => {
-            const assignments = state.classes[classId].weights.find(
-              (x) => x.id === bucketId
-            )!.assignments;
-            assignments.splice(
-              assignments.findIndex((x) => x.id === assignmentId),
-              1
-            );
-          }),
+      addNewAssignment: (classId: string, bucketId: string) =>
+        set((state) => {
+          state.classes[classId].weights
+            .find((x) => x.id === bucketId)!
+            .assignments.push(defaultAssignment());
+        }),
 
-        setAssignmentName: (
-          classId: string,
-          bucketId: string,
-          a: assignment,
-          newName: string
-        ) =>
-          set((state) => {
-            state.classes[classId].weights
-              .find((x) => x.id === bucketId)!
-              .assignments.find((x) => x.id === a.id)!.name = newName;
-          }),
+      removeAssignment: (
+        classId: string,
+        bucketId: string,
+        assignmentId: string
+      ) =>
+        set((state) => {
+          const assignments = state.classes[classId].weights.find(
+            (x) => x.id === bucketId
+          )!.assignments;
+          assignments.splice(
+            assignments.findIndex((x) => x.id === assignmentId),
+            1
+          );
+        }),
 
-        setAssignmentScore: (
-          classId: string,
-          bucketId: string,
-          a: assignment,
-          newScore: number
-        ) =>
-          set((state) => {
-            state.classes[classId].weights
-              .find((x) => x.id === bucketId)!
-              .assignments.find((x) => x.id === a.id)!.score = newScore;
-          }),
-        setAssignmentOutOf: (
-          classId: string,
-          bucketId: string,
-          a: assignment,
-          newOutOf: number
-        ) =>
-          set((state) => {
-            state.classes[classId].weights
-              .find((x) => x.id === bucketId)!
-              .assignments.find((x) => x.id === a.id)!.outOf = newOutOf;
-          }),
-        simulateAssignment: (
-          classId: string,
-          bucketId: string,
-          a: assignment
-        ) =>
-          set((state) => {
-            state.classes[classId].weights
-              .find((x) => x.id === bucketId)!
-              .assignments.find((x) => x.id === a.id)!.simulated = !a.simulated;
-          }),
-        deleteClass: (classId: string) =>
-          set((state) => {
-            delete state.classes[classId];
-          }),
-      })),
-      {
-        name: 'finals-calculator',
-        storage: createJSONStorage(() => localStorage),
-      }
-    )
-  );
+      setAssignmentName: (
+        classId: string,
+        bucketId: string,
+        a: assignment,
+        newName: string
+      ) =>
+        set((state) => {
+          state.classes[classId].weights
+            .find((x) => x.id === bucketId)!
+            .assignments.find((x) => x.id === a.id)!.name = newName;
+        }),
+
+      setAssignmentScore: (
+        classId: string,
+        bucketId: string,
+        a: assignment,
+        newScore: number
+      ) =>
+        set((state) => {
+          state.classes[classId].weights
+            .find((x) => x.id === bucketId)!
+            .assignments.find((x) => x.id === a.id)!.score = newScore;
+        }),
+      setAssignmentOutOf: (
+        classId: string,
+        bucketId: string,
+        a: assignment,
+        newOutOf: number
+      ) =>
+        set((state) => {
+          state.classes[classId].weights
+            .find((x) => x.id === bucketId)!
+            .assignments.find((x) => x.id === a.id)!.outOf = newOutOf;
+        }),
+      simulateAssignment: (classId: string, bucketId: string, a: assignment) =>
+        set((state) => {
+          state.classes[classId].weights
+            .find((x) => x.id === bucketId)!
+            .assignments.find((x) => x.id === a.id)!.simulated = !a.simulated;
+        }),
+      deleteClass: (classId: string) =>
+        set((state) => {
+          delete state.classes[classId];
+        }),
+    })),
+    {
+      name: 'finals-calculator',
+      storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: (state) => {
+        return () => state.setHasHydrated(true);
+      },
+    }
+  )
+);

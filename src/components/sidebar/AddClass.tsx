@@ -1,6 +1,6 @@
 'use client';
 
-import { BaseSyntheticEvent, useState } from 'react';
+import { BaseSyntheticEvent, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Button } from '../ui/button';
 import {
@@ -15,27 +15,23 @@ import { defaultBucket, SelectingStates, useDataStore } from '@/app/store';
 import { useRouter } from 'next/navigation';
 import ClassForm, { ClassFormData, ClassFormSchema } from './ClassForm';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function AddClass() {
+  const numClasses = useDataStore(
+    useShallow((state) => Object.keys(state.classes).length)
+  );
+
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(numClasses === 0);
+  }, [numClasses]);
+
   const addClass = useDataStore((state) => state.addClass);
-
-  // TODO - come back, add auto-open if no classes
-
-  // const classes = useDataStore((state) => state.classes);
-
-  // useEffect(() => {
-  //   setOpen(classes.length === 0);
-  // }, [classes]);
 
   const form = useForm<ClassFormData>({
     resolver: async (data, context, options) => {
-      // console.log('formData', data);
-      // console.log(
-      //   'validation result',
-      //   await zodResolver(ClassFormSchema)(data, context, options)
-      // );
-
       return zodResolver(ClassFormSchema)(data, context, options);
     },
     mode: 'onSubmit',

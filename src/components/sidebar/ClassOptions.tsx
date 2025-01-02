@@ -28,14 +28,6 @@ export default function ClassOptions(params: { existingClassId: string }) {
   const [open, setOpen] = useState(false);
   const editClass = useDataStore((state) => state.editClass);
 
-  // TODO - come back, add auto-open if no classes
-
-  // const classes = useDataStore((state) => state.classes);
-
-  // useEffect(() => {
-  //   setOpen(classes.length === 0);
-  // }, [classes]);
-
   const form = useForm<ClassFormData>({
     resolver: zodResolver(ClassFormSchema),
     mode: 'onSubmit',
@@ -87,15 +79,8 @@ export default function ClassOptions(params: { existingClassId: string }) {
           <DropdownMenuContent side="right" align="start">
             <DropdownMenuItem className="hover:cursor-pointer">
               <DialogTrigger>
-                <span
-                // onClick={() => {
-                //   setOpen(true);
-                // }}
-                >
-                  Edit Class
-                </span>
+                <span>Edit Class</span>
               </DialogTrigger>
-              {/* <AddClass /> */}
             </DropdownMenuItem>
             <DropdownMenuItem
               className="hover:cursor-pointer"

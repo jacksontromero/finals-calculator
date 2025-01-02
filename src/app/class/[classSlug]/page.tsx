@@ -2,7 +2,8 @@
 
 import ClassDetails from '@/app/class/[classSlug]/ClassDetails';
 import { useDataStore } from '@/app/store';
-import { use } from 'react';
+import { useRouter } from 'next/navigation';
+import { use, useEffect, useState } from 'react';
 
 export default function Page({
   params,
@@ -13,6 +14,15 @@ export default function Page({
   const classExists = useDataStore((state) =>
     state.classes.hasOwnProperty(classSlug)
   );
+
+  const hasHydrated = useDataStore((state) => state._hasHydrated);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (hasHydrated && !classExists) {
+      router.push('/');
+    }
+  }, [hasHydrated, classExists]);
 
   return classExists ? (
     <ClassDetails classId={classSlug} />
