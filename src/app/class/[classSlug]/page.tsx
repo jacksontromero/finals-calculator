@@ -1,7 +1,7 @@
 'use client';
 
 import ClassDetails from '@/app/class/[classSlug]/ClassDetails';
-import { useDataStore } from '@/app/store';
+import { useDataStore } from '@/data/store';
 import { useRouter } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
 
@@ -24,9 +24,5 @@ export default function Page({
     }
   }, [hasHydrated, classExists]);
 
-  return classExists ? (
-    <ClassDetails classId={classSlug} />
-  ) : (
-    <div>Loading...</div>
-  );
+  return classExists ? <ClassDetails classId={classSlug} /> : <div></div>;
 }

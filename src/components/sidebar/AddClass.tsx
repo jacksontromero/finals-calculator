@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from '../ui/dialog';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { defaultBucket, SelectingStates, useDataStore } from '@/app/store';
+import { defaultBucket, SelectingStates, useDataStore } from '@/data/store';
 import { useRouter } from 'next/navigation';
 import ClassForm, { ClassFormData, ClassFormSchema } from './ClassForm';
 import { SubmitHandler, useForm } from 'react-hook-form';

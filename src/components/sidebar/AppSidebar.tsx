@@ -1,5 +1,5 @@
 'use client';
-import { useDataStore } from '@/app/store';
+import { useDataStore } from '@/data/store';
 import {
   Sidebar,
   SidebarContent,
@@ -10,6 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSkeleton,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
 import AddClass from './AddClass';
@@ -23,6 +24,7 @@ export function AppSidebar() {
   );
 
   const classes = useDataStore.getState().classes;
+  const isHydrated = useDataStore((state) => state._hasHydrated);
 
   const router = useRouter();
 
@@ -34,19 +36,25 @@ export function AppSidebar() {
           <SidebarGroupLabel>Classes</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {classIds.length != 0 &&
-                Object.entries(classes).map(([_id, x]) => (
-                  <SidebarMenuItem key={x.id}>
-                    <SidebarMenuButton
-                      onClick={() => router.push(`/class/${x.id}`)}
-                    >
-                      <div>
-                        {x.name} ({x.number})
-                      </div>
-                    </SidebarMenuButton>
-                    <ClassOptions existingClassId={x.id} />
-                  </SidebarMenuItem>
-                ))}
+              {isHydrated
+                ? classIds.length != 0 &&
+                  Object.entries(classes).map(([_id, x]) => (
+                    <SidebarMenuItem key={x.id}>
+                      <SidebarMenuButton
+                        onClick={() => router.push(`/class/${x.id}`)}
+                      >
+                        <div>
+                          {x.name} ({x.number})
+                        </div>
+                      </SidebarMenuButton>
+                      <ClassOptions existingClassId={x.id} />
+                    </SidebarMenuItem>
+                  ))
+                : Array.from({ length: 5 }).map((_, index) => (
+                    <SidebarMenuItem key={index}>
+                      <SidebarMenuSkeleton />
+                    </SidebarMenuItem>
+                  ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -1,4 +1,4 @@
-import { bucket } from '@/app/store';
+import { bucket } from '@/data/store';
 import { Separator } from '@/components/ui/separator';
 import { P } from '@/components/ui/typography';
 import Assignments from './Assignments';

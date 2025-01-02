@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '../ui/dialog';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SelectingStates, useDataStore } from '@/app/store';
+import { SelectingStates, useDataStore } from '@/data/store';
 import { useRouter } from 'next/navigation';
 import ClassForm, { ClassFormData, ClassFormSchema } from './ClassForm';
 import { useForm } from 'react-hook-form';

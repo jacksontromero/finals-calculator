@@ -1,6 +1,6 @@
 'use client';
 
-import { bucket, SelectingStates, useDataStore } from '@/app/store';
+import { bucket, SelectingStates, useDataStore } from '@/data/store';
 import { Input } from '../../../components/ui/input';
 import {
   Tooltip,

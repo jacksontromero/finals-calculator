@@ -20,7 +20,7 @@ import {
 } from '../ui/tooltip';
 import { Trash2Icon } from 'lucide-react';
 import { z } from 'zod';
-import { bucket, defaultBucket } from '@/app/store';
+import { bucket, defaultBucket } from '@/data/store';
 
 export const ClassFormSchema = z.object({
   courseName: z.string().min(1),
