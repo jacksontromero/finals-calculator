@@ -36,10 +36,6 @@ export default function ClassOptions(params: { existingClassId: string }) {
   //   setOpen(classes.length === 0);
   // }, [classes]);
 
-  useEffect(() => {
-    console.log('open changed to ', open);
-  }, [open]);
-
   const form = useForm<ClassFormData>({
     resolver: zodResolver(ClassFormSchema),
     mode: 'onSubmit',
@@ -105,7 +101,7 @@ export default function ClassOptions(params: { existingClassId: string }) {
               className="hover:cursor-pointer"
               onClick={() => deleteClass(existingClass.id)}
             >
-              <span>Delete Project</span>
+              <span>Delete Class</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

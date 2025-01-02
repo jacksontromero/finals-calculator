@@ -23,7 +23,6 @@ export function AppSidebar() {
   );
 
   const classes = useDataStore.getState().classes;
-  const deleteClass = useDataStore((state) => state.deleteClass);
 
   const router = useRouter();
 

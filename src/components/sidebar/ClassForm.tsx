@@ -187,14 +187,13 @@ export default function ClassForm(params: {
                         )}
                       />
                     </div>
-                    {/* trash bin icon to delete bucket */}
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger
                           className="-mt-7"
                           onClick={() => remove(index)}
                         >
-                          <Trash2Icon size={20} />
+                          <Trash2Icon className="text-destructive" size={20} />
                         </TooltipTrigger>
                         <TooltipContent className="-mb-5">
                           <p>Delete this bucket</p>
@@ -221,7 +220,7 @@ export default function ClassForm(params: {
         <Separator className="mx-2 my-4"></Separator>
         <div className="text-center flex flex-col gap-2 items-center">
           {bucketsSum != 100 && (
-            <p role="alert" className="text-red-500 text-sm font-bold">
+            <p role="alert" className="text-destructive text-sm font-bold">
               The sum of all bucket weights must be 100%
             </p>
           )}
@@ -229,7 +228,6 @@ export default function ClassForm(params: {
             className="max-w-md"
             id="add-class-submit-button"
             type="submit"
-            variant="default"
             disabled={bucketsSum != 100}
           >
             {submitText}

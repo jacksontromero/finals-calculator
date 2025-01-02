@@ -12,6 +12,8 @@ import { PlusIcon, Trash2Icon } from 'lucide-react';
 import { P } from '../../../components/ui/typography';
 import { Checkbox } from '../../../components/ui/checkbox';
 import { Button } from '../../../components/ui/button';
+import { FormLabel } from '@/components/ui/form';
+import { Label } from '@/components/ui/label';
 
 export default function Assignments(params: {
   classId: string;
@@ -38,11 +40,11 @@ export default function Assignments(params: {
   );
 
   return (
-    <div className="flex flex-col gap-0 items-center">
+    <div className="flex flex-col gap-0 items-center mt-2">
       {bucket.assignments.map((x, i) => (
         <div
           key={x.id}
-          className={`p-1 bg-background rounded-md ${
+          className={`px-1 py-1 bg-background rounded-md ${
             selectingState == SelectingStates.FIRST_LOAD ||
             (selectingState == SelectingStates.SELECTED &&
             selectedAssignment!.id === x.id
@@ -52,57 +54,93 @@ export default function Assignments(params: {
         >
           {selectingState != SelectingStates.SELECTING ? (
             <form>
-              <div className="flex flex-row gap-1 items-center">
-                <Input
-                  className="w-[40%]"
-                  onChange={(e) =>
-                    setAssignmentName(classId, bucket.id, x, e.target.value)
-                  }
-                  placeholder="Assignment Name"
-                  defaultValue={x.name}
-                  onFocus={(e) => {
-                    e.target.select();
-                  }}
-                />
-                <Input
-                  className="w-[30%]"
-                  disabled={x.simulated}
-                  onChange={(e) =>
-                    setAssignmentScore(
-                      classId,
-                      bucket.id,
-                      x,
-                      Number(e.target.value)
-                    )
-                  }
-                  type="number"
-                  defaultValue={x.score}
-                  placeholder="Score"
-                  min={0}
-                  onFocus={(e) => {
-                    e.target.select();
-                  }}
-                  onWheel={(e) => (e.target as HTMLElement).blur()}
-                />
-                <Input
-                  className="w-[30%]"
-                  onChange={(e) =>
-                    setAssignmentOutOf(
-                      classId,
-                      bucket.id,
-                      x,
-                      Number(e.target.value)
-                    )
-                  }
-                  type="number"
-                  defaultValue={x.outOf}
-                  placeholder="Out Of"
-                  min={0}
-                  onFocus={(e) => {
-                    e.target.select();
-                  }}
-                  onWheel={(e) => (e.target as HTMLElement).blur()}
-                />
+              <div className="flex flex-row gap-1 items-end">
+                <div className="grid w-[40%] items-center gap-1.5">
+                  {i == 0 && (
+                    <Label
+                      className="text-muted-foreground"
+                      htmlFor="assignment-name-0"
+                    >
+                      Assignment Name
+                    </Label>
+                  )}
+                  <Input
+                    id={`assignment-name-${i}`}
+                    className="w-full"
+                    onChange={(e) =>
+                      setAssignmentName(classId, bucket.id, x, e.target.value)
+                    }
+                    placeholder="Name"
+                    defaultValue={x.name}
+                    onFocus={(e) => {
+                      e.target.select();
+                    }}
+                  />
+                </div>
+
+                <div className="grid w-[30%] items-center gap-1.5">
+                  {i == 0 && (
+                    <Label
+                      className="text-muted-foreground"
+                      htmlFor="assignment-score-0"
+                    >
+                      Score
+                    </Label>
+                  )}
+                  <Input
+                    id={`assignment-score-${i}`}
+                    className="w-full"
+                    disabled={x.simulated}
+                    onChange={(e) =>
+                      setAssignmentScore(
+                        classId,
+                        bucket.id,
+                        x,
+                        Number(e.target.value)
+                      )
+                    }
+                    type="number"
+                    defaultValue={x.score}
+                    placeholder="Score"
+                    min={0}
+                    onFocus={(e) => {
+                      e.target.select();
+                    }}
+                    onWheel={(e) => (e.target as HTMLElement).blur()}
+                  />
+                </div>
+
+                <div className="grid w-[30%] items-center gap-1.5">
+                  {i == 0 && (
+                    <Label
+                      className="text-muted-foreground"
+                      htmlFor="assignment-out-of-0"
+                    >
+                      Out Of
+                    </Label>
+                  )}
+                  <Input
+                    id={`assignment-out-of-${i}`}
+                    className="w-full"
+                    onChange={(e) =>
+                      setAssignmentOutOf(
+                        classId,
+                        bucket.id,
+                        x,
+                        Number(e.target.value)
+                      )
+                    }
+                    disabled={x.simulated}
+                    type="number"
+                    defaultValue={x.outOf}
+                    placeholder="Out Of"
+                    min={0}
+                    onFocus={(e) => {
+                      e.target.select();
+                    }}
+                    onWheel={(e) => (e.target as HTMLElement).blur()}
+                  />
+                </div>
 
                 <div className="w-8 flex flex-col items-center justify-center gap-1">
                   <TooltipProvider>
@@ -112,7 +150,7 @@ export default function Assignments(params: {
                           removeAssignment(classId, bucket.id, x.id)
                         }
                       >
-                        <Trash2Icon size={20} />
+                        <Trash2Icon className="text-destructive" size={20} />
                       </TooltipTrigger>
                       <TooltipContent>
                         <P>Delete Assignment</P>
@@ -124,7 +162,6 @@ export default function Assignments(params: {
                       <TooltipTrigger asChild>
                         <Checkbox
                           tabIndex={-1}
-                          // className="h-30 w-10"
                           checked={x.simulated}
                           onCheckedChange={() =>
                             simulateAssignment(classId, bucket.id, x)
@@ -157,7 +194,7 @@ export default function Assignments(params: {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger onClick={() => addNewAssignment(classId, bucket.id)}>
-            <PlusIcon />
+            <PlusIcon className="text-primary mt-2" />
           </TooltipTrigger>
           <TooltipContent>
             <P>Add Assignment</P>

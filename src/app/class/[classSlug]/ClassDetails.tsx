@@ -139,9 +139,6 @@ export default function ClassDetails(params: { classId: string }) {
   const resetSelectAssignment = useDataStore(
     (state) => state.resetSelectAssignment
   );
-  const pickSelectedAssignment = useDataStore(
-    (state) => state.pickSelectedAssignment
-  );
 
   const [targetGradeBox, setTargetGradeBox] = useState(
     null as JSX.Element | null

@@ -81,7 +81,6 @@ export default function AddClass() {
             onClick={() => {
               setOpen(true);
             }}
-            variant="outline"
             className="my-2"
           >
             Add New Class

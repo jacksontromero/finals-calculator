@@ -21,15 +21,17 @@ export default function Bucket(params: {
 
         <Assignments classId={classId} bucket={x} />
 
+        <Separator className="mt-2"></Separator>
+
         {x.assignments.length != 0 && (
           <div>
             {x.drops != 0 && (
-              <P className="text-md !mt-4">
+              <P className="!mt-4">
                 Average after {x.drops} drops:{' '}
                 {(calculateScores(x).dropped * 100).toFixed(2)}%
               </P>
             )}
-            <P className="text-md !mt-2">
+            <P className="!mt-2">
               Average without drops: {(calculateScores(x).raw * 100).toFixed(2)}
               %
             </P>
