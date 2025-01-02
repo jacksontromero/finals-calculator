@@ -12,7 +12,6 @@ import { PlusIcon, Trash2Icon } from 'lucide-react';
 import { P } from '../../../components/ui/typography';
 import { Checkbox } from '../../../components/ui/checkbox';
 import { Button } from '../../../components/ui/button';
-import { FormLabel } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
 
 export default function Assignments(params: {

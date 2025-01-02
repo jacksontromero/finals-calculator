@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import { P } from './ui/typography';
-import { FaGithub } from 'react-icons/fa';
+// import Link from 'next/link';
+// import { P } from './ui/typography';
+// import { FaGithub } from 'react-icons/fa';
 
 export default function Footer() {
   // const {mode, setMode} = useContext(ColorModeContext);

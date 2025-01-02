@@ -35,7 +35,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {classIds.length != 0 &&
-                Object.entries(classes).map(([id, x]) => (
+                Object.entries(classes).map(([_id, x]) => (
                   <SidebarMenuItem key={x.id}>
                     <SidebarMenuButton
                       onClick={() => router.push(`/class/${x.id}`)}

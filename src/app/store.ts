@@ -1,6 +1,6 @@
 import { StoreApi, UseBoundStore, create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
-import { persist, createJSONStorage, StorageValue } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
 export enum SelectingStates {
@@ -94,7 +94,7 @@ export const defaultBucket: () => bucket = () => ({
 export const useDataStore: UseBoundStore<StoreApi<globalDataStore>> =
   create<globalDataStore>()(
     persist(
-      immer((set, get) => ({
+      immer((set, _get) => ({
         classes: {} as Record<string, schoolClass>,
 
         addClass: (newClass: schoolClass) =>

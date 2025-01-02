@@ -1,6 +1,6 @@
 'use client';
 
-import { BaseSyntheticEvent, useEffect, useState } from 'react';
+import { BaseSyntheticEvent, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '../ui/dialog';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { schoolClass, SelectingStates, useDataStore } from '@/app/store';
+import { SelectingStates, useDataStore } from '@/app/store';
 import { useRouter } from 'next/navigation';
 import ClassForm, { ClassFormData, ClassFormSchema } from './ClassForm';
 import { useForm } from 'react-hook-form';

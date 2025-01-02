@@ -10,11 +10,11 @@ import { Button } from '../../../components/ui/button';
 import Bucket from './Bucket';
 
 export function calculateScores(b: bucket): { dropped: number; raw: number } {
-  let nonSim = b.assignments.filter((x) => !x.simulated);
-  let totalNonSimScore = nonSim.reduce((acc, x) => acc + x.score, 0);
-  let totalNonSimPoints = nonSim.reduce((acc, x) => acc + x.outOf, 0);
+  const nonSim = b.assignments.filter((x) => !x.simulated);
+  const totalNonSimScore = nonSim.reduce((acc, x) => acc + x.score, 0);
+  const totalNonSimPoints = nonSim.reduce((acc, x) => acc + x.outOf, 0);
 
-  let simulated = b.assignments.map((x) =>
+  const simulated = b.assignments.map((x) =>
     !x.simulated
       ? x
       : {
@@ -26,17 +26,17 @@ export function calculateScores(b: bucket): { dropped: number; raw: number } {
         }
   );
 
-  let sorted = simulated.sort(
+  const sorted = simulated.sort(
     (a1, a2) => a2.score / a2.outOf - a1.score / a1.outOf
   );
 
-  let totalScore = sorted.reduce((acc, x) => acc + x.score, 0);
-  let totalPoints = sorted.reduce((acc, x) => acc + x.outOf, 0);
+  const totalScore = sorted.reduce((acc, x) => acc + x.score, 0);
+  const totalPoints = sorted.reduce((acc, x) => acc + x.outOf, 0);
 
-  let dropped = sorted.slice(0, sorted.length - b.drops);
+  const dropped = sorted.slice(0, sorted.length - b.drops);
 
-  let totalDroppedScore = dropped.reduce((acc, x) => acc + x.score, 0);
-  let totalDroppedPoints = dropped.reduce((acc, x) => acc + x.outOf, 0);
+  const totalDroppedScore = dropped.reduce((acc, x) => acc + x.score, 0);
+  const totalDroppedPoints = dropped.reduce((acc, x) => acc + x.outOf, 0);
 
   return {
     dropped:
@@ -57,7 +57,7 @@ function calculateScoreNecessary(
 
   let totalPercentage = 0;
 
-  for (let b of weights) {
+  for (const b of weights) {
     if (b.id !== selectedBucket.id) {
       totalPercentage += calculateScores(b).dropped * b.percentage;
     }
@@ -65,19 +65,19 @@ function calculateScoreNecessary(
 
   totalPercentage /= 100;
 
-  let percentFinalBucketNeeded =
+  const percentFinalBucketNeeded =
     (targetGrade / 100 - totalPercentage) / (selectedBucket.percentage / 100);
 
   // calculate score needed for assignment within bucket
 
-  let assignmentsWithoutSelected = selectedBucket.assignments.filter(
+  const assignmentsWithoutSelected = selectedBucket.assignments.filter(
     (x) => x.id !== selectedAssignment?.id
   );
-  let nonSim = assignmentsWithoutSelected.filter((x) => !x.simulated);
-  let totalNonSimScore = nonSim.reduce((acc, x) => acc + x.score, 0);
-  let totalNonSimPoints = nonSim.reduce((acc, x) => acc + x.outOf, 0);
+  const nonSim = assignmentsWithoutSelected.filter((x) => !x.simulated);
+  const totalNonSimScore = nonSim.reduce((acc, x) => acc + x.score, 0);
+  const totalNonSimPoints = nonSim.reduce((acc, x) => acc + x.outOf, 0);
 
-  let simulated = assignmentsWithoutSelected.map((x) =>
+  const simulated = assignmentsWithoutSelected.map((x) =>
     !x.simulated
       ? x
       : {
@@ -89,19 +89,19 @@ function calculateScoreNecessary(
         }
   );
 
-  let sorted = simulated.sort(
+  const sorted = simulated.sort(
     (a1, a2) => a2.score / a2.outOf - a1.score / a1.outOf
   );
-  let dropped = sorted.slice(0, sorted.length - selectedBucket.drops);
+  const dropped = sorted.slice(0, sorted.length - selectedBucket.drops);
 
-  let totalDroppedScore = dropped.reduce((acc, x) => acc + x.score, 0);
-  let totalDroppedPoints = dropped.reduce((acc, x) => acc + x.outOf, 0);
+  const totalDroppedScore = dropped.reduce((acc, x) => acc + x.score, 0);
+  const totalDroppedPoints = dropped.reduce((acc, x) => acc + x.outOf, 0);
 
-  let percentageAddNecessary =
+  const percentageAddNecessary =
     percentFinalBucketNeeded -
     totalDroppedScore / (totalDroppedPoints + selectedAssignment.outOf);
 
-  let percentageForTarget =
+  const percentageForTarget =
     (percentageAddNecessary * (totalDroppedPoints + selectedAssignment.outOf)) /
     selectedAssignment.outOf;
   return percentageForTarget < 0 ? 0 : percentageForTarget;
@@ -110,7 +110,7 @@ function calculateScoreNecessary(
 function totalGrade(weights: bucket[]): number {
   let total = 0;
 
-  for (let b of weights) {
+  for (const b of weights) {
     total += calculateScores(b).dropped * b.percentage;
   }
 
@@ -157,12 +157,12 @@ export default function ClassDetails(params: { classId: string }) {
         onWheel={(e) => (e.target as HTMLElement).blur()}
       />
     );
-  }, [targetGrade]);
+  }, [targetGrade, classId, setTargetGrade]);
 
   const screenWidth = useWindowWidth();
-  let widthPerBucket = screenWidth / weights.length;
-  let widthBreakpoint = 240;
-  let vertical = widthPerBucket <= widthBreakpoint;
+  const widthPerBucket = screenWidth / weights.length;
+  const widthBreakpoint = 240;
+  const vertical = widthPerBucket <= widthBreakpoint;
 
   return (
     <div className={'p-2 w-full' + (vertical ? ' text-center' : '')}>
