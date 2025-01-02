@@ -8,12 +8,15 @@ export default function Bucket(params: {
   classId: string;
   x: bucket;
   i: number;
+  vertical: boolean;
 }) {
-  const { classId, x, i } = params;
+  const { classId, x, i, vertical } = params;
 
   return (
     <div className="flex flex-row min-h-full">
-      {i != 0 && <Separator orientation="vertical" className="mx-2" />}
+      {i != 0 && !vertical && (
+        <Separator orientation="vertical" className="mx-2" />
+      )}
       <div className="flex flex-col gap-1 align-start">
         <P className="font-bold text-md">
           {x.name} ({x.percentage}%)
@@ -21,7 +24,7 @@ export default function Bucket(params: {
 
         <Assignments classId={classId} bucket={x} />
 
-        <Separator className="mt-2"></Separator>
+        {!vertical && <Separator className="mt-2"></Separator>}
 
         {x.assignments.length != 0 && (
           <div>
