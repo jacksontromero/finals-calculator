@@ -54,10 +54,10 @@ export default function Assignments(params: {
           {selectingState != SelectingStates.SELECTING ? (
             <form>
               <div className="flex flex-row gap-1 items-end">
-                <div className="grid w-[40%] items-center gap-1.5">
+                <div className="grid w-[35%] items-center gap-1.5">
                   {i == 0 && (
                     <Label
-                      className="text-muted-foreground"
+                      className="text-muted-foreground text-clip overflow-hidden"
                       htmlFor="assignment-name-0"
                     >
                       Assignment Name
@@ -77,7 +77,7 @@ export default function Assignments(params: {
                   />
                 </div>
 
-                <div className="grid w-[30%] items-center gap-1.5">
+                <div className="grid w-[28%] items-center gap-1.5">
                   {i == 0 && (
                     <Label
                       className="text-muted-foreground"
@@ -109,7 +109,7 @@ export default function Assignments(params: {
                   />
                 </div>
 
-                <div className="grid w-[30%] items-center gap-1.5">
+                <div className="grid w-[28%] items-center gap-1.5">
                   {i == 0 && (
                     <Label
                       className="text-muted-foreground"
@@ -141,7 +141,7 @@ export default function Assignments(params: {
                   />
                 </div>
 
-                <div className="w-8 flex flex-col items-center justify-center gap-1">
+                <div className="w-[9%] flex flex-col items-center justify-center gap-1">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger
@@ -190,16 +190,20 @@ export default function Assignments(params: {
         </div>
       ))}
 
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger onClick={() => addNewAssignment(classId, bucket.id)}>
-            <PlusIcon className="text-primary mt-2" />
-          </TooltipTrigger>
-          <TooltipContent>
-            <P>Add Assignment</P>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      {selectingState != SelectingStates.SELECTING && (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger
+              onClick={() => addNewAssignment(classId, bucket.id)}
+            >
+              <PlusIcon className="text-primary mt-2" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <P>Add Assignment</P>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
     </div>
   );
 }
