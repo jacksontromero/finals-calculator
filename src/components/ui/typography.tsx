@@ -1,5 +1,5 @@
-import React, { forwardRef } from "react";
-import { cn } from "../../lib/utils";
+import React, { forwardRef } from 'react';
+import { cn } from '../../lib/utils';
 
 const H1 = forwardRef<
   HTMLHeadingElement,
@@ -10,8 +10,8 @@ const H1 = forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl",
-        props.className,
+        'scroll-m-20 text-4xl font-extrabold tracking-tight',
+        props.className
       )}
     >
       {props.children}
@@ -19,7 +19,7 @@ const H1 = forwardRef<
   );
 });
 
-H1.displayName = "H1";
+H1.displayName = 'H1';
 export { H1 };
 
 const H2 = forwardRef<
@@ -31,8 +31,8 @@ const H2 = forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0",
-        props.className,
+        'scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0',
+        props.className
       )}
     >
       {props.children}
@@ -40,7 +40,7 @@ const H2 = forwardRef<
   );
 });
 
-H2.displayName = "H2";
+H2.displayName = 'H2';
 export { H2 };
 
 const H3 = forwardRef<
@@ -52,8 +52,8 @@ const H3 = forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        "scroll-m-20 text-2xl font-semibold tracking-tight",
-        props.className,
+        'scroll-m-20 text-2xl font-semibold tracking-tight',
+        props.className
       )}
     >
       {props.children}
@@ -61,7 +61,7 @@ const H3 = forwardRef<
   );
 });
 
-H3.displayName = "H3";
+H3.displayName = 'H3';
 export { H3 };
 
 const H4 = forwardRef<
@@ -73,8 +73,8 @@ const H4 = forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        "scroll-m-20 text-xl font-semibold tracking-tight",
-        props.className,
+        'scroll-m-20 text-xl font-semibold tracking-tight',
+        props.className
       )}
     >
       {props.children}
@@ -82,7 +82,7 @@ const H4 = forwardRef<
   );
 });
 
-H4.displayName = "H4";
+H4.displayName = 'H4';
 export { H4 };
 
 const Lead = forwardRef<
@@ -93,14 +93,14 @@ const Lead = forwardRef<
     <p
       {...props}
       ref={ref}
-      className={cn("text-xl text-muted-foreground", props.className)}
+      className={cn('text-xl text-muted-foreground', props.className)}
     >
       {props.children}
     </p>
   );
 });
 
-Lead.displayName = "Lead";
+Lead.displayName = 'Lead';
 export { Lead };
 
 const P = forwardRef<
@@ -111,14 +111,14 @@ const P = forwardRef<
     <p
       {...props}
       ref={ref}
-      className={cn("leading-7 [&:not(:first-child)]:mt-6", props.className)}
+      className={cn('leading-7 [&:not(:first-child)]:mt-6', props.className)}
     >
       {props.children}
     </p>
   );
 });
 
-P.displayName = "P";
+P.displayName = 'P';
 export { P };
 
 const Large = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
@@ -127,15 +127,15 @@ const Large = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
       <div
         {...props}
         ref={ref}
-        className={cn("text-lg font-semibold", props.className)}
+        className={cn('text-lg font-semibold', props.className)}
       >
         {props.children}
       </div>
     );
-  },
+  }
 );
 
-Large.displayName = "Large";
+Large.displayName = 'Large';
 export { Large };
 
 const Small = forwardRef<
@@ -146,14 +146,14 @@ const Small = forwardRef<
     <p
       {...props}
       ref={ref}
-      className={cn("text-sm font-medium leading-none", props.className)}
+      className={cn('text-sm font-medium leading-none', props.className)}
     >
       {props.children}
     </p>
   );
 });
 
-Small.displayName = "Small";
+Small.displayName = 'Small';
 export { Small };
 
 const Muted = forwardRef<
@@ -164,14 +164,14 @@ const Muted = forwardRef<
     <span
       {...props}
       ref={ref}
-      className={cn("text-sm text-muted-foreground", props.className)}
+      className={cn('text-sm text-muted-foreground', props.className)}
     >
       {props.children}
     </span>
   );
 });
 
-Muted.displayName = "Muted";
+Muted.displayName = 'Muted';
 export { Muted };
 
 const InlineCode = forwardRef<
@@ -183,8 +183,8 @@ const InlineCode = forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
-        props.className,
+        'relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold',
+        props.className
       )}
     >
       {props.children}
@@ -192,7 +192,7 @@ const InlineCode = forwardRef<
   );
 });
 
-InlineCode.displayName = "InlineCode";
+InlineCode.displayName = 'InlineCode';
 export { InlineCode };
 
 const List = forwardRef<
@@ -203,14 +203,14 @@ const List = forwardRef<
     <ul
       {...props}
       ref={ref}
-      className={cn("my-6 ml-6 list-disc [&>li]:mt-2", props.className)}
+      className={cn('my-6 ml-6 list-disc [&>li]:mt-2', props.className)}
     >
       {props.children}
     </ul>
   );
 });
 
-List.displayName = "List";
+List.displayName = 'List';
 export { List };
 
 const Quote = forwardRef<
@@ -222,8 +222,8 @@ const Quote = forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        "mt-6 border-l-2 pl-6 italic text-muted-foreground",
-        props.className,
+        'mt-6 border-l-2 pl-6 italic text-muted-foreground',
+        props.className
       )}
     >
       {props.children}
@@ -231,5 +231,5 @@ const Quote = forwardRef<
   );
 });
 
-Quote.displayName = "Quote";
+Quote.displayName = 'Quote';
 export { Quote };

@@ -21,7 +21,6 @@ import ClassOptions from './ClassOptions';
 import { H1, P } from '../ui/typography';
 import Link from 'next/link';
 import { Separator } from '@radix-ui/react-separator';
-import { LucideGithub } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 export function AppSidebar() {
