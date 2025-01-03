@@ -70,7 +70,7 @@ export default function AddClass() {
   };
 
   return (
-    <div>
+    <div className="flex  justify-center">
       <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
         <DialogTrigger asChild>
           <Button

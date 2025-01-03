@@ -5,6 +5,7 @@ import { AppSidebar } from '@/components/sidebar/AppSidebar';
 import { ThemeProvider } from '@/components/theme-provider';
 import { GeistSans } from 'geist/font/sans';
 import Topbar from '@/components/Topbar';
+import { SessionProvider } from 'next-auth/react';
 
 export const metadata: Metadata = {
   title: 'Final Grade Calculator',
@@ -27,12 +28,14 @@ export default function RootLayout({
           // disableTransitionOnChange
         >
           <SidebarProvider>
-            <AppSidebar />
+            <SessionProvider>
+              <AppSidebar />
 
-            <main className="w-full">
-              <Topbar />
-              {children}
-            </main>
+              <main className="w-full">
+                <Topbar />
+                {children}
+              </main>
+            </SessionProvider>
           </SidebarProvider>
         </ThemeProvider>
       </body>
