@@ -3,8 +3,8 @@ import './globals.css';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/sidebar/AppSidebar';
 import { ThemeProvider } from '@/components/theme-provider';
-import Topbar from '@/components/topbar/Topbar';
 import { GeistSans } from 'geist/font/sans';
+import Topbar from '@/components/Topbar';
 
 export const metadata: Metadata = {
   title: 'Final Grade Calculator',
